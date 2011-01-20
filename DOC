@@ -1,0 +1,96 @@
+AlphaControl
+
+  Eventable(klass)
+    klass.addEventListener()
+    klass.removeEventListener()
+    klass.createEvent()
+    klass.dispatchEvent()
+    klass.on/type/()
+
+  Optionable(klass)
+    klass.options
+    klass.setOptions()
+
+UI
+
+  UI.Widget
+    initWidget()
+    setContent()
+    getContent()
+    attachToDOM()
+    setPosition()
+    show()
+    close()
+    hide()
+    destroy()
+    displayed()
+
+  UI.Overlay < UI.Widget
+    initOverlay()
+
+DIALOGS
+
+  UI.Dialog < UI.Widget
+    initDialog()
+    setTitle()
+    getTitle()
+#    addButton()
+#    on/button/()
+
+  UI.ModalDialog < UI.Dialog.Base 
+    initModalDialog()
+
+#  UI.ConfirmDialog < UI.ModalDialog
+#    onvalid()
+#    oncancel()
+#
+#  UI.AlertDialog < UI.ModalDialog
+#    onvalid()
+#
+#  UI.PromptDialog < UI.ModalDialog
+#    onvalid()
+#    oncancel()
+
+PICKERS
+
+  UI.Picker < UI.Widget
+    initPicker()
+    initialPosition()
+    computePosition()
+#    activate()
+#    deactivate()
+
+  UI.ListPicker  < UI.Picker
+    initListPicker()
+    activate()
+    deactivate()
+    cancel()
+    showOrHide()
+    setItems()
+    getItems()
+    getItem(index)
+    hasItems()
+    markSelection()
+    unmarkSelection()
+    moveSelectionUp()
+    moveSelectionDown()
+    selectSelection()
+
+  UI.ColorPicker < UI.Picker
+    initColorPicker()
+    setColor()
+    setBaseColor()
+    applyColor()
+    getGradientColor()
+    getHueColor()
+
+ADVANCED
+
+#  UI.Autocompleter < UI.ListPicker
+#  UI.Sortable
+#  UI.Tooltip < UI.Picker
+
+  UI.Notification < UI.Widget
+    initNotification(options)
+    setMessage(message, timeout)
+
