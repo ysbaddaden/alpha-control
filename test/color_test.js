@@ -2,7 +2,7 @@ new Unit.TestCase('ColorTest',
 {
   test_hex: function()
   {
-    var color = new Alpha.Color('#000000');
+    var color = new Color('#000000');
     this.assertEqual(0, color.r);
     this.assertEqual(0, color.g);
     this.assertEqual(0, color.b);
@@ -14,7 +14,7 @@ new Unit.TestCase('ColorTest',
     this.assertEqual("hsla(0, 0%, 0%, 0.5)", color.toHSLA(0.5));
     this.assertEqual("#000000", color.toHex());
     
-    var color = new Alpha.Color('#ABC');
+    var color = new Color('#ABC');
     this.assertEqual(170, color.r);
     this.assertEqual(187, color.g);
     this.assertEqual(204, color.b);
@@ -25,7 +25,7 @@ new Unit.TestCase('ColorTest',
     this.assertEqual("hsla(210, 17%, 73%, 1)", color.toHSLA());
     this.assertEqual("#AABBCC", color.toHex());
     
-    var color = new Alpha.Color('#FF88DD');
+    var color = new Color('#FF88DD');
     this.assertEqual(255, color.r);
     this.assertEqual(136, color.g);
     this.assertEqual(221, color.b);
@@ -36,7 +36,7 @@ new Unit.TestCase('ColorTest',
     this.assertEqual("hsla(317, 47%, 77%, 1)", color.toHSLA());
     this.assertEqual("#FF88DD", color.toHex());
     
-    var color = new Alpha.Color('  #FF00DD ');
+    var color = new Color('  #FF00DD ');
     this.assertEqual(255, color.r);
     this.assertEqual(0, color.g);
     this.assertEqual(221, color.b);
@@ -47,14 +47,14 @@ new Unit.TestCase('ColorTest',
     this.assertEqual("hsla(308, 100%, 50%, 1)", color.toHSLA());
     this.assertEqual("#FF00DD", color.toHex());
     
-    this.assertThrow('Error', function() { new Alpha.Color("") });
-    this.assertThrow('Error', function() { new Alpha.Color("#0") });
-    this.assertThrow('Error', function() { new Alpha.Color("#1234") });
+    this.assertThrow('Error', function() { new Color("") });
+    this.assertThrow('Error', function() { new Color("#0") });
+    this.assertThrow('Error', function() { new Color("#1234") });
   },
 
   test_rgb: function()
   {
-    var color = new Alpha.Color("rgb(0, 0,0)");
+    var color = new Color("rgb(0, 0,0)");
     this.assertEqual(0, color.r);
     this.assertEqual(0, color.g);
     this.assertEqual(0, color.b);
@@ -66,7 +66,7 @@ new Unit.TestCase('ColorTest',
     this.assertEqual("hsla(0, 0%, 0%, 1)", color.toHSLA());
     this.assertEqual("#000000", color.toHex());
     
-    var color = new Alpha.Color("rgb(128, 130,5)");
+    var color = new Color("rgb(128, 130,5)");
     this.assertEqual(128, color.r);
     this.assertEqual(130, color.g);
     this.assertEqual(5, color.b);
@@ -77,12 +77,12 @@ new Unit.TestCase('ColorTest',
     this.assertEqual("hsla(61, 96%, 26%, 1)", color.toHSLA());
     this.assertEqual("#808205", color.toHex());
     
-    this.assertThrow('Error', function() { new Alpha.Color("rgb(0,2)") });
+    this.assertThrow('Error', function() { new Color("rgb(0,2)") });
   },
 
   test_rgba: function()
   {
-    var color = new Alpha.Color("rgba(0, 0,0, 0.8)");
+    var color = new Color("rgba(0, 0,0, 0.8)");
     this.assertEqual(0, color.r);
     this.assertEqual(0, color.g);
     this.assertEqual(0, color.b);
@@ -93,7 +93,7 @@ new Unit.TestCase('ColorTest',
     this.assertEqual("hsla(0, 0%, 0%, 0.8)", color.toHSLA());
     this.assertEqual("#000000", color.toHex());
     
-    var color = new Alpha.Color("rgba(128, 130,12, 0.1)");
+    var color = new Color("rgba(128, 130,12, 0.1)");
     this.assertEqual(128, color.r);
     this.assertEqual(130, color.g);
     this.assertEqual(12, color.b);
@@ -104,7 +104,7 @@ new Unit.TestCase('ColorTest',
     this.assertEqual("hsla(61, 91%, 28%, 0.1)", color.toHSLA());
     this.assertEqual("#80820C", color.toHex());
     
-    var color = new Alpha.Color("rgba(128,130,12)");
+    var color = new Color("rgba(128,130,12)");
     this.assertEqual(128, color.r);
     this.assertEqual(130, color.g);
     this.assertEqual(12, color.b);
@@ -118,7 +118,7 @@ new Unit.TestCase('ColorTest',
 
   test_array: function()
   {
-    var color = new Alpha.Color([0, 0, 0]);
+    var color = new Color([0, 0, 0]);
     this.assertEqual(0, color.r);
     this.assertEqual(0, color.g);
     this.assertEqual(0, color.b);
@@ -127,7 +127,7 @@ new Unit.TestCase('ColorTest',
     this.assertEqual("rgba(0, 0, 0, 1)", color.toRGBA());
     this.assertEqual("#000000", color.toHex());
     
-    var color = new Alpha.Color([0, 12, 13, 0.5]);
+    var color = new Color([0, 12, 13, 0.5]);
     this.assertEqual(0, color.r);
     this.assertEqual(12, color.g);
     this.assertEqual(13, color.b);
@@ -136,13 +136,13 @@ new Unit.TestCase('ColorTest',
     this.assertEqual("rgba(0, 12, 13, 0.5)", color.toRGBA());
     this.assertEqual("#000C0D", color.toHex());
     
-    this.assertThrow('Error', function() { new Alpha.Color([0,1]) });
-    this.assertThrow('Error', function() { new Alpha.Color([0,1,2,3,4]) });
+    this.assertThrow('Error', function() { new Color([0,1]) });
+    this.assertThrow('Error', function() { new Color([0,1,2,3,4]) });
   },
 
   test_object: function()
   {
-    var color = new Alpha.Color({r: 0, g: 0, b: 0});
+    var color = new Color({r: 0, g: 0, b: 0});
     this.assertEqual(0, color.r);
     this.assertEqual(0, color.g);
     this.assertEqual(0, color.b);
@@ -151,7 +151,7 @@ new Unit.TestCase('ColorTest',
     this.assertEqual("rgba(0, 0, 0, 1)", color.toRGBA());
     this.assertEqual("#000000", color.toHex());
     
-    var color = new Alpha.Color({r: 0, g: 12, b: 13, a: 0.9});
+    var color = new Color({r: 0, g: 12, b: 13, a: 0.9});
     this.assertEqual(0, color.r);
     this.assertEqual(12, color.g);
     this.assertEqual(13, color.b);
@@ -160,6 +160,6 @@ new Unit.TestCase('ColorTest',
     this.assertEqual("rgba(0, 12, 13, 0.9)", color.toRGBA());
     this.assertEqual("#000C0D", color.toHex());
     
-    this.assertThrow('Error', function() { new Alpha.Color({}) });
+    this.assertThrow('Error', function() { new Color({}) });
   }
 });
