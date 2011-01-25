@@ -362,8 +362,7 @@ Unit.TestCase.prototype.assertInstanceOf = function(className, object, message)
 Unit.TestCase.prototype.assertTypeOf = function(type, object, message)
 {
   var fullMessage = this.buildMessage(message,
-    "<?> expected to be of type\n<?> but was\n<?>.",
-    object, type, typeof object);
+    "Expected to be of type\n<?> but was\n<?>.", type, typeof object);
   this.assert(typeof object == type, fullMessage);
 }
 

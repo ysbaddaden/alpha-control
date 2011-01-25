@@ -6,6 +6,10 @@ new Unit.TestCase('UI.WidgetTest',
     this.widget.initWidget();
   },
 
+  teardown: function() {
+    this.widget.destroy();
+  },
+
   test_new: function() {
     this.assertTypeOf('function', this.widget.initWidget);
   },
@@ -30,7 +34,7 @@ new Unit.TestCase('UI.WidgetTest',
   {
     var html = "<span>toto</span>";
     this.widget.setContent(html);
-    this.assertEqual(html, this.widget.getContent().innerHTML);
+    this.assertEqual(html, this.widget.getContent().innerHTML.toLowerCase());
     
     var span = document.createElement('span');
     this.widget.setContent(span);
@@ -62,6 +66,7 @@ new Unit.TestCase('UI.WidgetTest',
     this.widget.close();
     this.assertTypeOf('object', this.widget.getContent());
     this.assertTypeOf('object', this.widget.container);
+    this.assertTrue(this.widget.attached());
     this.assertFalse(this.widget.displayed());
   },
 
@@ -71,16 +76,18 @@ new Unit.TestCase('UI.WidgetTest',
     this.widget.close();
     this.assertUndefined(this.widget.getContent());
     this.assertUndefined(this.widget.container);
+    this.assertFalse(this.widget.attached());
     this.assertFalse(this.widget.displayed());
   },
 
   test_destroy_with_attached_widget: function()
   {
     var container = this.widget.container;
+    
     this.widget.attachToDOM();
     this.widget.destroy();
     
-    this.assertNull(container.parentNode);
+    this.assertFalse(this.widget.attached());
     this.assertUndefined(this.widget.getContent());
     
     delete container;
