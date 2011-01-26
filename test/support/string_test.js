@@ -193,6 +193,10 @@ new Unit.TestCase('StringTest',
     }
   },
 
+  test_pluralize_empty_string: function() {
+    this.assertEqual("", "".pluralize());
+  },
+
   test_singularize: function()
   {
     for (var singular in SingularToPlural)
@@ -203,15 +207,27 @@ new Unit.TestCase('StringTest',
     }
   },
 
+  test_singularize_empty_string: function() {
+    this.assertEqual("", "".singularize());
+  },
+
   test_tableize: function()
   {
+    this.assertEqual("accounts", "Account".tableize())
     this.assertEqual("primary_spokesmen", "PrimarySpokesman".tableize())
     this.assertEqual("node_children", "NodeChild".tableize())
   },
 
   test_classify: function()
   {
+    this.assertEqual("Account", "accounts".classify())
     this.assertEqual("PrimarySpokesman", "primary_spokesmen".classify())
     this.assertEqual("NodeChild", "node_children".classify())
+  },
+
+  test_constantize: function()
+  {
+    this.assert(UI.Widget == "UI.Widget".constantize());
+    this.assert(Eventable == "Eventable".constantize());
   }
 });
