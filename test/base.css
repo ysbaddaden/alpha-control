@@ -14,5 +14,5 @@ span.success, tr.success td:nth-child(3) { color: #0A0; }
 span.failure, tr.failure td:nth-child(3) { color: #A00; }
 span.error,   tr.error   td:nth-child(3) { color: #AA0; }
 
-span.result { font-weight: bold; }
+span.result { font-weight: bold; display: block; }
 
