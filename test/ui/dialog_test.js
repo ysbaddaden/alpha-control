@@ -8,6 +8,10 @@ new Unit.TestCase('UI.DialogTest',
     this.dialog.destroy();
   },
 
+  test_prototype: function() {
+    this.assertPrototypeOf(UI.Widget, this.dialog);
+  },
+
   test_initDialog: function()
   {
     this.dialog.initDialog();

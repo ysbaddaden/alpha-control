@@ -8,6 +8,10 @@ new Unit.TestCase('UI.Notification',
     this.notification.destroy();
   },
 
+  test_prototype: function() {
+    this.assertPrototypeOf(UI.Widget, this.notification);
+  },
+
   test_initNotification: function()
   {
     this.notification.initNotification();

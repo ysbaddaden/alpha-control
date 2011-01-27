@@ -8,6 +8,12 @@ new Unit.TestCase('UI.ModalDialogTest',
     this.dialog.destroy();
   },
 
+  test_prototype: function()
+  {
+    this.assertPrototypeOf(UI.Dialog, this.dialog);
+    this.assertPrototypeOf(UI.Widget, this.dialog);
+  },
+
   test_initModalDialog: function()
   {
     this.dialog.initModalDialog();

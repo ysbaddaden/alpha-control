@@ -8,6 +8,10 @@ new Unit.TestCase('UI.OverlayTest',
     this.overlay.destroy();
   },
 
+  test_prototype: function() {
+    this.assertPrototypeOf(UI.Widget, this.overlay);
+  },
+
   test_initOverlay: function()
   {
     this.overlay.initOverlay();

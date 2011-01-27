@@ -163,7 +163,10 @@ Unit.AssertionMessage.argToString = function(arg)
 {
   var className = Unit.AssertionMessage.getClassName(arg), value;
   
-  if (className == 'Boolean') {
+  if (className == 'Function') {
+    value = 'function() {...}';
+  }
+  else if (className == 'Boolean') {
     value = arg ? 'true' : 'false';
   }
   else if (typeof arg == 'undefined') {
@@ -183,7 +186,7 @@ Unit.AssertionMessage.argToString = function(arg)
     }
     value = '[' + parts.join(', ') + ']';
   }
-  else if (className == 'Object')
+  else if (className == 'Object' && !arg.tagName)
   {
     var parts = [];
     for (var i in arg) {
@@ -205,7 +208,7 @@ Unit.AssertionMessage.argToString = function(arg)
     value = arg.toString();
   }
   else {
-    value = arg;
+    value = "" + arg;
   }
   
   return value;
@@ -245,14 +248,14 @@ Unit.TestCase.prototype.assertSame = function(expected, actual, message)
 {
   var fullMessage = this.buildMessage(message, "<?> expected but was\n<?>.",
     expected, actual);
-  this.assert(this._equiv(expected, actual, true), fullMessage);
+  this.assert(expected === actual, fullMessage);
 }
 
 Unit.TestCase.prototype.assertNotSame = function(expected, actual, message)
 {
   var fullMessage = this.buildMessage(message, "<?> expected to be != to\n<?>.",
     actual, expected);
-  this.assert(!this._equiv(expected, actual, true), fullMessage);
+  this.assert(expected !== actual, fullMessage);
 }
 
 Unit.TestCase.prototype.assertTrue = function(actual, message) {
@@ -350,20 +353,26 @@ Unit.TestCase.prototype.assertNoMatch = function(pattern, string, message)
   this.assert(!pattern.test(string), fullMessage);
 }
 
-Unit.TestCase.prototype.assertInstanceOf = function(className, object, message)
-{
-  var objectClassName = Unit.AssertionMessage.getClassName(object);
-  var fullMessage = this.buildMessage(message,
-    "<?> expected to be an instance of\n<?> but was\n<?>.",
-    object, className, objectClassName);
-  this.assert(objectClassName == className, fullMessage);
-}
-
 Unit.TestCase.prototype.assertTypeOf = function(type, object, message)
 {
   var fullMessage = this.buildMessage(message,
     "Expected to be of type\n<?> but was\n<?>.", type, typeof object);
   this.assert(typeof object == type, fullMessage);
+}
+
+Unit.TestCase.prototype.assertInstanceOf = function(klass, object, message)
+{
+  var fullMessage = this.buildMessage(message,
+    "<?> expected to be an instance of\n<?>.", object, klass);
+  this.assert(object instanceof klass, fullMessage);
+}
+
+Unit.TestCase.prototype.assertPrototypeOf = function(klass, object, message)
+{
+  var fullMessage = this.buildMessage(message,
+    "<?> expected to be the prototype of\n<?>.",
+    klass, object);
+  this.assert(klass.prototype.isPrototypeOf(object), fullMessage);
 }
 
 Unit.TestCase.prototype.flunk = function(message) {
