@@ -123,30 +123,39 @@ Resources
     belongsTo(resource, options)
     hasOne(resource, options)
     hasMany(resource, options)
-    
+
+  Examples:
+
     var User = Resource.create('User')
     
     user = new User({:name => 'my'})
-    user.save                                   # => POST   /users.xml   name=my
-    user = User.create({:name => 'me'})         # => POST   /users.xml   name=me
-    user = User.update(2, {:name => 'myself'})  # => PUT    /users/2.xml name=myself
-    User.destroy(1)                             # => DELETE /users/1.xml
+    user.save                                               # => POST   /users.xml   name=my
+    User.create({:name => 'me'}, function(user) {})         # => POST   /users.xml   name=me
+    User.update(2, {:name => 'myself'}, function(user) {})  # => PUT    /users/2.xml name=myself
+    User.destroy(1, function(success) {});                  # => DELETE /users/1.xml
     
     user = User.find(123)                       # => GET    /users/123.xml
     user.update_attribute(:name, "mini me")     # => PUT    /users/123.xml name=mini%20me
     user.destroy                                # => DELETE /users/123.xml
-  
+
   Relations
-  
+
     Account = Resource.create('Account')
     Account.hasMany('operations');
     
     Operation = Resource.create('Operation')
     Operation.belongsTo('account')
     
-    account    = Account.find(123)              # => GET /accounts/123.xml
-    operations = account.operations()           # => GET /accounts/123/operations.xml
-    operation  = account.operations().find(456) # => GET /accounts/123/operations/456.xml
+    Account.find(123, function(account)               # => GET /accounts/123.xml
+    {
+      account.operations(function(operations)         # => GET /accounts/123/operations.xml
+      {
+      });
+      
+      account.findOperation(456, function(operation)  # => GET /accounts/123/operations/456.xml
+      {
+      });
+    };              
 
 ActionController
 

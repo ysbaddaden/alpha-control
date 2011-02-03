@@ -58,8 +58,8 @@ String.prototype.parameterize = function()
 String.prototype.titleize = function()
 {
   var str = this.underscore().humanize();
-  str = str.replace(/\s\b[\w]/g, function(char) {
-    return char.toUpperCase();
+  str = str.replace(/\s\b[\w]/g, function(chr) {
+    return chr.toUpperCase();
   });
   return str;
 }
