@@ -248,7 +248,7 @@ if (!Array.prototype.reduceRight)
 if (!String.prototype.trim)
 {
   String.prototype.trim = function() {
-    return this.replace(/^\s+/, '').replace(/\s+$/, '');
+    return this.replace(/^\s+$/, '').replace(/\s+$/, '');
   }
 }
 
@@ -461,6 +461,8 @@ if (typeof Element == 'undefined')
 //    }
 //  }
 
+  // It's simpler to implement the non-standard innerText in non-IE browsers
+  // than implementing the standard textContent in IE < 8.
   if (typeof elm.innerText == 'undefined')
   {
     Element.prototype._alpha_get_innerText = function() {
@@ -636,16 +638,12 @@ Element.prototype.get = function(attribute)
 }
 
 /**
- * Emulates DOM Events in Internet Explorer.
+ * Emulates DOM Events in IE < 9.
  * 
  * - document.createEvent()
  * - Element.dispatchEvent()
  * - Element.addEventListener()
  * - Element.removeEventListener()
- * 
- * requires: compat/core.js
- * requires: compat/element/dom.js
- * requires: compat/element/element.js
  * 
  * Custom event dispatching is inspired by Prototype.js
  * by Sam Stephenson http://www.prototypejs.org/
@@ -1006,13 +1004,29 @@ if (typeof window.innerWidth == 'undefined')
  *  - use of querySelectorAll() has been removed (no use, we actually replace it when missing or obviously limited).
  *  - non standard selectors/operators have been removed (ie :contains).
  *  - integrated missing CSS 3 pseudo selectors (ie. :root and :target).
- * 
- * Lacks:
- * 
- *  - support for HTML5 elements in IE (that's IE's fault).
  */
 
-if (!Element.prototype.querySelectorAll || Alpha.browser.ie)
+Alpha.fullQSASupport = function()
+{
+  // older browsers
+  if (!document.querySelectorAll) {
+    return false;
+  }
+  
+  try
+  {
+    // IE8 proposes querySelectorAll but limited in features
+    document.querySelectorAll('p:last-child');
+  }
+  catch(e) {
+    return false;
+  }
+  
+  // any good browser, even IE9
+  return true;
+}
+
+if (!Alpha.fullQSASupport())
 {
   var Sly   = (function()
   {
@@ -1696,7 +1710,7 @@ if (!Element.prototype.querySelectorAll || Alpha.browser.ie)
 	    },
 
 	    'index': function(node, index) {
-		    var count = 1;
+		    var count = 0;
 		    while ((node = node.previousSibling)) {
 			    if (node.nodeType == 1 && ++count > index) return false;
 		    }
@@ -1751,7 +1765,7 @@ if (!Element.prototype.querySelectorAll || Alpha.browser.ie)
 	    },
 
 	    '|=': function(value, escaped) {
-		    return '(?:^|\\|)' + escaped + '(?:$|\\|)';
+	      return '(?:^|-)' + escaped + '(?:$|-)';
 	    }
 
     };
