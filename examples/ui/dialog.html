@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<link rel="stylesheet" type="text/css" href="../base.css"/>
+	<title>UI.Dialog</title>
+</head>
+<body>
+	<h1>UI.Dialog</h1>
+
+  <form action="#">
+    <div class="field">
+      <label for="title">Title:</label><br/>
+      <input type="text" id="title" value="My Dialog"/>
+    </div>
+    
+    <div class="field">
+      <label for="content">Content:</label><br/>
+      <textarea id="content">
+&lt;p&gt;Lorem ipsum dolor sit amet, consectetur
+adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+dolore magna aliqua.&lt;/p&gt;
+
+&lt;p&gt;Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+culpa qui officia deserunt mollit anim id est laborum.&lt;/p&gt;
+      </textarea>
+    </div>
+    
+    <div class="field">
+      <label for="position">Position:</label><br/>
+      <select id="position">
+        <option value="">center</option>
+        <option>top left</option>
+        <option>top</option>
+        <option>top right</option>
+        <option>right</option>
+        <option>bottom right</option>
+        <option>bottom</option>
+        <option>bottom left</option>
+        <option>left</option>
+      </select>
+    </div>
+    
+    <div class="field checkboxes">
+      <input type="checkbox" id="titlebar" checked="true"/>
+      <label for="titlebar">title bar ?</label>
+      <br/>
+      <input type="checkbox" id="closeOnEscape" checked="true"/>
+      <label for="closeOnEscape">close on ESC key?</label>
+    </div>
+    
+    <div class="actions">
+      <input type="submit" value="Create Dialog"/>
+    </div>
+  </form>
+
+<script src="../loader.js"></script>
+<script>
+load('..');
+</script>
+
+<script>
+
+document.getElementsByTagName('form').item(0).addEventListener('submit', function(event)
+{
+  event.preventDefault();
+  
+  var options = { titlebar: true };
+  options.titlebar = $('titlebar').checked;
+  options.closeOnEscape = $('closeOnEscape').checked;
+  
+  switch ($('position').value)
+  {
+    case 'top left': options.position = ['top', 'left']; break;
+    case 'top': options.position = ['top']; break;
+    case 'top right': options.position = ['top', 'right']; break;
+    case 'right': options.position = ['right']; break;
+    case 'bottom right': options.position = ['bottom', 'right']; break;
+    case 'bottom': options.position = ['bottom']; break;
+    case 'bottom left': options.position = ['bottom', 'left']; break;
+    case 'left': options.position = ['left']; break;
+  }
+  
+  var dialog = new UI.Dialog();
+  dialog.initDialog(options);
+  
+  if (options.titlebar) {
+    dialog.setTitle($('title').value);
+  }
+  dialog.setContent($('content').value);
+  dialog.show();
+});
+
+</script>
+</body>
+</html>

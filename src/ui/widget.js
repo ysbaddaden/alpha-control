@@ -29,7 +29,7 @@ UI.Widget.prototype.initWidget = function(options)
   this.content.className = 'content';
   this.container.appendChild(this.content);
   
-  if (this.options.destroyOnEscape)
+  if (this.options.closeOnEscape)
   {
     this._closeOnEscape = this.close.bind(this);
     window.addEventListener('keyup', this._closeOnEscape, false);

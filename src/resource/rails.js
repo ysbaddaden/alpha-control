@@ -1,7 +1,7 @@
 /**
  * Simplifies requests to a Ruby on Rails application.
  * 
- * TODO: multipart encoding of xhr request bodies.
+ * TODO: raw body upload option for create() and update().
  * TODO: throw an Error on HTTP 500 Server Error.
  */
 var Rails = {};
@@ -37,14 +37,8 @@ Rails.request = function(method, url, data, callback)
   xhr.open(method.toUpperCase(), url, true);
   xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
   
-  if (method == 'post')
-  {
-//    if (options.mutipart) {
-//      xhr.setRequestHeader('Content-Type', 'multipart/form-data');
-//    }
-//    else {
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-//    }
+  if (method == 'post') {
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   }
   
   xhr.onreadystatechange = function()
@@ -61,21 +55,14 @@ Rails.request = function(method, url, data, callback)
   return xhr;
 }
 
-Rails.toBody = function(data, multipart)
+Rails.toBody = function(data)
 {
-  if multipart
-  {
-    throw new Error("Multipart upload isn't yet supported.");
+  var body = [];
+  
+  for (var k in data) {
+    body.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
   }
-  else
-  {
-    var body = [];
-    
-    for (var k in data) {
-      body.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
-    }
-    return body.join('&');
-  }
+  return body.join('&');
 }
 
 Rails.CSRFParam = null;

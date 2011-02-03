@@ -3,7 +3,7 @@ UI.Dialog.prototype = new UI.Widget();
 
 UI.Dialog.prototype.initDialog = function(options)
 {
-  this.setOptions({
+  this.setDefaultOptions({
     titlebar:      true,
     position:      ['center', 'middle'],
     onClose:       'destroy',
