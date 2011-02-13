@@ -19,14 +19,11 @@
  */
 var Eventable = function(object, types)
 {
-  object.prototype._event_listeners = {};
-
   types.forEach(function(type)
   {
     if (typeof object.prototype['on' + type] != 'undefined') {
       throw new Error("Event type '" + type + "' already defined.");
     }
-    object.prototype._event_listeners[type] = [];
     object.prototype['on' + type] = function(event) {}
   });
 
@@ -35,10 +32,16 @@ var Eventable = function(object, types)
     // Adds an event listener to this object.
     object.prototype.addEventListener = function(type, callback)
     {
-      if (typeof this._event_listeners[type] == 'undefined') {
+      if (typeof this['on' + type] == 'undefined') {
         throw new Error("No such event type '" + type + "'");
       }
-      this._event_listeners[type].push(callback)
+      if (typeof this._eventListeners == 'undefined') {
+        this._eventListeners = {};
+      }
+      if (typeof this._eventListeners[type] == 'undefined') {
+        this._eventListeners[type] = [];
+      }
+      this._eventListeners[type].push(callback)
     }
   }
 
@@ -47,12 +50,12 @@ var Eventable = function(object, types)
     // Removes an event listener from this object.
     object.prototype.removeEventListener = function(type, callback)
     {
-      if (typeof this._event_listeners[type] == 'undefined') {
+      if (typeof this['on' + type] == 'undefined') {
         throw new Error("No such event type '" + type + "'");
       }
-      var pos = this._event_listeners[type].indexOf(callback);
+      var pos = this._eventListeners[type].indexOf(callback);
       if (pos != -1) {
-        this._event_listeners[type].splice(pos, 1)
+        this._eventListeners[type].splice(pos, 1)
       }
     }
   }
@@ -111,14 +114,16 @@ var Eventable = function(object, types)
         event.preventDefault();
       }
       
-      for (var i=0, len = this._event_listeners[event.type].length; i<len; i++)
+      if (this._eventListeners && this._eventListeners[event.type])
       {
-        if (event.propagationStopped === true) {
-          break;
+        for (var i=0, len = this._eventListeners[event.type].length; i<len; i++)
+        {
+          if (event.propagationStopped === true) {
+            break;
+          }
+          this._eventListeners[event.type][i](event);
         }
-        this._event_listeners[event.type][i](event);
       }
-      
       return event.defaultPrevented;
     }
   }
