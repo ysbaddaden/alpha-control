@@ -42,7 +42,7 @@
     </table>
   </div>
 
-  <!--div class="block" id="table3">
+  <div class="block" id="table3">
     <table>
       <thead>
         <tr><th>header 0</th></tr>
@@ -62,7 +62,7 @@
         <tr><td>row 3</td></tr>
       </tbody>
     </table>
-  </div-->
+  </div>
 
   <h2>Lists</h2>
   
@@ -116,13 +116,13 @@
   list3.initSortable(document.getElementById('list3'));
   
   var table1 = new UI.Sortable();
-  table1.initSortable(document.getElementById('table1'), {nodeName: 'TR'});
+  table1.initSortable(document.getElementById('table1'), {selector: 'tr'});
   
   var table2 = new UI.Sortable();
-  table2.initSortable(document.getElementById('table2'), {nodeName: 'TR'});
+  table2.initSortable(document.getElementById('table2'), {selector: 'tr'});
   
-  //var table3 = new UI.Sortable();
-  //table3.initSortable(document.getElementById('table3'), {selector: 'tbody tr'});
+  var table3 = new UI.Sortable();
+  table3.initSortable(document.getElementById('table3'), {selector: 'tbody tr'});
   </script>
 </body>
 </html>

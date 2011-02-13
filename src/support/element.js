@@ -1,3 +1,15 @@
+//Element.prototype.getParent = function(nodeName)
+//{
+//  var element = this;
+//  nodeName = nodeName.toUpperCase();
+//  
+//  while(element && element.nodeName != nodeName && element.parentNode) {
+//    element = element.get ? element.get('parentNode') : element.parentNode;
+//  }
+//  
+//  return element.nodeName == nodeName ? element : undefined;
+//}
+
 Element.prototype.insertAfter = function(newElement, referenceElement)
 {
   if (!referenceElement) {

@@ -1,25 +1,13 @@
-Element.prototype.getParent = function(nodeName)
-{
-  var element = this;
-  nodeName = nodeName.toUpperCase();
-  
-  while(element && element.nodeName != nodeName && element.parentNode) {
-    element = element.get ? element.get('parentNode') : element.parentNode;
-  }
-  
-  return element.parentNode ? element : undefined;
-}
-
 // NOTE: shall UI.Sortable inherit from UI.Widget?
+// TODO: shall dispatch events on start, drag and stop.
 
 UI.Sortable = function() {}
 Optionable(UI.Sortable);
 
 UI.Sortable.prototype.initSortable = function(list, options)
 {
-  this.setDefaultOptions({nodeName: 'LI'});
+  this.setDefaultOptions({selector: 'li'});
   this.setOptions(options);
-  this.options.nodeName = this.options.nodeName.toUpperCase();
   
   this.list = list;
   this.list.addEventListener('mousedown', this.start.bind(this), false);
@@ -30,7 +18,7 @@ UI.Sortable.prototype.initSortable = function(list, options)
 
 UI.Sortable.prototype.start = function(event)
 {
-  var item = event.target.getParent(this.options.nodeName);
+  var item = this.findItem(event.target);
   if (item)
   {
     this.dragged = item;
@@ -46,26 +34,29 @@ UI.Sortable.prototype.start = function(event)
 
 UI.Sortable.prototype.drag = function(event)
 {
-  var y, idx;
+  var y, idx, target;
   
   if (this.dragged)
   {
     y = event.clientY || event.pageY;
     
-    target = event.target.getParent(this.options.nodeName);
-    idx = this.getItemIndex(target);
-    
-    if (idx !== undefined)
+    target = this.findItem(event.target);
+    if (target)
     {
-      if (idx > this.draggedIdx && y > this.previousY)
+      idx = this.getItemIndex(target);
+      
+      if (idx !== undefined)
       {
-        target.parentNode.insertAfter(this.dragged, target);
-        this.draggedIdx = idx;
-      }
-      else if (idx < this.draggedIdx && y < this.previousY)
-      {
-        target.parentNode.insertBefore(this.dragged, target);
-        this.draggedIdx = idx;
+        if (idx > this.draggedIdx && y > this.previousY)
+        {
+          target.parentNode.insertAfter(this.dragged, target);
+          this.draggedIdx = idx;
+        }
+        else if (idx < this.draggedIdx && y < this.previousY)
+        {
+          target.parentNode.insertBefore(this.dragged, target);
+          this.draggedIdx = idx;
+        }
       }
     }
     
@@ -90,9 +81,31 @@ UI.Sortable.prototype.stop = function(event)
   }
 }
 
+UI.Sortable.prototype.getItems = function() {
+  return this.list.querySelectorAll(this.options.selector);
+}
+
+// browses target -> parent until we find an item.
+UI.Sortable.prototype.findItem = function(target)
+{
+  var items = this.getItems();
+  do
+  {
+    for (var i=0; i<items.length; i++)
+    {
+      if (target == items[i]) {
+        return items[i];
+      }
+    }
+    target = target.parentNode;
+  }
+  while(target && target.parentNode);
+}
+
 UI.Sortable.prototype.getItemIndex = function(item)
 {
-  var items = this.list.getElementsByTagName(this.options.nodeName);
+//  var items = this.list.getElementsByTagName(this.options.nodeName);
+  var items = this.getItems();
   for (var i=0; i<items.length; i++)
   {
     if (items[i] == item) {
