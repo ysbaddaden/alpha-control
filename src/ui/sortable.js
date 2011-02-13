@@ -1,8 +1,8 @@
 // NOTE: shall UI.Sortable inherit from UI.Widget?
-// TODO: shall dispatch events on start, drag and stop.
 
 UI.Sortable = function() {}
 Optionable(UI.Sortable);
+Eventable(UI.Sortable, ['dragstart', 'drop']);
 
 UI.Sortable.prototype.initSortable = function(list, options)
 {
@@ -13,7 +13,7 @@ UI.Sortable.prototype.initSortable = function(list, options)
   this.list.addEventListener('mousedown', this.start.bind(this), false);
   
   this._drag = this.drag.bind(this);
-  this._stop = this.stop.bind(this);
+  this._drop = this.drop.bind(this);
 }
 
 UI.Sortable.prototype.start = function(event)
@@ -22,11 +22,20 @@ UI.Sortable.prototype.start = function(event)
   if (item)
   {
     this.dragged = item;
+    
+    var _event = new Eventable.Event();
+    _event.initEvent('dragstart', true);
+    if (this.dispatchEvent(_event))
+    {
+      this.dragged = null;
+      return;
+    }
+    
     this.dragged.addClassName('dragged');
     this.draggedIdx = this.getItemIndex(this.dragged);
     
     document.body.addEventListener('mousemove', this._drag, false);
-    document.body.addEventListener('mouseup',   this._stop, false);
+    document.body.addEventListener('mouseup',   this._drop, false);
     
     event.preventDefault();
   }
@@ -67,15 +76,19 @@ UI.Sortable.prototype.drag = function(event)
   event.preventDefault();
 }
 
-UI.Sortable.prototype.stop = function(event)
+UI.Sortable.prototype.drop = function(event)
 {
   if (this.dragged)
   {
+    var _event = new Eventable.Event();
+    _event.initEvent('drop', true);
+    if (this.dispatchEvent(_event)) return;
+    
     this.dragged.removeClassName('dragged');
     this.dragged = null;
     
     document.body.removeEventListener('mousemove', this._drag, false);
-    document.body.removeEventListener('mouseup',   this._stop, false);
+    document.body.removeEventListener('mouseup',   this._drop, false);
     
     event.preventDefault();
   }
@@ -104,7 +117,6 @@ UI.Sortable.prototype.findItem = function(target)
 
 UI.Sortable.prototype.getItemIndex = function(item)
 {
-//  var items = this.list.getElementsByTagName(this.options.nodeName);
   var items = this.getItems();
   for (var i=0; i<items.length; i++)
   {

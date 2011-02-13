@@ -7,7 +7,6 @@
 	
 	<style type="text/css">
 	.block ul { padding-left: 1em; }
-	.block li { cursor: pointer; }
 	table { margin: 1em 0; }
 	</style>
 </head>
@@ -123,6 +122,12 @@
   
   var table3 = new UI.Sortable();
   table3.initSortable(document.getElementById('table3'), {selector: 'tbody tr'});
+  table3.addEventListener('dragstart', log);
+  table3.addEventListener('drop',      log);
+  
+  function log(event) {
+    console.log(event.type, table3.dragged.parentNode, table3.dragged.sectionRowIndex);
+  }
   </script>
 </body>
 </html>
