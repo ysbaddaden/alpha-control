@@ -1,5 +1,10 @@
 body { font: normal 14px sans-serif; color: #333; background: #E4E4E4; }
 
+.block { padding: 1em 2em; background: #FFF; border: 1px solid #CCC;
+  display: inline-block; vertical-align: top; margin-right: 16px; }
+
+/* forms */
+
 .field { margin-bottom: 1em; }
 
 label { color: #666; }
@@ -14,6 +19,8 @@ input[type=submit]:active { border-style: inset; }
 input[type=checkbox] { width: auto; }
 
 .checkboxes label { color: #333; }
+
+/* dialogs */
 
 .dialog {
   border: 1px solid #AAA; width: 300px;
@@ -32,3 +39,8 @@ input[type=checkbox] { width: auto; }
 .dialog .content:first-child {
   -webkit-border-radius: 8px; -moz-border-radius: 8px; border-radius: 8px;
 }
+
+/* sortable */
+
+.dragged { opacity: .5; }
+

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<link rel="stylesheet" type="text/css" href="../base.css"/>
+	<title>UI.Sortable</title>
+	
+	<style type="text/css">
+	.block ul { padding-left: 1em; }
+	.block li { cursor: pointer; }
+	table { margin: 1em 0; }
+	</style>
+</head>
+<body>
+	<h1>UI.Sortable</h1>
+
+  <h2>Tables</h2>
+
+  <div class="block">
+    <table id="table1">
+      <tr><td>row 0</td></tr>
+      <tr><td>row 1</td></tr>
+      <tr><td>row 2</td></tr>
+      <tr><td>row 3</td></tr>
+      <tr><td>row 4</td></tr>
+      <tr><td>row 5</td></tr>
+    </table>
+  </div>
+
+  <div class="block">
+    <table id="table2">
+      <thead>
+        <tr><th>header</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>row</strong> 0</td></tr>
+        <tr><td><strong>row</strong> 1</td></tr>
+        <tr><td><strong>row</strong> 2</td></tr>
+        <tr><td><strong>row</strong> 3</td></tr>
+        <tr><td><strong>row</strong> 4</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!--div class="block" id="table3">
+    <table>
+      <thead>
+        <tr><th>header 0</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>row 0</td></tr>
+        <tr><td>row 1</td></tr>
+      </tbody>
+    </table>
+    
+    <table>
+      <thead>
+        <tr><th>header 1</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>row 2</td></tr>
+        <tr><td>row 3</td></tr>
+      </tbody>
+    </table>
+  </div-->
+
+  <h2>Lists</h2>
+  
+  <div class="block">
+    <ul id="list1">
+      <li>item 0</li>
+      <li>item 1</li>
+      <li>item 2</li>
+      <li>item 3</li>
+      <li>item 4</li>
+      <li>item 5</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <ul id="list2">
+      <li><strong>item</strong> 0</li>
+      <li><strong>item</strong> 1</li>
+      <li><strong>item</strong> 2</li>
+      <li><strong>item</strong> 3</li>
+      <li><strong>item</strong> 4</li>
+      <li><strong>item</strong> 5</li>
+    </ul>
+  </div>
+
+  <div class="block" id="list3">
+    <ul>
+      <li>list a - item 0</li>
+      <li>list a - item 1</li>
+      <li>list a - item 2</li>
+    </ul>
+    
+    <ul>
+      <li>list b - item 3</li>
+      <li>list b - item 4</li>
+      <li>list b - item 5</li>
+    </ul>
+  </div>
+
+  <script src="../loader.js"></script>
+  <script>load('..')</script>
+
+  <script>
+  var list1 = new UI.Sortable();
+  list1.initSortable(document.getElementById('list1'));
+  
+  var list2 = new UI.Sortable();
+  list2.initSortable(document.getElementById('list2'));
+  
+  var list3 = new UI.Sortable();
+  list3.initSortable(document.getElementById('list3'));
+  
+  var table1 = new UI.Sortable();
+  table1.initSortable(document.getElementById('table1'), {nodeName: 'TR'});
+  
+  var table2 = new UI.Sortable();
+  table2.initSortable(document.getElementById('table2'), {nodeName: 'TR'});
+  
+  //var table3 = new UI.Sortable();
+  //table3.initSortable(document.getElementById('table3'), {selector: 'tbody tr'});
+  </script>
+</body>
+</html>

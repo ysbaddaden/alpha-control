@@ -18,7 +18,8 @@ function load(relativePath)
     'ui/modal_dialog.js',
     'ui/notification.js',
     'ui/picker.js',
-    'ui/list_picker.js'
+    'ui/list_picker.js',
+    'ui/sortable.js'
   ];
   
   if (relativePath) {
