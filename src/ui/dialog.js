@@ -47,11 +47,11 @@ UI.Dialog.prototype.getTitle = function() {
   return this.title;
 }
 
-UI.Dialog.prototype.attachToDOM = function()
-{
-  this.container.style.visibility = 'hidden';
-  UI.Widget.prototype.attachToDOM.call(this);
-}
+//UI.Dialog.prototype.attachToDOM = function()
+//{
+//  this.container.style.visibility = 'hidden';
+//  UI.Widget.prototype.attachToDOM.call(this);
+//}
 
 /**
  * Positions the Dialog within the page. Position is defined by the +position+
@@ -74,7 +74,12 @@ UI.Dialog.prototype.setPosition = function()
     position[this.options.position] = true;
   }
   
-  this.container.style.position = 'absolute';
+  var _display    = this.container.style.display;
+  var _visibility = this.container.style.visibility;
+  
+  this.container.style.position   = 'absolute';
+  this.container.style.display    = 'block';
+  this.container.style.visibility = 'hidden';
   
   if (position.top) {
     this.container.style.top = '0px';
@@ -102,7 +107,8 @@ UI.Dialog.prototype.setPosition = function()
       + (document.documentElement ? document.documentElement.scrollLeft : window.pageXOffset)) + 'px';
   }
   
-  this.container.style.visibility = 'visible';
+  this.container.style.display    = _display;
+  this.container.style.visibility = _visibility;
 }
 
 UI.Dialog.prototype.destroy = function()
