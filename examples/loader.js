@@ -19,7 +19,9 @@ function load(relativePath)
     'ui/notification.js',
     'ui/picker.js',
     'ui/list_picker.js',
-    'ui/sortable.js'
+    
+    'ui/sortable.js',
+    'ui/autocomplete.js'
   ];
   
   if (relativePath) {

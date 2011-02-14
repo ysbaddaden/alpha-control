@@ -44,3 +44,8 @@ input[type=checkbox] { width: auto; }
 
 .dragged { opacity: .5; }
 
+/* others */
+
+.loading { background-image: url(ajax-loader.gif);
+  background-repeat: no-repeat; background-position: 99% 50%; }
+

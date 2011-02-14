@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<link rel="stylesheet" type="text/css" href="../base.css"/>
+	<title>UI.Autocomplete</title>
+</head>
+<body>
+	<h1>UI.Autocomplete</h1>
+  
+  <form action="#" method="get" class="block">
+    <div>
+      <input type="text" id="firstname" placeholder="First name"/>
+    </div>
+  </form>
+  
+  <script src="../loader.js"></script>
+  <script>
+  load('..');
+  </script>
+  
+  <script>
+  var a = new UI.Autocomplete();
+  a.initAutocomplete(document.getElementById('firstname'),
+    {url: '/search', param: "firstname"});
+  </script>
+</body>
+</html>
