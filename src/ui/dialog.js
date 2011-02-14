@@ -47,12 +47,6 @@ UI.Dialog.prototype.getTitle = function() {
   return this.title;
 }
 
-//UI.Dialog.prototype.attachToDOM = function()
-//{
-//  this.container.style.visibility = 'hidden';
-//  UI.Widget.prototype.attachToDOM.call(this);
-//}
-
 /**
  * Positions the Dialog within the page. Position is defined by the +position+
  * option, which can be any of 'center', 'middle', 'left', 'right', 'top',
@@ -89,9 +83,9 @@ UI.Dialog.prototype.setPosition = function()
   }
   else
   {
-    var height = (window.innerHeight || document.documentElement.clientHeight) - this.container.offsetHeight;
-    this.container.style.top = parseInt(Math.max(0, height) / 2
-      + (document.documentElement ? document.documentElement.scrollTop : window.pageYOffset)) + 'px';
+    var top = ((window.innerHeight || document.documentElement.clientHeight) - this.container.offsetHeight) / 2;
+    top += document.documentElement.scrollTop || window.pageYOffset;
+    this.container.style.top = Math.round(top) + 'px';
   }
   
   if (position.left) {
@@ -102,9 +96,9 @@ UI.Dialog.prototype.setPosition = function()
   }
   else
   {
-    var width = (window.innerWidth || document.documentElement.clientWidth) - this.container.offsetWidth;
-    this.container.style.left = parseInt(Math.max(0, width) / 2
-      + (document.documentElement ? document.documentElement.scrollLeft : window.pageXOffset)) + 'px';
+    var left = ((window.innerWidth || document.documentElement.clientWidth) - this.container.offsetWidth) / 2;
+    left += document.documentElement.scrollLeft || window.pageXOffset;
+    this.container.style.left = Math.round(left) + 'px';
   }
   
   this.container.style.display    = _display;
