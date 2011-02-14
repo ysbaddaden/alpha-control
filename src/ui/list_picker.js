@@ -4,7 +4,7 @@
 UI.ListPicker = function() {}
 UI.ListPicker.prototype = new UI.Picker();
 
-//Eventable(UI.ListPicker, ['activate', 'deactivate', 'select']);
+Eventable(UI.ListPicker, ['activate', 'deactivate', 'select']);
 
 UI.ListPicker.prototype.initListPicker = function(input, options)
 {
@@ -130,11 +130,9 @@ UI.ListPicker.prototype.selectSelection = function()
   
   if (this.selection)
   {
-//    var event = this.createEvent('select');
-//    event.target = this.target;
-//    if (this.dispatchEvent(event)) {
-//      this.unmarkSelection();
-//    }
+    var event = this.createEvent('select');
+    event.target = this.selection;
+    this.dispatchEvent(event);
     this.unmarkSelection();
   }
 }
@@ -175,9 +173,9 @@ UI.ListPicker.prototype.cancel = function(event)
 // IMPROVE: search for a parent LI if target isn't an LI.
 UI.ListPicker.prototype.click_cb = function(event)
 {
-  if (evt.target.tagName.toLowerCase() == 'li')
+  if (event.target.tagName.toLowerCase() == 'li')
   {
-    this.selection = evt.target;
+    this.selection = event.target;
     this.selectSelection();
   }
 }
@@ -194,8 +192,8 @@ UI.ListPicker.prototype.keypress_cb = function(event)
       if (this.displayed())
       {
         this.selectSelection();
-        evt.stopPropagation();
-        evt.preventDefault();
+        event.stopPropagation();
+        event.preventDefault();
       }
       return;
   }
