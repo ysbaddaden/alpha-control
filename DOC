@@ -86,8 +86,12 @@ UI
 
   ADVANCED
 
-  #  UI.Autocompleter < UI.ListPicker
-  #  UI.Sortable
+    UI.Sortable
+      event: dragstart
+      event: drop
+    
+    UI.Autocomplete < UI.ListPicker
+    
   #  UI.Tooltip < UI.Picker
 
     UI.Notification < UI.Widget

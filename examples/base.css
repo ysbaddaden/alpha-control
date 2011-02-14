@@ -40,6 +40,17 @@ input[type=checkbox] { width: auto; }
   -webkit-border-radius: 8px; -moz-border-radius: 8px; border-radius: 8px;
 }
 
+/* pickers */
+
+.picker { background: #FFF; border: 1px solid #AAA;
+  -webkit-box-shadow: 0 0 6px #999; -moz-box-shadow: 0 0 6px #999; box-shadow: 0 0 6px #999;
+}
+.list-picker ul { margin: 0; padding-left: 0; list-style: none;
+  -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;
+}
+.list-picker li { padding: 2px; }
+.list-picker li.selected { background: #FFC; }
+
 /* sortable */
 
 .dragged { opacity: .5; }

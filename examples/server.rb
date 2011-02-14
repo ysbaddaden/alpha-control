@@ -31,3 +31,14 @@ def browse(path)
   contents + "</ul>\n</body>\n</html>"
 end
 
+get "/search" do
+  contents = ""
+  
+  ['julien', 'jeanmary', 'céline', 'cécile', 'Suzanne'].each do |name|
+    re = Regexp.new('^' + Regexp.quote(params[:firstname]))
+    contents += "<li>#{name.capitalize}</li>" if name =~ re
+  end
+  
+  contents
+end
+

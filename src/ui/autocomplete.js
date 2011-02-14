@@ -7,7 +7,10 @@ UI.Autocomplete.prototype.initAutocomplete = function(input, options)
     throw new Error("Missing required url option.");
   }
   this.setDefaultOptions({param: 'param'});
+  
   this.initListPicker(input, options);
+  this.addEventListener('select', this.autocomplete.bind(this));
+  
   this.relativeElement.addEventListener('keyup', this.search.bind(this), false);
 }
 
@@ -15,10 +18,16 @@ UI.Autocomplete.prototype.search = function(event)
 {
   var self = this;
   
-  if (this.relativeElement.value == this.previousValue) {
+  if (this.relativeElement.value.trim() == "")
+  {
+    this.setItems('');
+    this.hide();
     return;
   }
-  if (this.request) {
+  else if (this.relativeElement.value == this.previousValue) {
+    return;
+  }
+  else if (this.request) {
     this.request.abort();
   }
   this.relativeElement.addClassName('loading');
@@ -32,8 +41,10 @@ UI.Autocomplete.prototype.search = function(event)
     {
       self.relativeElement.removeClassName('loading');
       
-      if (this.status >= 200 && this.status < 400) {
+      if (this.status >= 200 && this.status < 400)
+      {
         self.setItems();
+        self.showOrHide();
       }
       else {
         console.error("HTTP Error: " + this.status, self.uri());
@@ -55,5 +66,11 @@ UI.Autocomplete.prototype.setItems = function()
 {
   var items = this.request.responseText;
   UI.ListPicker.prototype.setItems.call(this, items);
+}
+
+// Called whenever a selection is selected. Tries to read a data-value
+// attribute and falls back to innerText.
+UI.Autocomplete.prototype.autocomplete = function(event) {
+  this.relativeElement.value =  event.target.getAttribute('data-value') || event.target.innerText;
 }
 
