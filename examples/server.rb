@@ -1,5 +1,6 @@
 require "rubygems"
 require "sinatra"
+require "active_support/ordered_hash"
 require "active_support/json"
 
 set :public, File.expand_path('../..', __FILE__)
@@ -17,6 +18,33 @@ get "/examples/ui" do
   browse("examples/ui")
 end
 
+$names = [
+  { :id => 1, :name => 'julien'   },
+  { :id => 2, :name => 'céline'   },
+  { :id => 3, :name => 'jeanmary' },
+  { :id => 4, :name => 'cécile'   },
+  { :id => 5, :name => 'suzanne'  },
+]
+
+get "/search" do
+  contents = ""
+  
+  $names.each do |name|
+    re = Regexp.new('^' + Regexp.quote(params[:firstname]))
+    contents += "<li>#{name[:name].capitalize}</li>" if name[:name] =~ re
+  end
+  
+  contents
+end
+
+get "/search.json" do
+  $names.reject do |name|
+    re = Regexp.new('^' + Regexp.quote(params[:firstname]))
+    !(name[:name] =~ re)
+  end.to_json
+end
+
+
 def browse(path)
   contents = "<!DOCTYPE html>\n<html>\n<body><ul>"
   
@@ -29,16 +57,5 @@ def browse(path)
   end
   
   contents + "</ul>\n</body>\n</html>"
-end
-
-get "/search" do
-  contents = ""
-  
-  ['julien', 'jeanmary', 'céline', 'cécile', 'Suzanne'].each do |name|
-    re = Regexp.new('^' + Regexp.quote(params[:firstname]))
-    contents += "<li>#{name.capitalize}</li>" if name =~ re
-  end
-  
-  contents
 end
 

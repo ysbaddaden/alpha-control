@@ -10,19 +10,82 @@
   
   <form action="#" method="get" class="block">
     <div>
-      <input type="text" id="firstname" placeholder="First name"/>
+      Simple search (HTML response):<br/>
+      <input type="text" id="autocomplete1" placeholder="First name"/>
     </div>
   </form>
   
-  <script src="../loader.js"></script>
-  <script>
-  load('..');
-  </script>
+  <br/>
   
-  <script>
-  var a = new UI.Autocomplete();
-  a.initAutocomplete(document.getElementById('firstname'),
-    {url: '/search', param: "firstname"});
-  </script>
+  <form action="#" method="get" class="block">
+    <div>
+      Automatically marks the first item (HTML response):<br/>
+      <input type="text" id="autocomplete2" placeholder="First name"/>
+    </div>
+  </form>
+  
+  <br/>
+  
+  <form action="#" method="get" class="block">
+    <div>
+      Advanced behavior (JSON response + hidden field ID):<br/>
+      <input type="text" id="user_id" placeholder="user_id" disabled="true"/><br/>
+      <input type="text" id="autocomplete3" name="user_firstname" placeholder="First name"/>
+    </div>
+  </form>
+  
+<script src="../loader.js"></script>
+<script>
+load('..');
+</script>
+
+<script>
+// responseText is HTML (a series of LI elements)
+
+var simple = new UI.Autocomplete();
+simple.initAutocomplete(document.getElementById('autocomplete1'), {
+  url: '/search',
+  param: "firstname"
+});
+
+var automark = new UI.Autocomplete();
+automark.initAutocomplete(document.getElementById('autocomplete2'), {
+  url: '/search',
+  param: "firstname",
+  autoMarkFirst: true
+});
+
+// responseText is JSON + we want to set an hidden field
+
+var asjson = new UI.Autocomplete();
+
+asjson.setItems = function()
+{
+  var names = JSON.parse(this.request.responseText),
+    fragment = document.createDocumentFragment(), li;
+  
+  for (var i=0; i<names.length; i++)
+  {
+    li = document.createElement('li');
+    li.setAttribute('data-id', names[i].id);
+    li.innerHTML = names[i].name;
+    fragment.appendChild(li);
+  }
+  UI.Autocomplete.prototype.setItems.call(this, fragment);
+}
+
+asjson.autocomplete = function(event)
+{
+  $('user_id').value = event.target.getAttribute('data-id');
+  UI.Autocomplete.prototype.setValue.call(this, event.target.innerText);
+}
+
+asjson.initAutocomplete(document.getElementById('autocomplete3'), {
+  url: '/search.json',
+  param: "firstname",
+  autoMarkFirst: true
+});
+</script>
+
 </body>
 </html>
