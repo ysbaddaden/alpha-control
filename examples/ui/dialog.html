@@ -3,10 +3,10 @@
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<link rel="stylesheet" type="text/css" href="../base.css"/>
-	<title>UI.Dialog</title>
+	<title>UI.Dialog &amp; UI.ModalDialog</title>
 </head>
 <body>
-	<h1>UI.Dialog</h1>
+	<h1>UI.Dialog &amp; UI.ModalDialog</h1>
 
   <form action="#">
     <div class="field">
@@ -17,16 +17,10 @@
     <div class="field">
       <label for="content">Content:</label><br/>
       <textarea id="content">
-&lt;p&gt;Lorem ipsum dolor sit amet, consectetur
-adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-dolore magna aliqua.&lt;/p&gt;
+&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/p&gt;
 
-&lt;p&gt;Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-culpa qui officia deserunt mollit anim id est laborum.&lt;/p&gt;
-      </textarea>
+&lt;p&gt;Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;/p&gt;
+</textarea>
     </div>
     
     <div class="field">
@@ -45,6 +39,9 @@ culpa qui officia deserunt mollit anim id est laborum.&lt;/p&gt;
     </div>
     
     <div class="field checkboxes">
+      <input type="checkbox" id="modal"/>
+      <label for="modal">modal dialog ?</label>
+      <br/>
       <input type="checkbox" id="titlebar" checked="true"/>
       <label for="titlebar">title bar ?</label>
       <br/>
@@ -63,12 +60,12 @@ load('..');
 </script>
 
 <script>
-
 document.getElementsByTagName('form').item(0).addEventListener('submit', function(event)
 {
+  var options, dialog;
   event.preventDefault();
   
-  var options = { titlebar: true };
+  options = { titlebar: true };
   options.titlebar = $('titlebar').checked;
   options.closeOnEscape = $('closeOnEscape').checked;
   
@@ -84,8 +81,16 @@ document.getElementsByTagName('form').item(0).addEventListener('submit', functio
     case 'left': options.position = ['left']; break;
   }
   
-  var dialog = new UI.Dialog();
-  dialog.initDialog(options);
+  if ($('modal').checked)
+  {
+    dialog = new UI.ModalDialog();
+    dialog.initModalDialog(options);
+  }
+  else
+  {
+    dialog = new UI.Dialog();
+    dialog.initDialog(options);
+  }
   
   if (options.titlebar) {
     dialog.setTitle($('title').value);
@@ -93,7 +98,6 @@ document.getElementsByTagName('form').item(0).addEventListener('submit', functio
   dialog.setContent($('content').value);
   dialog.show();
 });
-
 </script>
 </body>
 </html>
