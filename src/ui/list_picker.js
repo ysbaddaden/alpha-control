@@ -1,5 +1,5 @@
-// TODO: Add events to UI.ListPicker
-// IMPROVE: shall we move activate() and deactivate() to Picker itself?
+// TODO: Dispatch activate/deactivate events
+// IMPROVE: shall we move activate/deactivate to UI.Picker itself?
 
 UI.ListPicker = function() {}
 UI.ListPicker.prototype = new UI.Picker();
@@ -63,6 +63,10 @@ UI.ListPicker.prototype.getItem = function(index) {
 
 UI.ListPicker.prototype.hasItems = function(items) {
   return this.getItems().length > 0;
+}
+
+UI.ListPicker.prototype.clearItems = function() {
+  this.list.innerHTML = '';
 }
 
 // selection
@@ -147,7 +151,7 @@ UI.ListPicker.prototype.showOrHide = function()
 
 UI.ListPicker.prototype.activate = function(event)
 {
-//  if (this.dispatchEvent('activate') && this.hasItems()) {
+//  if (!this.dispatchEvent('activate') && this.hasItems()) {
   if (this.hasItems()) {
     this.show();
   }
