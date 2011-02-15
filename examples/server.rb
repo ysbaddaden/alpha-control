@@ -38,10 +38,16 @@ get "/search" do
 end
 
 get "/search.json" do
-  $names.reject do |name|
+  names = $names.reject do |name|
     re = Regexp.new('^' + Regexp.quote(params[:firstname]))
     !(name[:name] =~ re)
-  end.to_json
+  end
+  
+  if params[:callback]
+    params[:callback] + "(" + names.to_json + ");"
+  else
+    names.to_json
+  end
 end
 
 
