@@ -30,10 +30,19 @@
     <div>
       Advanced behavior (JSON response + hidden field ID):<br/>
       <input type="text" id="user_id" placeholder="user_id" disabled="true"/><br/>
-      <input type="text" id="autocomplete3" name="user_firstname" placeholder="First name"/>
+      <input type="text" id="autocomplete3" placeholder="First name"/>
     </div>
   </form>
   
+  <br/>
+  
+  <form action="#" method="get" class="block">
+    <div>
+      Advanced behavior (JSONP response):<br/>
+      <input type="text" id="autocomplete4" placeholder="First name"/>
+    </div>
+  </form>
+
 <script src="../loader.js"></script>
 <script>
 load('..');
@@ -57,9 +66,9 @@ automark.initAutocomplete(document.getElementById('autocomplete2'), {
 
 // responseText is JSON + we want to set an hidden field
 
-var asjson = new UI.Autocomplete();
+var a = new UI.Autocomplete();
 
-asjson.setItems = function()
+a.setItems = function()
 {
   var names = JSON.parse(this.request.responseText),
     fragment = document.createDocumentFragment(), li;
@@ -74,17 +83,48 @@ asjson.setItems = function()
   UI.Autocomplete.prototype.setItems.call(this, fragment);
 }
 
-asjson.autocomplete = function(event)
+a.autocomplete = function(event)
 {
   $('user_id').value = event.target.getAttribute('data-id');
   UI.Autocomplete.prototype.setValue.call(this, event.target.innerText);
 }
 
-asjson.initAutocomplete(document.getElementById('autocomplete3'), {
+a.initAutocomplete(document.getElementById('autocomplete3'), {
   url: '/search.json',
   param: "firstname",
   autoMarkFirst: true
 });
+
+// JSONP requests
+var a4 = new UI.Autocomplete();
+
+a4.setItems = function(json)
+{
+  var fragment = document.createDocumentFragment(), li;
+  if (json.length)
+  {
+    for (var i=0; i<json.length; i++)
+    {
+      li = document.createElement('li');
+      li.setAttribute('data-id', json[i].id);
+      li.innerHTML = json[i].name;
+      fragment.appendChild(li);
+    }
+    UI.Autocomplete.prototype.setItems.call(this, fragment);
+  }
+  else {
+    this.clearItems();
+  }
+}
+
+var host = window.location.hostname == "localhost" ? "127.0.0.1" : "localhost";
+a4.initAutocomplete(document.getElementById('autocomplete4'), {
+  url: 'http://' + host + ':4567/search.json',
+  param: "firstname",
+  jsonp: true,
+  callback: 'cb'
+});
+
 </script>
 
 </body>

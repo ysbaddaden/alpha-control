@@ -38,27 +38,26 @@ get "/search" do
 end
 
 get "/search.json" do
+  content_type :json
+  
   names = $names.reject do |name|
     re = Regexp.new('^' + Regexp.quote(params[:firstname]))
     !(name[:name] =~ re)
   end
   
-  if params[:callback]
-    params[:callback] + "(" + names.to_json + ");"
+  if params[:cb]
+    params[:cb] + "(" + names.to_json + ");"
   else
     names.to_json
   end
 end
-
 
 def browse(path)
   contents = "<!DOCTYPE html>\n<html>\n<body><ul>"
   
   Dir.open(File.expand_path("../../" + path, __FILE__)) do |d|
     d.each do |f|
-      next if [".", ".."].include?(f)
-      
-      contents += "<li><a href=\"/#{path}/#{f}\">#{f}</a></li>\n"
+      contents += "<li><a href=\"/#{path}/#{f}\">#{f}</a></li>\n" unless [".", ".."].include?(f)
     end
   end
   

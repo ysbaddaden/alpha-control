@@ -8,7 +8,11 @@ UI.Autocomplete.prototype.initAutocomplete = function(input, options)
   if (!options || !options.url) {
     throw new Error("Missing required url option.");
   }
-  this.setDefaultOptions({param: 'param'});
+  this.setDefaultOptions({
+    param: 'param',
+    delay: 200,
+    callback: 'callback'
+  });
   
   this.initListPicker(input, options);
   this.addEventListener('select', this.autocomplete.bind(this));
@@ -19,14 +23,19 @@ UI.Autocomplete.prototype.initAutocomplete = function(input, options)
 UI.Autocomplete.prototype.delayedSearch = function(event)
 {
   var self = this;
-  if (this.delayedSearchTimer) clearTimeout(this.delayedSearchTimer);
-  this.delayedSearchTimer = setTimeout(function() { self.search(event) }, 200);
+  
+  if (this.delayedSearchTimer) {
+    clearTimeout(this.delayedSearchTimer);
+  }
+  
+  this.delayedSearchTimer = setTimeout(function() {
+    self.search(event);
+  }, this.options.delay);
 }
 
 UI.Autocomplete.prototype.search = function(event)
 {
-  var self = this;
-  
+  // shall we make remote request?
   if (this.relativeElement.value.trim() == "")
   {
     this.setItems('');
@@ -36,13 +45,45 @@ UI.Autocomplete.prototype.search = function(event)
   else if (this.relativeElement.value == this.previousValue) {
     return;
   }
-  else if (this.request) {
-    this.request.abort();
-  }
   this.relativeElement.addClassName('loading');
   
+  // remote request
+  if (this.options.jsonp) {
+    this.jsonp_request();
+  }
+  else {
+    this.xhr_request()
+  }
+  
+  this.previousValue = this.relativeElement.value;
+}
+
+UI.Autocomplete.prototype.jsonp_request = function()
+{
+  var self = this;
+  
+  if (this.request) {
+    this.request.abort();
+  }
+  this.request = new JSONP.Request();
+  this.request.open(this.url(), function(responseJSON)
+  {
+    self.relativeElement.removeClassName('loading');
+    self.setItems(responseJSON);
+    self.showOrHide();
+  }, {param: this.options.callback});
+  this.request.send();
+}
+
+UI.Autocomplete.prototype.xhr_request = function()
+{
+  var self = this;
+  
+  if (this.request) {
+    this.request.abort();
+  }
   this.request = new XMLHttpRequest();
-  this.request.open('GET', this.uri(), true);
+  this.request.open('GET', this.url(), true);
   this.request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
   this.request.onreadystatechange = function()
   {
@@ -56,13 +97,12 @@ UI.Autocomplete.prototype.search = function(event)
         self.showOrHide();
       }
       else {
-        console && console.error("HTTP Error: " + this.status, self.uri());
+        console && console.error("HTTP Error: " + this.status, self.url());
       }
     }
   };
   
   this.request.send("");
-  this.previousValue = this.relativeElement.value;
 }
 
 UI.Autocomplete.prototype.setItems = function(items)
@@ -86,7 +126,7 @@ UI.Autocomplete.prototype.setValue = function(value)
   this.clearItems();
 }
 
-UI.Autocomplete.prototype.uri = function()
+UI.Autocomplete.prototype.url = function()
 {
   return this.options.url + "?" + this.options.param + "=" +
     encodeURIComponent(this.relativeElement.value)
