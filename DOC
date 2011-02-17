@@ -1,17 +1,125 @@
-AlphaControl
+= AlphaControl
 
-  Eventable(klass)
-    klass.addEventListener()
-    klass.removeEventListener()
-    klass.createEvent()
-    klass.dispatchEvent()
-    klass.on/type/()
+AlphaControl is a collection of libraries for client-side JavaScript. It's
+definitive goal is to provide a framework for webapps. Thought it's goal is
+similar to frameworks like Cappuccino, AlphaControl aims to leave complete
+control over the DOM to the developers.
 
-  Optionable(klass)
-    klass.options
-    klass.setOptions()
+AlphaControl is meant for Web developers that want to move the logic to the
+client, not for mobile apps developers that want to move from native to the
+browser. You must know or learn about JavaScript prototypes and how it
+actually works. You must know or learn HTML, CSS and the DOM API.
 
-UI
+== JavaScript support
+
+=== Color
+
+=== Eventable
+
+Adds DOM Events-like support to any object.
+
+.Example
+
+  var Klass = function() {}
+  Eventable(Klass, ['activate', 'deactivate'])
+
+.Methods added to the object's prototype
+
+- addEventListener(type, callback)
+- removeEventListener(type, callback)
+- createEvent(type)
+- dispatchEvent(event_or_type)
+
+The previous example would also add on + type methods:
+
+- onactivate(event)
+- ondeactivate(event)
+
+=== Function
+
+.Prototype methods:
+- bind(object)
+
+=== Inflector
+
+=== RegExp
+
+.Methods
+
+- RegExp.escape() - escapes a string to be included in a RegExp.
+
+=== String
+
+String inflections follow the rules of ActiveSupport::Inflector of Ruby on Rails.
+
+.Prototype methods
+
+- capitalize
+- camelize
+- classsify
+- constantize
+- dasherize
+- humanize
+- parameterize
+- pluralize
+- singularize
+- tableize
+- titleize
+- transliterate
+- underscore
+
+=== Optionable
+
+Simplifies options handling to any object. Options are just {key: value} objects.
+
+.Example:
+
+  var Klass = function() {}
+  Optionable(Klass)
+
+.Methods added to the object's prototype
+
+- Klass.prototype.setOptions(options) - overwrites previously set options.
+- Klass.prototype.setDefaultOptions(options) - adds options only if they were not defined already.
+
+
+== DOM Support
+
+=== Element
+
+
+
+=== JSONP.Request
+
+This class allows cross-domain GET requests whenever the webservice allows
+for JSON with Padding requests.
+
+.Example:
+
+  var request = new JSONP.Request();
+  JSONP.open('http://example.org/path.json', function() {});
+  JSONP.send();
+
+It creates the script tag, attaches it to the DOM, handles the callback and
+eventually removes the script tag from the DOM.
+
+.Methods
+
+- open(url, callback)
+- send()
+- abort()
+
+=== Serializer [WIP]
+
+Do not use.
+
+It should be refactored as HTMLFormElement.prototype.serialize() which means
+AlphaCore should be refactored to allow extending the prototype of such
+elements.
+
+== UI
+
+User Interfaces Widgets.
 
   UI.Widget
     initWidget()
@@ -28,7 +136,7 @@ UI
   UI.Overlay < UI.Widget
     initOverlay()
 
-  DIALOGS
+=== Dialogs
 
     UI.Dialog < UI.Widget
       initDialog()
@@ -60,7 +168,7 @@ UI
   #    activate()
   #    deactivate()
 
-    UI.ListPicker  < UI.Picker
+    UI.ListPicker < UI.Picker
       initListPicker()
       activate()
       deactivate()
@@ -70,6 +178,7 @@ UI
       getItems()
       getItem(index)
       hasItems()
+      clearItems()
       markSelection()
       unmarkSelection()
       moveSelectionUp()
@@ -98,14 +207,17 @@ UI
       initNotification(options)
       setMessage(message, timeout)
 
-EJS
+== EJS
+
+Simple templating system based on erubis' syntax.
 
   EJS
     initEJS(template)
     compile()
     evaluate(context)
 
-Resources
+
+== Resources [WIP]
 
   Resource
     create(name, options)
