@@ -1,0 +1,75 @@
+== UI
+
+User Interfaces Widgets.
+
+=== UI.Widget
+
+Base object for (almost) all UI widgets.
+
+.Properties
+
+  container::
+    the main element of the widget.
+  
+  content::
+    the content element, appended into `container`.
+
+.Methods
+
+  initWidget(options)::
+    initializes the widget by setting the `options` and creating the `container`
+    and `content` elements.
+
+  setContent(content)::
+    accepts an HTML string, an element or a document fragment.
+
+  getContent()::
+    returns the content element.
+
+  attachToDOM()::
+    attaches the widget to the document's body.
+
+  setPosition()::
+    positions the widget on screen (does nothing by default).
+
+  show()::
+    displays the widget on the document.
+
+  close()::
+    either hides or destroys the widget.
+
+  hide()::
+    hides the widget.
+
+  destroy()::
+    removes the widget from the DOM, and destroys the `container` and `content`
+    elements. You must call `initWidget()` again to reuse the widget.
+
+  displayed()::
+    checks wether the widget is displayed or not.
+
+=== UI.Notification < UI.Widget
+
+.Methods
+
+  - initNotification(options)
+  - setMessage(message, timeout)
+  
+=== UI.Overlay < UI.Widget
+
+.Methods
+
+  - initOverlay()
+
+=== UI.Sortable
+
+.Events
+
+  - dragstart
+  - drop
+
+.TODO
+  Write documentation for UI.Sortable.
+
+// === UI.Tooltip < UI.Picker
+

@@ -1,0 +1,35 @@
+== DOM Support
+
+=== Element
+
+.TODO
+Write documentation for DOM Element support.
+
+=== JSONP.Request
+
+This class allows cross-domain GET requests whenever the webservice allows
+for JSON with Padding requests.
+
+.Example
+
+  var request = new JSONP.Request();
+  JSONP.open('http://example.org/path.json', function() {});
+  JSONP.send();
+
+It creates the script tag, attaches it to the DOM, handles the callback and
+eventually removes the script tag from the DOM.
+
+.Methods
+
+  - open(url, callback)
+  - send()
+  - abort()
+
+// === Serializer [WIP]
+// 
+// Do not use.
+// 
+// It should be refactored as HTMLFormElement.prototype.serialize() which means
+// AlphaCore should be refactored to allow extending the prototype of such
+// elements.
+

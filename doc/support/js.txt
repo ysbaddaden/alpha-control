@@ -1,0 +1,100 @@
+== JavaScript support
+
+=== Color
+
+.TODO
+Write documentation for Color.
+
+=== Eventable
+
+Adds DOM Events-like support to any object.
+
+.Example
+
+  var Klass = function() {}
+  Eventable(Klass, ['activate', 'deactivate'])
+
+.Methods added to the object's prototype
+
+  - addEventListener(type, callback)
+  - removeEventListener(type, callback)
+  - createEvent(type)
+  - dispatchEvent(event_or_type)
+
+The previous example would also add `'on' + type` methods:
+
+  - onactivate(event)
+  - ondeactivate(event)
+
+=== Function
+
+.Prototype methods
+
+  bind(object)::
+    facility to bind an object to a function, whatever the context. It's
+    especially useful for binding `this`.
+
+=== Inflector
+
+String inflections follow the rules of `ActiveSupport::Inflector` of Ruby on
+Rails.
+
+.Object Methods
+
+  plural(regexp, replacement)::
+    declares a singular -> plural rule.
+  
+  singular(regexp, replacement)::
+    declares a plural -> singular rule.
+  
+  irregular(singular, plural)::
+    declares an irregular word.
+  
+  uncountable(words)::
+    declares uncountable words -- takes an array of strings.
+
+=== RegExp
+
+.Methods
+
+  RegExp.escape()::
+    escapes a string to be included in a RegExp.
+
+=== String
+
+These methods follow the rules of ruby-core `String` and Ruby on Rails
+`ActiveSupport::String` classes.
+
+.Prototype methods
+
+  - capitalize
+  - camelize
+  - classsify
+  - constantize
+  - dasherize
+  - humanize
+  - parameterize
+  - pluralize
+  - singularize
+  - tableize
+  - titleize
+  - transliterate
+  - underscore
+
+=== Optionable
+
+Simplifies options handling to any object. Options are just `{key: value}` objects.
+
+.Example:
+
+  var Klass = function() {}
+  Optionable(Klass)
+
+.Methods added to the object's prototype
+
+  setOptions(options)::
+    overwrites previously set options.
+
+  setDefaultOptions(options)::
+    adds options only if they were not defined already.
+
