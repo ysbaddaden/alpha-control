@@ -7,7 +7,8 @@ SUPPORT_FILES=src/support/function.js \
 	src/support/element.js \
 	src/support/color.js \
 	src/support/optionable.js \
-	src/support/eventable.js
+	src/support/eventable.js \
+	src/support/jsonp.js
 
 UI_FILES=src/ui/widget.js \
 	src/ui/overlay.js \
@@ -15,7 +16,12 @@ UI_FILES=src/ui/widget.js \
 	src/ui/dialog.js \
 	src/ui/modal_dialog.js \
 	src/ui/picker.js \
-	src/ui/list_picker.js
+	src/ui/list_picker.js \
+	src/ui/autocomplete.js \
+	src/ui/sortable.js
+
+# src/support/serializer.js
+# src/ui/color_picker.js
 
 all: support ui alpha-control
 
