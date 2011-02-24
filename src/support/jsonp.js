@@ -48,6 +48,6 @@ JSONP.Request.prototype.abort = function()
   if (node) {
     node.parentNode.removeChild(node);
   }
-  delete window[this.callbackName()];
+  window[this.callbackName()] = null;
 }
 
