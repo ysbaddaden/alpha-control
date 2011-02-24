@@ -21,16 +21,16 @@ new Unit.TestCase('JSONP.RequestTest',
   {
     var self = this; this.async();
     
-    window.showPost = function(post)
+    window.showPost = function(posts)
     {
       self.sync(function()
       {
-        self.assertEqual('2nd Post', post.post.title);
+        self.assertEqual(2, posts.length);
         delete window.showPost;
       });
     }
     var req = new JSONP.Request();
-    req.open('/posts/1.json', showPost, {'callback': "cb"});
+    req.open('/posts.json', showPost, {'param': "cb"});
     req.send();
   },
 

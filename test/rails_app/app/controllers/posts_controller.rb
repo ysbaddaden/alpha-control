@@ -10,12 +10,12 @@ class PostsController < ApplicationController
 
   def index
     @posts = posts
-    respond_with(@posts)
+    _respond(@posts, params[:cb])
   end
 
   def show
     @post = post
-    respond_with(@post)
+    _respond(@post, params[:callback])
   end
 
   def create
@@ -67,5 +67,17 @@ class PostsController < ApplicationController
       post = posts[params[:id].to_i]
       raise NotFound.new("No such Post.") unless post
       post
+    end
+
+    def _respond(resource, callback)
+      respond_with(resource) do |format|
+        format.json do
+          if callback
+            render :json => resource, :callback => callback, :content_type => 'text/javascript'
+          else
+            render :json => resource
+          end
+        end
+      end
     end
 end
