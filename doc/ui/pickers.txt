@@ -1,0 +1,53 @@
+=== Pickers
+
+==== UI.Picker < UI.Widget
+
+Base picker object.
+
+.Methods
+
+  - initPicker()
+  - initialPosition()
+  - computePosition()
+
+.TODO
+
+  - activate()
+  - deactivate()
+
+// === UI.ColorPicker < UI.Picker
+// 
+// .Methods
+// 
+//   - initColorPicker()
+//   - setColor()
+//   - setBaseColor()
+//   - applyColor()
+//   - getGradientColor()
+//   - getHueColor()
+
+==== UI.ListPicker < UI.Picker
+
+.Methods
+
+  - initListPicker()
+  - activate()
+  - deactivate()
+  - cancel()
+  - showOrHide()
+  - setItems()
+  - getItems()
+  - getItem(index)
+  - hasItems()
+  - clearItems()
+  - markSelection()
+  - unmarkSelection()
+  - moveSelectionUp()
+  - moveSelectionDown()
+  - selectSelection()
+
+==== UI.Autocomplete < UI.ListPicker
+
+.TODO
+Write documentation for UI.Autocomplete
+

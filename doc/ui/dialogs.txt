@@ -1,0 +1,41 @@
+=== Dialogs
+
+==== UI.Dialog < UI.Widget
+
+.Methods
+
+  - initDialog()
+  - setTitle()
+  - getTitle()
+
+// .TODO
+// 
+// - addButton()
+// - on<button>() events
+
+==== UI.ModalDialog < UI.Dialog.Base 
+
+.Methods
+
+  - initModalDialog()
+
+// ==== UI.ConfirmDialog < UI.ModalDialog
+// 
+// .Events
+// 
+// - valid
+// - cancel
+// 
+// ==== UI.AlertDialog < UI.ModalDialog
+// 
+// .Events
+// 
+// - valid
+// 
+// ==== UI.PromptDialog < UI.ModalDialog
+// 
+// .Events
+// 
+// - valid
+// - cancel
+

@@ -1,0 +1,89 @@
+= AlphaControl
+
+AlphaControl is a collection of libraries for client-side JavaScript. It's
+definitive goal is to provide a framework for webapps. Thought it's goal is
+similar to frameworks like Cappuccino, AlphaControl aims to leave complete
+control over the DOM to the developers.
+
+AlphaControl is meant for Web developers that want to move the logic to the
+client, not for mobile apps developers that want to move from native to the
+browser. You must know or learn about JavaScript prototypes and how it
+actually works. You must know or learn HTML, CSS and the DOM API.
+
+include::support/js.txt[]
+include::support/dom.txt[]
+include::ui/ui.txt[]
+include::ui/dialogs.txt[]
+include::ui/pickers.txt[]
+
+
+// == EJS
+// 
+// Simple templating system based on erubis' syntax.
+// 
+//   EJS
+//     initEJS(template)
+//     compile()
+//     evaluate(context)
+// 
+// 
+// == Resources [WIP]
+// 
+//   Resource
+//     create(name, options)
+//   
+//   Resource.prototype
+//     newRecord
+//     persisted()
+//     save()
+//     updateAttribute(attribute, value)
+//     updateAttributes(attributes)
+//     destroy()
+// 
+//   Resource.classMethods
+//     find(id)
+//     create(attributes)
+//     update(id, attributes)
+//     destroy(id)
+//     
+//     belongsTo(resource, options)
+//     hasOne(resource, options)
+//     hasMany(resource, options)
+// 
+//   Examples:
+// 
+//     var User = Resource.create('User')
+//     
+//     user = new User({:name => 'my'})
+//     user.save                                               # => POST   /users.xml   name=my
+//     User.create({:name => 'me'}, function(user) {})         # => POST   /users.xml   name=me
+//     User.update(2, {:name => 'myself'}, function(user) {})  # => PUT    /users/2.xml name=myself
+//     User.destroy(1, function(success) {});                  # => DELETE /users/1.xml
+//     
+//     user = User.find(123)                       # => GET    /users/123.xml
+//     user.update_attribute(:name, "mini me")     # => PUT    /users/123.xml name=mini%20me
+//     user.destroy                                # => DELETE /users/123.xml
+// 
+//   Relations
+// 
+//     Account = Resource.create('Account')
+//     Account.hasMany('operations');
+//     
+//     Operation = Resource.create('Operation')
+//     Operation.belongsTo('account')
+//     
+//     Account.find(123, function(account)               # => GET /accounts/123.xml
+//     {
+//       account.operations(function(operations)         # => GET /accounts/123/operations.xml
+//       {
+//       });
+//       
+//       account.findOperation(456, function(operation)  # => GET /accounts/123/operations/456.xml
+//       {
+//       });
+//     };              
+// 
+// ActionController
+// 
+//   Routes
+// 
