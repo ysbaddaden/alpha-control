@@ -117,9 +117,8 @@ a4.setItems = function(json)
   }
 }
 
-var host = window.location.hostname == "localhost" ? "127.0.0.1" : "localhost";
 a4.initAutocomplete(document.getElementById('autocomplete4'), {
-  url: 'http://' + host + ':4567/search.json',
+  url: 'http://' + window.location.host + '/search.json',
   param: "firstname",
   jsonp: true,
   callback: 'cb'
