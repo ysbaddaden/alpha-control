@@ -2,8 +2,27 @@
 
 === Element
 
-.TODO
-Write documentation for DOM Element support.
+.Methods
+
+  findParentNode(nodeName)::
+    returns the first node that matches the nodeName, starting from the element
+    itself up to its ancestors. It may return the element itself.
+  
+  insertAfter(element, node)::
+    just like insertBefore, except it inserts the element after the node.
+  
+  addClassName(className)::
+    adds the className unless it has already been added to the element.
+  
+  hasClassName(className)::
+    returns true if element has the given class name, false otherwise.
+  
+  toggleClassName(className)::
+    toggles the presence of class name: adds-it if not defined, otherwise removes it.
+  
+  removeClassName(className)::
+    removes the given class name from the element.
+
 
 === JSONP.Request
 
@@ -24,6 +43,9 @@ eventually removes the script tag from the DOM.
   - open(url, callback)
   - send()
   - abort()
+
+.TODO
+Handle POST, PUT and DELETE JSONP requests throught a generated FORM.
 
 // === Serializer [WIP]
 // 

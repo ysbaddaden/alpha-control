@@ -1,42 +1,37 @@
-//Element.prototype.getParent = function(nodeName)
-//{
-//  var element = this;
-//  nodeName = nodeName.toUpperCase();
-//  
-//  while(element && element.nodeName != nodeName && element.parentNode) {
-//    element = element.get ? element.get('parentNode') : element.parentNode;
-//  }
-//  
-//  return element.nodeName == nodeName ? element : undefined;
-//}
+Element.prototype.findParentNode = function(nodeName)
+{
+  var element = this; nodeName = nodeName.toUpperCase();
+  while(element && element.nodeName != nodeName && element.parentNode) {
+    element = element.get ? element.get('parentNode') : element.parentNode;
+  }
+  return element.nodeName == nodeName ? element : null;
+}
 
 Element.prototype.insertAfter = function(newElement, referenceElement)
 {
   if (!referenceElement) {
     this.appendChild(newElement);
   }
-  else
-  {
-    var nextSibling = referenceElement.nextSibling;
-    this.insertBefore(newElement, nextSibling);
+  else {
+    this.insertBefore(newElement, referenceElement.nextSibling);
   }
   return newElement;
 }
 
 Element.prototype.getPosition = function(parent)
 {
-  var position = {x: 0, y: 0};
+  var pos = {left: 0, top: 0};
   if (this.offsetParent)
   {
     var obj = this;
     do
     {
-      position.x += obj.offsetLeft;
-      position.y += obj.offsetTop;
+      pos.left += obj.offsetLeft;
+      pos.top  += obj.offsetTop;
     }
     while (obj = obj.offsetParent)
   }
-  return position;
+  return pos;
 }
 
 if (!Element.prototype.hasClassName)
