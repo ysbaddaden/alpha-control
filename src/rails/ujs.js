@@ -7,10 +7,12 @@ var UJS = {
     document.body.addEventListener('ajax:complete', UJS.afterRemoteRequest, false);
     
     var div = document.createElement("div");
-    if (typeof div.onsubmit != "undefined") {
+    
+//    if (typeof div.onsubmit != "undefined") { // disabled since firefox says 'undefined' too :(
       document.body.addEventListener("submit", UJS.onsubmit, false);
-    }
-    else {
+//    }
+//    else {
+    if (typeof div.onsubmit == "undefined") {
       document.body.addEventListener('focusin', UJS.IEFocusMonitor, false);
     }
   },
@@ -160,7 +162,6 @@ var UJS = {
   {
     var event = document.createEvent('HTMLEvents');
     event.initEvent(type, true, true);
-    event.target = target;
     event.memo = request;
     return target.dispatchEvent(event);
   },
