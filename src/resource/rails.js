@@ -1,6 +1,8 @@
 /**
  * Simplifies requests to a Ruby on Rails application.
  * 
+ * DEPRECATED: Prefer src/rails/request.js
+ * 
  * TODO: raw body upload option for create() and update().
  * TODO: throw an Error on HTTP 500 Server Error.
  */
