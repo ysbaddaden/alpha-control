@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
+	<title>AlphaControl: Examples</title>
+	<link rel="stylesheet" type="text/css" href="/examples/base.css"/>
+	<style>
+	body { background: #E4E4E4; }
+	
+  #menu, iframe { display: inline-block; vertical-align: top; }
+  #menu { margin-right: 10px; list-style: none; padding: 0;
+    font-weight: bold; text-shadow: 0 1px 0 #FFF; font-size: 13px; }
+  #menu dt { padding: 3px 5px; margin: 0 0 2px; color: #000;
+      border-bottom: 1px solid #999; -webkit-box-shadow: 0 1px 0 #FFF;
+  }
+  #menu dd { margin: 0; }
+  #menu a { padding: 3px 5px; margin: 2px 0; color: #646464;
+    display: block; text-decoration: none;
+    border-radius: 3px; 
+  }
+  #menu a.selected { color: #FFF; text-shadow: 0 1px 0 #646464; background: #B4B4B4; }
+  
+  iframe  { width: 80%; height: 80%; border: 1px solid #AAA; background: #FFF;
+    -webkit-box-shadow: 0 0 6px #999; -moz-box-shadow: 0 0 6px #999; box-shadow: 0 0 6px #999;
+  }
+	</style>
+</head>
+<body>
+  <h1>AlphaControl: Examples</h1>
+  
+  <dl id="menu">
+    <dt>UI</dt>
+    <dd><a target="main" href="/examples/ui/autocomplete.html">Autocomplete</a></dd>
+    <dd><a target="main" href="/examples/ui/dialog.html">Dialog</a></dd>
+    <dd><a target="main" href="/examples/ui/notification.html">Notification</a></dd>
+    <dd><a target="main" href="/examples/ui/sortable.html">Sortable</a></dd>
+  </dl>
+  
+  <iframe name="main"></iframe>
+  
+  <script>
+  var menu = document.getElementById('menu');
+  menu.addEventListener('click', function(event)
+  {
+    var entries = menu.getElementsByTagName('a');
+    for (var i=0; i<entries.length; i++) {
+      entries[i].className = null;
+    }
+    event.target.className = "selected";
+  }, false);
+  </script>
+</body>
+</html>

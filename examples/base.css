@@ -1,7 +1,11 @@
-body { font: normal 14px sans-serif; color: #333; background: #E4E4E4; }
+body { font: normal 14px sans-serif; color: #333; background: #FFF;
+  padding: 10px; margin: 0; }
+h1 { text-shadow: #FFF 0 1px 0; margin-top: 0; }
 
 .block { padding: 1em 2em; background: #FFF; border: 1px solid #CCC;
-  display: inline-block; vertical-align: top; margin-right: 16px; }
+  display: inline-block; vertical-align: top; margin-right: 16px;
+  /*-webkit-box-shadow: 0 0 6px #999;*/
+}
 
 /* forms */
 
@@ -27,8 +31,8 @@ input[disabled], select[disabled], textarea[disabled] { color: #666; background:
 .overlay { position: fixed; top: 0; bottom: 0; left: 0; right: 0;
   opacity: .75; background: #AAA; }
 
-.dialog, .picker {
-  border: 1px solid #AAA;
+.dialog, .picker { border: 1px solid #AAA; }
+.dialog, .picker, .notification {
   -webkit-box-shadow: 0 0 6px #999; -moz-box-shadow: 0 0 6px #999; box-shadow: 0 0 6px #999;
 }
 
@@ -39,14 +43,21 @@ input[disabled], select[disabled], textarea[disabled] { color: #666; background:
 .dialog .titlebar { background: #E4E4E4; color: #333; font-weight: bold;
   font-size: 12px; padding: 4px 10px; border-bottom: 1px solid #CCC;
   -webkit-border-radius: 8px 8px 0 0; -moz-border-radius: 8px 8px 0 0; border-radius: 8px 8px 0 0;
+  text-shadow: #FFF 0 1px 0;
 }
-.dialog .titlebar .close { float: right; cursor: pointer; }
+.dialog .titlebar .close { float: right; cursor: pointer; padding: 0 3px; }
 .dialog .content { background: #FFF; padding: 10px;
   -webkit-border-radius: 0 0 8px 8px; -moz-border-radius: 0 0 8px 8px; border-radius: 0 0 8px 8px;
 }
 .dialog .content:first-child { -webkit-border-radius: 8px; -moz-border-radius: 8px; border-radius: 8px; }
 .dialog .content :first-child { margin-top: 0; }
 .dialog .content :last-child { margin-bottom: 0; }
+
+.notification {
+  position: fixed; top: 10px; right: 10px;
+  background: rgba(0, 0, 0, .75); color: #FFF; font-weight: bold; padding: 10px 20px;
+  -webkit-border-radius: 8px; -moz-border-radius: 8px; border-radius: 8px;
+}
 
 /* pickers */
 .picker { background: #FFF; }
