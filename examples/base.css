@@ -1,11 +1,9 @@
 body { font: normal 14px sans-serif; color: #333; background: #FFF;
-  padding: 10px; margin: 0; }
+  padding: 20px; margin: 0; }
 h1 { text-shadow: #FFF 0 1px 0; margin-top: 0; }
 
 .block { padding: 1em 2em; background: #FFF; border: 1px solid #CCC;
-  display: inline-block; vertical-align: top; margin-right: 16px;
-  /*-webkit-box-shadow: 0 0 6px #999;*/
-}
+  display: inline-block; vertical-align: top; margin-right: 16px; }
 
 /* forms */
 
