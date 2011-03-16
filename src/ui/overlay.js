@@ -3,7 +3,7 @@ UI.Overlay.prototype = new UI.Widget();
 
 UI.Overlay.prototype.initOverlay = function(options)
 {
-  this.setOptions({
+  this.setDefaultOptions({
     onClose: 'destroy',
     closeOnEscape: false
   });

@@ -22,17 +22,15 @@ UI.ModalDialog.prototype.show = function()
   UI.Dialog.prototype.show.call(this);
 }
 
-UI.ModalDialog.prototype.hide = function()
+UI.ModalDialog.prototype._close = function(type)
 {
-  this.overlay.hide();
-  UI.Dialog.prototype.hide.call(this);
-}
-
-UI.ModalDialog.prototype.destroy = function()
-{
-  if (this.overlay) {
+  UI.Dialog.prototype._close.call(this, type);
+  
+  if (type == 'hide') {
+    this.overlay.hide();
+  }
+  else {
     this.overlay.destroy();
   }
-  UI.Dialog.prototype.destroy.call(this);
 }
 

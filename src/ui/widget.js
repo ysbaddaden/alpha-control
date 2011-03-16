@@ -84,12 +84,24 @@ UI.Widget.prototype.show = function()
     this.attachToDOM();
   }
   this.setPosition();
-  this.container.style.display = 'block';
+  this._show();
 }
 
 // Hides the Widget.
 UI.Widget.prototype.hide = function() {
-  this._hide();
+  this._close('hide');
+}
+
+// Closes the widgets, using the +onClose+ strategy.
+UI.Widget.prototype.close = function(event)
+{
+  if (event && event.type == 'keyup' && event.keyCode != 27) return;
+  this._close(this.options.onClose);
+}
+
+// Removes the Widget from the DOM and destroys it.
+UI.Widget.prototype.destroy = function() {
+  this._close('destroy');
 }
 
 // :nodoc:
@@ -102,23 +114,8 @@ UI.Widget.prototype._hide = function() {
   if (this.container) this.container.style.display = 'none';
 }
 
-// Closes the widgets, using the +onClose+ strategy.
-UI.Widget.prototype.close = function(event)
-{
-  if (event && event.type == 'keyup' && event.keyCode != 27) {
-    return;
-  }
-  
-  switch(this.options.onClose)
-  {
-    case 'hide':    this.hide();    break;
-    case 'destroy': this.destroy(); break;
-    default: throw new Error("Unknown onClose option: " + this.options.onClose);
-  }
-}
-
-// Removes the Widget from the DOM and destroys it.
-UI.Widget.prototype.destroy = function()
+// :nodoc:
+UI.Widget.prototype._destroy = function()
 {
   if (this.container)
   {
@@ -134,6 +131,17 @@ UI.Widget.prototype.destroy = function()
     
     delete this.content;
     delete this.container;
+  }
+}
+
+// :nodoc:
+UI.Widget.prototype._close = function(type)
+{
+  switch (type)
+  {
+    case 'hide':    this._hide();    break;
+    case 'destroy': this._destroy(); break;
+    default: throw new Error("Unknown onClose option: " + type);
   }
 }
 
