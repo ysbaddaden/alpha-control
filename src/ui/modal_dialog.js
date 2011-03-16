@@ -8,29 +8,15 @@ UI.ModalDialog.prototype.initModalDialog = function(options)
   
   this.overlay = new UI.Overlay();
   this.overlay.initOverlay();
+  
+  this.addEventListener('show',    this.overlay.show.bind(this.overlay));
+  this.addEventListener('hide',    this.overlay.hide.bind(this.overlay));
+  this.addEventListener('destroy', this.overlay.destroy.bind(this.overlay));
 }
 
 UI.ModalDialog.prototype.attachToDOM = function()
 {
   this.overlay.attachToDOM();
   UI.Dialog.prototype.attachToDOM.call(this);
-}
-
-UI.ModalDialog.prototype.show = function()
-{
-  this.overlay.show();
-  UI.Dialog.prototype.show.call(this);
-}
-
-UI.ModalDialog.prototype._close = function(type)
-{
-  UI.Dialog.prototype._close.call(this, type);
-  
-  if (type == 'hide') {
-    this.overlay.hide();
-  }
-  else {
-    this.overlay.destroy();
-  }
 }
 

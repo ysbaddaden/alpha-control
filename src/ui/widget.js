@@ -5,7 +5,7 @@ var UI = {};
 UI.Widget = function() {}
 
 Optionable(UI.Widget);
-//Eventable(UI.Widget, ['show', 'close', 'hide', 'destroy']);
+Eventable(UI.Widget, ['show', 'close', 'hide', 'destroy']);
 
 /**
  * Initializes a Widget.
@@ -84,7 +84,10 @@ UI.Widget.prototype.show = function()
     this.attachToDOM();
   }
   this.setPosition();
-  this._show();
+  
+  if (!this.dispatchEvent('show')) {
+    this._show();
+  }
 }
 
 // Hides the Widget.
@@ -137,11 +140,14 @@ UI.Widget.prototype._destroy = function()
 // :nodoc:
 UI.Widget.prototype._close = function(type)
 {
-  switch (type)
+  if (!this.dispatchEvent('close'))
   {
-    case 'hide':    this._hide();    break;
-    case 'destroy': this._destroy(); break;
-    default: throw new Error("Unknown onClose option: " + type);
+    switch (type)
+    {
+      case 'hide':    if (!this.dispatchEvent('hide'))    this._hide();    break;
+      case 'destroy': if (!this.dispatchEvent('destroy')) this._destroy(); break;
+      default: throw new Error("Unknown onClose option: " + type);
+    }
   }
 }
 
