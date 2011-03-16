@@ -10,6 +10,8 @@ SUPPORT_FILES=src/support/function.js \
 	src/support/eventable.js \
 	src/support/jsonp.js
 
+# src/support/serializer.js
+
 UI_FILES=src/ui/widget.js \
 	src/ui/overlay.js \
 	src/ui/notification.js \
@@ -20,18 +22,25 @@ UI_FILES=src/ui/widget.js \
 	src/ui/autocomplete.js \
 	src/ui/sortable.js
 
-# src/support/serializer.js
+# src/ui/date_picker.js
 # src/ui/color_picker.js
 
-all: support ui alpha-control
+RAILS_FILES=src/rails/request.js \
+  src/rails/ujs.js
+
+all: support rails ui alpha-control
 
 alpha-control:
-	cat $(SUPPORT_FILES) $(UI_FILES) > lib/alpha-control.js
+	cat $(SUPPORT_FILES) $(RAILS_FILES) $(UI_FILES) > lib/alpha-control.js
 	$(YUICOMP) lib/alpha-control.js > lib/alpha-control-compressed.js
 
 support:
 	cat $(SUPPORT_FILES) > lib/support.js
 	$(YUICOMP) lib/support.js > lib/support-compressed.js
+
+rails:
+	cat $(RAILS_FILES) > lib/rails.js
+	$(YUICOMP) lib/rails.js > lib/rails-compressed.js
 
 ui:
 	cat $(UI_FILES) > lib/ui.js

@@ -1,0 +1,61 @@
+<h1>Manual UJS tests</h1>
+
+<h2>Links</h2>
+
+<h3>Method</h3>
+
+<ul>
+  <li><%= link_to 'publish post', publish_post_path(0), :method => :put %></li>
+  <li><%= link_to 'delete post', post_path(0), :method => :delete %></li>
+  <li><%= link_to 'delete post with confirm', post_path(0),
+    :method => :delete, :confirm => 'Are you sure?' %></li>
+</ul>
+
+<h3>Remote</h3>
+
+<ul>
+  <li><%= link_to 'publish post', publish_post_path(0, :format => :json), :method => :put, :remote => true %></li>
+  <li><%= link_to 'delete post', post_path(0, :format => :xml), :method => :delete, :remote => true %></li>
+  <li><%= link_to 'delete post with confirm', post_path(0, :format => :xml),
+    :method => :delete, :remote => true, :confirm => 'Are you sure?' %></li>
+</ul>
+
+
+<h2>Forms</h2>
+
+<%= form_tag posts_path do %>
+  <p>
+    <input type="text" name="post[title]" value="some post"/>
+    <%= submit_tag 'create', :disable_with => "Creating..."  %>
+  </p>
+<% end %>
+
+<%= form_tag posts_path do %>
+  <p>
+    <input type="text" name="post[title]" value="some post"/>
+    <%= submit_tag 'create with confirm', :confirm => 'Are you sure?', :disable_with => "Creating... with confirm"  %>
+  </p>
+<% end %>
+
+<h3>Remote</h3>
+
+<%= form_tag posts_path(:format => :xml), :remote => true do %>
+  <p>
+    <input type="text" name="post[title]" value="some post"/>
+    <%= submit_tag 'create', :disable_with => "Creating..."  %>
+  </p>
+<% end %>
+
+<%= form_tag posts_path(:format => :json), :remote => true do %>
+  <p>
+    <input type="text" name="post[title]" value="some post"/>
+    <%= submit_tag 'create with confirm', :confirm => 'Are you sure?', :disable_with => "Creating... with confirm"  %>
+  </p>
+<% end %>
+
+<script src="javascripts/src/alpha-core.js"></script>
+<script src="javascripts/src/support/function.js"></script>
+<script src="javascripts/src/support/eventable.js"></script>
+<script src="javascripts/src/rails/request.js"></script>
+<script src="javascripts/src/rails/ujs.js"></script>
+

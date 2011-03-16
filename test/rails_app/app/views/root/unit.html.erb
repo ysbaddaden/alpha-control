@@ -1,0 +1,62 @@
+<h1>AlphaControl: Unit Test Suite</h1>
+
+<!-- core -->
+<%= javascript_include_tag 'src/alpha-core.js' %>
+
+<!-- support -->
+<%= javascript_include_tag 'src/support/function.js' %>
+<%= javascript_include_tag 'src/support/regexp.js' %>
+<%= javascript_include_tag 'src/support/inflector.js' %>
+<%= javascript_include_tag 'src/support/string.js' %>
+<%= javascript_include_tag 'src/support/element.js' %>
+<%= javascript_include_tag 'src/support/color.js' %>
+<%= javascript_include_tag 'src/support/optionable.js' %>
+<%= javascript_include_tag 'src/support/eventable.js' %>
+<%= javascript_include_tag 'src/support/jsonp.js' %>
+
+<!-- rails -->
+<%= javascript_include_tag 'src/rails/request.js' %>
+
+<!-- ui -->
+<%= javascript_include_tag 'src/ui/widget.js' %>
+<%= javascript_include_tag 'src/ui/overlay.js' %>
+<%= javascript_include_tag 'src/ui/dialog.js' %>
+<%= javascript_include_tag 'src/ui/modal_dialog.js' %>
+<%= javascript_include_tag 'src/ui/notification.js' %>
+<%= javascript_include_tag 'src/ui/picker.js' %>
+<%= javascript_include_tag 'src/ui/list_picker.js' %>
+<%#= javascript_include_tag 'src/ui/date_picker.js' %>
+<%#= javascript_include_tag 'src/ui/color_picker.js' %>
+
+<!-- tests -->
+<%= javascript_include_tag 'test/unit.js' %>
+
+<%= javascript_include_tag 'test/support/function_test.js' %>
+<%= javascript_include_tag 'test/support/regexp_test.js' %>
+<%#= javascript_include_tag 'test/support/inflector_test.js' %>
+<%= javascript_include_tag 'test/support/string_test.js' %>
+<%= javascript_include_tag 'test/support/element_test.js' %>
+<%= javascript_include_tag 'test/support/color_test.js' %>
+<%= javascript_include_tag 'test/support/optionable_test.js' %>
+<%= javascript_include_tag 'test/support/eventable_event_test.js' %>
+<%= javascript_include_tag 'test/support/eventable_test.js' %>
+
+<%= javascript_include_tag 'test/support/jsonp_test.js' %>
+<%= javascript_include_tag 'test/rails/request_test.js' %>
+
+<%= javascript_include_tag 'test/ui/widget_test.js' %>
+<%= javascript_include_tag 'test/ui/overlay_test.js' %>
+<%= javascript_include_tag 'test/ui/dialog_test.js' %>
+<%= javascript_include_tag 'test/ui/modal_dialog_test.js' %>
+<%= javascript_include_tag 'test/ui/notification_test.js' %>
+<%= javascript_include_tag 'test/ui/picker_test.js' %>
+<%= javascript_include_tag 'test/ui/list_picker_test.js' %>
+<%#= javascript_include_tag 'test/ui/date_picker_test.js' %>
+<%#= javascript_include_tag 'test/ui/color_picker_test.js' %>
+<%#= javascript_include_tag 'test/ui/autocomplete_test.js' %>
+<%#= javascript_include_tag 'test/ui/sortable_test.js' %>
+
+<script type="text/javascript">
+Unit.HtmlRunner.run()
+</script>
+

@@ -8,7 +8,7 @@
 <body>
 	<h1>UI.Autocomplete</h1>
   
-  <form action="#" method="get" class="block">
+  <form action="#" method="get">
     <div>
       Simple search (HTML response):<br/>
       <input type="text" id="autocomplete1" placeholder="First name"/>
@@ -17,7 +17,7 @@
   
   <br/>
   
-  <form action="#" method="get" class="block">
+  <form action="#" method="get">
     <div>
       Automatically marks the first item (HTML response):<br/>
       <input type="text" id="autocomplete2" placeholder="First name"/>
@@ -26,7 +26,7 @@
   
   <br/>
   
-  <form action="#" method="get" class="block">
+  <form action="#" method="get">
     <div>
       Advanced behavior (JSON response + hidden field ID):<br/>
       <input type="text" id="user_id" placeholder="user_id" disabled="true"/><br/>
@@ -36,7 +36,7 @@
   
   <br/>
   
-  <form action="#" method="get" class="block">
+  <form action="#" method="get">
     <div>
       Advanced behavior (JSONP response):<br/>
       <input type="text" id="autocomplete4" placeholder="First name"/>
@@ -117,9 +117,8 @@ a4.setItems = function(json)
   }
 }
 
-var host = window.location.hostname == "localhost" ? "127.0.0.1" : "localhost";
 a4.initAutocomplete(document.getElementById('autocomplete4'), {
-  url: 'http://' + host + ':4567/search.json',
+  url: 'http://' + window.location.host + '/search.json',
   param: "firstname",
   jsonp: true,
   callback: 'cb'

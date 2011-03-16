@@ -43,7 +43,7 @@ UI.Sortable.prototype.start = function(event)
 
 UI.Sortable.prototype.drag = function(event)
 {
-  var y, idx, target;
+  var y, idx, target, parent;
   
   if (this.dragged)
   {
@@ -56,14 +56,15 @@ UI.Sortable.prototype.drag = function(event)
       
       if (idx !== undefined)
       {
+        var parent = target.get ? target.get('parentNode') : target.parentNode;
         if (idx > this.draggedIdx && y > this.previousY)
         {
-          target.parentNode.insertAfter(this.dragged, target);
+          parent.insertAfter(this.dragged, target);
           this.draggedIdx = idx;
         }
         else if (idx < this.draggedIdx && y < this.previousY)
         {
-          target.parentNode.insertBefore(this.dragged, target);
+          parent.insertBefore(this.dragged, target);
           this.draggedIdx = idx;
         }
       }

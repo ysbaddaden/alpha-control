@@ -1,5 +1,30 @@
 === Dialogs
 
+==== UI.Notification < UI.Widget
+
+Notifications look like desktop notifications, except they appear somewhere
+in your HTML page. They're useful to show the state of your application to
+your users like "Loading...".
+
+.Options
+
+It accepts any option UI.Widget accepts, plus a +timeout+ option (in milliseconds).
+If timeout is 0, there is no timeout; if timeout is greater than 0, then the
+notification will be hidden automatically after the spent time.
+
+.Methods
+
+  initNotification(options)::
+    creates the notification element.
+  
+  setMessage(message, timeout)::
+    sets the message as HTML string, and displays the notification.
+    The timeout parameter is optional.
+  
+  getMessage()::
+    returns the notification message as an HTML string.
+
+
 ==== UI.Dialog < UI.Widget
 
 .Methods

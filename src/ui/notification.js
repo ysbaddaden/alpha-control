@@ -15,11 +15,15 @@ UI.Notification.prototype.setMessage = function(html, timeout)
 {
   timeout = timeout || this.options.timeout;
   
+  if (this.timer) {
+    clearTimeout(this.timer);
+  }
+  
   this.setContent(html);
   this.show();
   
   if (timeout > 0) {
-    setTimeout(this.hide.bind(this), timeout);
+    this.timer = setTimeout(this.hide.bind(this), timeout);
   }
 }
 
