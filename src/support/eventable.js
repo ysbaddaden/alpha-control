@@ -103,8 +103,8 @@ var Eventable = function(object, types)
      */
     object.prototype.dispatchEvent = function(event_or_type)
     {
-      var event = (typeof event_or_type == 'string') ?
-        this.createEvent(event_or_type) : event_or_type;
+      var event = (typeof event_or_type == 'string') ? this.createEvent(event_or_type) : event_or_type;
+      event.target = this;
       
       if (typeof this['on' + event.type] == 'undefined') {
         throw new Error("No such event type '" + event.type + "'");
