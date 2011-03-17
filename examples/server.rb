@@ -7,7 +7,7 @@ set :public, File.expand_path('../..', __FILE__)
 set :method_override, true
 
 get "/" do
-  redirect "/examples"
+  redirect "/examples/example.html"
 end
 
 get "/examples" do

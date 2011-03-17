@@ -6,6 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="/examples/base.css"/>
 	<style>
 	body { background: #E4E4E4; }
+	html, body { height: 90%; }
 	
   #menu, iframe { display: inline-block; vertical-align: top; margin: 0; }
   #menu { margin-right: 20px; list-style: none; padding: 0;
@@ -19,7 +20,7 @@
   }
   #menu a.selected { color: #FFF; text-shadow: 0 1px 0 #646464; background: #B4B4B4; }
   
-  iframe  { width: 80%; height: 80%; border: 1px solid #AAA; background: #FFF;
+  iframe  { width: 80%; height: 100%; border: 1px solid #AAA; background: #FFF;
     -webkit-box-shadow: 0 0 6px #999; -moz-box-shadow: 0 0 6px #999; box-shadow: 0 0 6px #999;
   }
 	</style>
@@ -35,8 +36,9 @@
     <dd><a target="main" href="/examples/ui/sortable.html">Sortable</a></dd>
   </dl>
   
-  <iframe name="main"></iframe>
+  <iframe name="main" frameborder="0"></iframe>
   
+  <script charset="utf-8" src="../src/alpha-core.js"></script>
   <script>
   var menu = document.getElementById('menu');
   menu.addEventListener('click', function(event)
