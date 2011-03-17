@@ -116,7 +116,7 @@ UI.Autocomplete.prototype.setItems = function(items)
 // Called whenever a selection is selected. Tries to read a data-value
 // attribute and falls back to innerText.
 UI.Autocomplete.prototype.autocomplete = function(event) {
-  this.setValue(event.target.getAttribute('data-value') || event.target.innerText);
+  this.setValue(event.targetElement.getAttribute('data-value') || event.targetElement.innerText);
 }
 
 // Sets the autocompleted input value and empties the the list picker.

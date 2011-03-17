@@ -135,7 +135,7 @@ UI.ListPicker.prototype.selectSelection = function()
   if (this.selection)
   {
     var event = this.createEvent('select');
-    event.target = this.selection;
+    event.targetElement = this.selection;
     this.dispatchEvent(event);
     this.unmarkSelection();
   }
