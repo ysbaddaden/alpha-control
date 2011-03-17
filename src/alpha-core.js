@@ -248,7 +248,7 @@ if (!Array.prototype.reduceRight)
 if (!String.prototype.trim)
 {
   String.prototype.trim = function() {
-    return this.replace(/^\s+/, '').replace(/\s+$/, '');
+    return this.replace(/^\s+$/, '').replace(/\s+$/, '');
   }
 }
 
@@ -946,10 +946,10 @@ if (typeof window.innerWidth == 'undefined')
       return document.documentElement.clientHeight;
     }});
     Object.defineProperty(window, 'pageXOffset', {get: function() {
-      return document.documentElement.scrollWidth;
+      return document.documentElement.scrollLeft;
     }});
     Object.defineProperty(window, 'pageYOffset', {get: function() {
-      return document.documentElement.scrollHeight;
+      return document.documentElement.scrollTop;
     }});
   }
   else

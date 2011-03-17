@@ -83,8 +83,7 @@ UI.Dialog.prototype.setPosition = function()
   }
   else
   {
-    var top = ((window.innerHeight || document.documentElement.clientHeight) - this.container.offsetHeight) / 2;
-    top += document.documentElement.scrollTop || window.pageYOffset;
+    var top = (window.innerHeight - this.container.offsetHeight) / 2 + window.pageYOffset;
     this.container.style.top = Math.round(top) + 'px';
   }
   
@@ -96,8 +95,7 @@ UI.Dialog.prototype.setPosition = function()
   }
   else
   {
-    var left = ((window.innerWidth || document.documentElement.clientWidth) - this.container.offsetWidth) / 2;
-    left += document.documentElement.scrollLeft || window.pageXOffset;
+    var left = (window.innerWidth - this.container.offsetWidth) / 2 + window.pageXOffset;
     this.container.style.left = Math.round(left) + 'px';
   }
   
