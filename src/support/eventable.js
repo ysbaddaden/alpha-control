@@ -165,7 +165,7 @@ Eventable.Event.prototype = {
   },
 
   stopPropagation: function() {
-    this.propagationpropagationStopped = true;
+    this.propagationStopped = true;
   }
 }
 

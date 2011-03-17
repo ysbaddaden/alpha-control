@@ -40,6 +40,6 @@ new Unit.TestCase('Eventable.EventTest',
     this.assertNull(event.propagationStopped);
     
     event.stopPropagation();
-    this.assertNull(event.propagationStopped);
+    this.assertTrue(event.propagationStopped);
   }
 });
