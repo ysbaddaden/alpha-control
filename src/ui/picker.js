@@ -25,7 +25,7 @@ UI.Picker.prototype.initPicker = function(relativeElement, options)
     this._bound_closeOnOuterClick = this._closeOnOuterClick.bind(this);
     
 //    var elm = document.documentElement ? document.documentElement : window;
-//    elm.addEventListener('click', this._bound_closeOnOuterClick, false)
+//    elm.addEventListener('click', this._bound_closeOnOuterClick, false);
     window.addEventListener('click', this._bound_closeOnOuterClick, false);
   }
 }
@@ -39,7 +39,7 @@ UI.Picker.prototype._closeOnOuterClick = function(event)
       return;
     }
   }
-  while(obj = obj.parentNode);
+  while (obj = obj.parentNode);
   
   this.close();
 }
@@ -113,7 +113,9 @@ UI.Picker.prototype.computePosition = function()
 
 UI.Picker.prototype.setPosition = function()
 {
-  this.container.style.position = 'absolute';
+  this.container.style.position   = 'absolute';
+  this._visible();
+  
   var position = this.computePosition();
   
   this.container.style.top  = parseInt(position.top)  + 'px';
@@ -124,6 +126,31 @@ UI.Picker.prototype.setPosition = function()
   }
   else {
     this.container.addClassName(position.className);
+  }
+  
+  this._reset_visibility();
+}
+
+UI.Picker.prototype._reset_visibility = function()
+{
+  if (this._saved_visibility)
+  {
+    this.container.style.display    = this._saved_visibility.display;
+    this.container.style.visibility = this._saved_visibility.visibility;
+    this._saved_visibility = null;
+  }
+}
+
+UI.Picker.prototype._visible = function()
+{
+  if (this.container.style.display != 'block')
+  {
+    this._saved_visibility = {
+      display:    this.container.style.display,
+      visibility: this.container.style.visibility
+    }
+    this.container.style.display    = 'block';
+    this.container.style.visibility = 'hidden';
   }
 }
 

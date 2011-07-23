@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <title>UI.Picker</title>
+
+  <link rel="stylesheet" type="text/css" href="../base.css"/>
+  <style type="text/css">
+  p { text-align: center; margin-bottom: 3em; }
+  .picker { padding: 10px; }
+  .picker .content { padding: 2px 10px; }
+  </style>
+</head>
+<body>
+  <h1>UI.Picker</h1>
+
+  <p>
+    <button class="">standard input picker</button>
+  </p>
+
+  <p>
+    <button class="top">top</button>
+    <button class="bottom">bottom</button>
+    <button class="left">left</button>
+    <button class="right">right</button>
+  </p>
+
+  <p>
+    <button class="top left">top left</button>
+    <button class="top right">top right</button>
+    <button class="bottom left">bottom left</button>
+    <button class="bottom right">bottom right</button>
+  </p>
+
+  <script src="../loader.js"></script>
+  <script>load('..')</script>
+
+  <script>
+  var buttons = document.getElementsByTagName('button');
+  
+  Array.prototype.forEach.call(buttons, function(btn)
+  {
+    btn.addEventListener('click', function()
+    {
+      if (!btn.picker)
+      {
+        btn.picker = new UI.Picker();
+        btn.picker.initPicker(btn, { position: btn.className });
+        btn.picker.setContent('a picker');
+      }
+      btn.picker.show();
+    }, false);
+  });
+  </script>
+</body>
+</html>

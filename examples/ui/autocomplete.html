@@ -85,8 +85,8 @@ a.setItems = function()
 
 a.autocomplete = function(event)
 {
-  $('user_id').value = event.target.getAttribute('data-id');
-  UI.Autocomplete.prototype.setValue.call(this, event.target.innerText);
+  $('user_id').value = event.targetElement.getAttribute('data-id');
+  UI.Autocomplete.prototype.setValue.call(this, event.targetElement.innerText);
 }
 
 a.initAutocomplete(document.getElementById('autocomplete3'), {

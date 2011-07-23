@@ -6,19 +6,21 @@ h1 { text-shadow: #FFF 0 1px 0; margin-top: 0; }
   display: inline-block; vertical-align: top; margin-right: 16px; }
 
 /* forms */
-
 form { margin: 0 0 1em; }
-.field { margin-bottom: 1em; }
 
+.field { margin-bottom: 1em; }
 label { color: #666; }
-input, select, textarea { width: 400px; border: 1px inset #AAA; background: #FFF;
+
+button, input, select, textarea { width: 400px; border: 1px inset #AAA; background: #FFF;
   padding: 4px; font: normal 14px/1.5 sans-serif;
   -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+
 textarea { height: 150px; }
 select { border-style: outset; }
-input[type=submit] { border-style: outset; padding: 4px 10px; width: auto;
-  font-family: sans-serif; font-weight: bold; }
-input[type=submit]:active { border-style: inset; }
+
+button, input[type=submit] { border-style: outset; padding: 4px 10px; width: auto;
+  font-family: sans-serif; font-weight: bold; background: #EEE; }
+button:active, input[type=submit]:active { border-style: inset; }
 input[type=checkbox] { width: auto; }
 
 .checkboxes label { color: #333; }
@@ -59,6 +61,7 @@ input[disabled], select[disabled], textarea[disabled] { color: #666; background:
 
 /* pickers */
 .picker { background: #FFF; }
+
 .list-picker ul { margin: 0; padding-left: 0; list-style: none;
   -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;
 }

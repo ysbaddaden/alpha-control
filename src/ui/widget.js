@@ -83,9 +83,9 @@ UI.Widget.prototype.show = function()
   if (!this.container.parentNode || !this.container.parentNode.tagName) {
     this.attachToDOM();
   }
-  this.setPosition();
-  
-  if (!this.dispatchEvent('show')) {
+  if (!this.dispatchEvent('show'))
+  {
+    this.setPosition();
     this._show();
   }
 }
