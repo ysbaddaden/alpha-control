@@ -1,5 +1,7 @@
 /**
- * Warning: experimental work in progress.
+ * WARNING: EXPERIMENTAL WORK IN PROGRESS.
+ * 
+ * Tries to implement something like ActiveResource.
  * 
  *   var User = Resource.create('User');
  *   

@@ -70,8 +70,7 @@ Unit.TestCase._wait = function()
   }
   else
   {
-    Unit.TestCase.runner.addSuccess(Unit.TestCase.testCase.name,
-      Unit.TestCase.testCase.currentTest);
+    Unit.TestCase.runner.testEnd();
     Unit.TestCase._process();
   }
 }
@@ -96,13 +95,15 @@ Unit.TestCase.prototype.sync = function(func)
 Unit.TestCase.prototype.runTest = function(testName)
 {
   this.currentTest = testName;
+  Unit.TestCase.runner.testStart(this.name, this.currentTest);
+  
   this._catcher(function()
   {
     this._teardowned = false;
     this.setup();
     this[this.currentTest]();
   });
-
+  
   if (!Unit.TestCase.blocking) {
     this._teardown();
   }
@@ -118,10 +119,10 @@ Unit.TestCase.prototype._catcher = function(func)
   catch (exception)
   {
     if (exception instanceof Unit.Failure) {
-      Unit.TestCase.runner.addFailure(this.name, this.currentTest, exception);
+      Unit.TestCase.runner.addFailure(exception);
     }
     else {
-      Unit.TestCase.runner.addError(this.name, this.currentTest, exception);
+      Unit.TestCase.runner.addError(exception);
     }
     this.failed = true;
   }
@@ -441,10 +442,8 @@ Unit.TestCase.prototype._equivObjects = function(a, b, strict)
 
 Unit.HtmlRunner = function() {}
 
-Unit.HtmlRunner.run = function()
-{
-  var r = new Unit.HtmlRunner();
-  r.run();
+Unit.HtmlRunner.run = function() {
+  (new Unit.HtmlRunner()).run();
 }
 
 Unit.HtmlRunner.Error = function(className, testName, exception)
@@ -472,35 +471,113 @@ Unit.HtmlRunner.prototype = {
     this.errors     = 0;
     this.exceptions = [];
     
-    this.console = document.createElement('pre');
-    this.table   = document.createElement('table');
+    this.console = document.createElement('p');
+    this.console.className = 'console';
+    this.table = document.createElement('table');
     document.body.appendChild(this.console);
     document.body.appendChild(this.table);
     
     Unit.TestCase.run(this);
   },
 
-  displayExceptions: function()
+  // Called whenever a new test is run.
+  testStart: function(className, testName)
   {
-    this.print("\n");
+    var td, span;
+    
+    this.success = true;
+    this.currentTest = {className: className, testName: testName};
+    
+    this.tr = document.createElement('tr');
+    this.tr.className = 'running';
+    
+    td = document.createElement('td');
+    td.appendChild(document.createTextNode(this.currentTest.className));
+    this.tr.appendChild(td);
+    
+    td = document.createElement('td');
+    td.appendChild(document.createTextNode(this.currentTest.testName));
+    this.tr.appendChild(td);
+    
+    this.td = document.createElement('td');
+    this.td.className = 'result';
+    span = document.createElement('span');
+    span.appendChild(document.createTextNode('running...'));
+    this.td.appendChild(span);
+    this.tr.appendChild(this.td);
+    
+    this.table.appendChild(this.tr);
+  },
+
+  // Called whenever a test has finished.
+  testEnd: function()
+  {
+    if (this.success) {
+      this.addSuccess();
+    }
+  },
+
+  // Called when all the test suite has been runned.
+  finished: function()
+  {
+    this.printExceptions();
+    this.printResult();
+  },
+
+  addAssertion: function() {
+    this.assertions++;
+  },
+
+  addSuccess: function()
+  {
+    this.tests++;
+    this.print('.');
+    this.debug('success');
+  },
+
+  addFailure: function(exception)
+  {
+    this.success = false;
+    this.failures++;
+    this.exceptions.push(new Unit.HtmlRunner.Failure(this.currentTest.className, this.currentTest.testName, exception));
+    this.print('F');
+    this.debug('failure', exception);
+  },
+
+  addError: function(exception)
+  {
+    this.success = false;
+    this.errors++;
+    this.exceptions.push(new Unit.HtmlRunner.Error(this.currentTest.className, this.currentTest.testName, exception));
+    this.print('E');
+    this.debug('error', exception);
+  },
+
+  // console-like debug (useful for IE6 which doesn't display the debug table).
+  print: function(chr) {
+    this.console.innerHTML += chr;
+  },
+
+  printExceptions: function()
+  {
+    this.print("<br/>");
     
     for (var i=0, len=this.exceptions.length; i<len; i++)
     {
       var e = this.exceptions[i];
       
-      this.print("\n" +
+      this.print("<br/>" +
         '<span class="' + (e.type == 'Error' ? 'error' : 'failure') + '">' +
-        (parseInt(i) + 1) + ") " + e.testName + "(" + e.className + ")\n" +
+        (parseInt(i) + 1) + ") " + e.testName + "(" + e.className + ")<br/>" +
         e.type + ": " + this.escapeHTML(e.exception.message.toString()) +
-        '</span>\n'
+        '</span><br/>'
       );
     }
   },
 
-  displayResult: function()
+  printResult: function()
   {
-    this.print("\n");
-    this.print('<span class="result">' +
+    this.print('<br/><span class="result">' +
       this.tests + " tests, " +
       this.assertions + " assertions, " +
       this.failures + " failures, " +
@@ -509,66 +586,10 @@ Unit.HtmlRunner.prototype = {
     );
   },
 
-  finished: function()
+  debug: function(type, exception)
   {
-    this.displayExceptions();
-    this.displayResult();
-  },
-
-  addAssertion: function() {
-    this.assertions++;
-  },
-
-  addSuccess: function(className, testName)
-  {
-    this.tests++;
-    
-    this.print('.');
-    this.debug('success', className, testName);
-  },
-
-  addFailure: function(className, testName, exception)
-  {
-    this.failures++;
-    this.exceptions.push(new Unit.HtmlRunner.Failure(className, testName, exception));
-    
-    this.print('F');
-    this.debug('failure', className, testName, exception);
-  },
-
-  addError: function(className, testName, exception)
-  {
-    this.errors++;
-    this.exceptions.push(new Unit.HtmlRunner.Error(className, testName, exception));
-    
-    this.print('E');
-    this.debug('error', className, testName, exception);
-  },
-
-  print: function(chr) {
-    this.console.innerHTML += chr;
-  },
-
-  debug: function(type, className, testName, exception)
-  {
-    var tr, td;
-    
-    tr = document.createElement('tr');
-    tr.className = type;
-    
-    td = document.createElement('td');
-    td.innerHTML = className;
-    tr.appendChild(td);
-    
-    td = document.createElement('td');
-    td.innerHTML = testName;
-    tr.appendChild(td);
-    
-    td = document.createElement('td');
-    td.innerHTML = type;
-    tr.appendChild(td);
-    
-    this.table.appendChild(tr);
+    this.tr.className = type;
+    this.td.innerHTML = type;
     
     if (type != 'success')
     {
@@ -577,7 +598,8 @@ Unit.HtmlRunner.prototype = {
       
       td = document.createElement('td');
       td.setAttribute('colspan', 3);
-      td.innerHTML = this.escapeHTML(exception.message.toString());
+      //td.innerHTML = this.escapeHTML(exception.message.toString());
+      td.appendChild(document.createTextNode(exception.message.toString()));
       tr.appendChild(td);
       
       this.table.appendChild(tr);

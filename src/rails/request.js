@@ -6,10 +6,10 @@ var Rails = {};
  * either an unique token to be passed either as a parameter or as a
  * X-CSRF-Token HTTP header.
  * 
- * The implementation is based on XMLHttpRequest 2 which uses events for
- * callbacks. If you overwrite the onreadystatechange method please be sure
- * to call Rails.Request.prototype.onreadystatechange or events won't be
- * dispatched!
+ * The implementation is modeled after XMLHttpRequest 2 which uses events for
+ * callbacks. If you ever overwrite the onreadystatechange method please be
+ * sure to call the Rails.Request.prototype.onreadystatechange method or events
+ * wouldn't be dispatched.
  * 
  * Example:
  * 
@@ -90,7 +90,7 @@ Rails.Request.prototype._clear = function() {
   this.xhr = null;
 }
 
-// IMPROVE: move to a HTTP object in AlphaControl?
+// IMPROVE: move Rails.toURLEncoded to a HTTP object in AlphaControl?
 Rails.toURLEncoded = function(params)
 {
   if (typeof params == 'string') {
