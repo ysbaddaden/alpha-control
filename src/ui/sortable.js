@@ -6,7 +6,7 @@ Eventable(UI.Sortable, ['dragstart', 'drop']);
 
 UI.Sortable.prototype.initSortable = function(list, options)
 {
-  this.setDefaultOptions({selector: 'li'});
+  this.setDefaultOptions({ selector: 'li' });
   this.setOptions(options);
   
   this.list = list;
@@ -23,9 +23,7 @@ UI.Sortable.prototype.start = function(event)
   {
     this.dragged = item;
     
-    var _event = new Eventable.Event();
-    _event.initEvent('dragstart', true);
-    if (this.dispatchEvent(_event))
+    if (this.dispatchEvent('dragstart') === false)
     {
       this.dragged = null;
       return;
@@ -56,7 +54,7 @@ UI.Sortable.prototype.drag = function(event)
       
       if (idx !== undefined)
       {
-        var parent = target.get ? target.get('parentNode') : target.parentNode;
+        parent = target.get ? target.get('parentNode') : target.parentNode;
         if (idx > this.draggedIdx && y > this.previousY)
         {
           parent.insertAfter(this.dragged, target);
@@ -81,9 +79,7 @@ UI.Sortable.prototype.drop = function(event)
 {
   if (this.dragged)
   {
-    var _event = new Eventable.Event();
-    _event.initEvent('drop', true);
-    if (this.dispatchEvent(_event)) return;
+    if (this.dispatchEvent('drop') === false) return;
     
     this.dragged.removeClassName('dragged');
     this.dragged = null;
@@ -95,17 +91,31 @@ UI.Sortable.prototype.drop = function(event)
   }
 }
 
+// Returns the list of matching items.
 UI.Sortable.prototype.getItems = function() {
   return this.list.querySelectorAll(this.options.selector);
 }
 
-// browses target -> parent until we find an item.
+// Returns the list of matching handles (falls back on items' selector).
+UI.Sortable.prototype.getHandles = function() {
+  return this.list.querySelectorAll(this.options.handle || this.options.selector);
+}
+
+// Browses target -> parent until we find a matching item --thought no item is
+// searched if handle doesn't match.
 UI.Sortable.prototype.findItem = function(target)
 {
+  if (this.options.handle)
+  {
+    var handle = this.findHandle(target);
+    if (!handle) return;
+    target = handle;
+  }
+
   var items = this.getItems();
   do
   {
-    for (var i=0; i<items.length; i++)
+    for (var i=0, len = items.length; i<len; i++)
     {
       if (target == items[i]) {
         return items[i];
@@ -113,7 +123,23 @@ UI.Sortable.prototype.findItem = function(target)
     }
     target = target.parentNode;
   }
-  while(target && target.parentNode);
+  while (target && target.parentNode);
+}
+
+UI.Sortable.prototype.findHandle = function(target)
+{
+  var handles = this.getHandles();
+  do
+  {
+    for (var i=0, len = handles.length; i<len; i++)
+    {
+      if (target == handles[i]) {
+        return handles[i];
+      }
+    }
+    target = target.parentNode;
+  }
+  while (target && target.parentNode);
 }
 
 UI.Sortable.prototype.getItemIndex = function(item)
@@ -126,4 +152,3 @@ UI.Sortable.prototype.getItemIndex = function(item)
     }
   }
 }
-

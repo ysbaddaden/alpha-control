@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-	<title>UI.Sortable</title>
-	
-	<link rel="stylesheet" type="text/css" href="../base.css"/>
-	<style type="text/css">
-	.block ul { padding-left: 1em; }
-	table { margin: 1em 0; }
-	</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <title>UI.Sortable</title>
+
+  <link rel="stylesheet" type="text/css" href="../base.css"/>
+  <style type="text/css">
+  .block ul { padding-left: 1em; }
+  table { margin: 1em 0; }
+  .drag { font-weight: bold; font-size: 12px; cursor: move; }
+  </style>
 </head>
 <body>
-	<h1>UI.Sortable</h1>
+  <h1>UI.Sortable</h1>
 
   <h2>Tables</h2>
 
@@ -51,7 +52,7 @@
         <tr><td>row 1</td></tr>
       </tbody>
     </table>
-    
+
     <table>
       <thead>
         <tr><th>header 1</th></tr>
@@ -63,8 +64,23 @@
     </table>
   </div>
 
+  <div class="block">
+    <table id="table4">
+      <thead>
+        <tr><th>header</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>row 0</td><td class="drag">drag</td></tr>
+        <tr><td>row 1</td><td class="drag">drag</td></tr>
+        <tr><td>row 2</td><td class="drag">drag</td></tr>
+        <tr><td>row 3</td><td class="drag">drag</td></tr>
+        <tr><td>row 4</td><td class="drag">drag</td></tr>
+      </tbody>
+    </table>
+  </div>
+
   <h2>Lists</h2>
-  
+
   <div class="block">
     <ul id="list1">
       <li>item 0</li>
@@ -93,7 +109,7 @@
       <li>list a - item 1</li>
       <li>list a - item 2</li>
     </ul>
-    
+
     <ul>
       <li>list b - item 3</li>
       <li>list b - item 4</li>
@@ -105,15 +121,7 @@
   <script>load('..')</script>
 
   <script>
-  var list1 = new UI.Sortable();
-  list1.initSortable(document.getElementById('list1'));
-  
-  var list2 = new UI.Sortable();
-  list2.initSortable(document.getElementById('list2'));
-  
-  var list3 = new UI.Sortable();
-  list3.initSortable(document.getElementById('list3'));
-  
+  // tables
   var table1 = new UI.Sortable();
   table1.initSortable(document.getElementById('table1'), {selector: 'tr'});
   
@@ -126,8 +134,21 @@
   table3.addEventListener('drop',      log);
   
   function log(event) {
-    //console && console.log(event.type, table3.dragged.parentNode, table3.dragged.sectionRowIndex);
+    console && console.log(event.type, table3.dragged.parentNode, table3.dragged.sectionRowIndex);
   }
-  </script>
+  
+  var table4 = new UI.Sortable();
+  table4.initSortable(document.getElementById('table4'), {selector: 'tr', handle: '.drag'});
+  
+  // lists
+  var list1 = new UI.Sortable();
+  list1.initSortable(document.getElementById('list1'));
+  
+  var list2 = new UI.Sortable();
+  list2.initSortable(document.getElementById('list2'));
+  
+  var list3 = new UI.Sortable();
+  list3.initSortable(document.getElementById('list3'));
+    </script>
 </body>
 </html>
