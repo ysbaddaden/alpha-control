@@ -10,7 +10,7 @@ Base object for (almost) all UI widgets.
 
   container::
     the main element of the widget.
-  
+
   content::
     the content element, appended into `container`.
 
@@ -54,7 +54,7 @@ Base object for (almost) all UI widgets.
 
   - initNotification(options)
   - setMessage(message, timeout)
-  
+
 === UI.Overlay < UI.Widget
 
 .Methods
@@ -63,13 +63,35 @@ Base object for (almost) all UI widgets.
 
 === UI.Sortable
 
+.Properties
+
+  dragged::
+    the currently dragged item, also available on drop.
+
+.Methods
+
+  initSortable(container, options)::
+    declares a container Element as sortable.
+
+  getItemIndex(item)::
+    returns the position of a given item within all items.
+
+.Options
+
+  selector::
+    a CSS selector to match the sortable items (defaults to `li`).
+
+  handle::
+    a CSS selector to match handles if you want a handle to initiate the drag
+    instead of using the whole item.
+
 .Events
 
-  - dragstart
-  - drop
+  dragstart::
+    dispatched when an item is about to be dragged.
 
-.TODO
-  Write documentation for UI.Sortable.
+  drop::
+    dispatched when an item is dropped.
 
 // === UI.Tooltip < UI.Picker
 
