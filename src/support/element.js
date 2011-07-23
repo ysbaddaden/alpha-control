@@ -103,8 +103,10 @@ Element.prototype.setStyle = function(property, value)
 
 Element.prototype.getStyle = function(property)
 {
+  var v;
+  
   if (window.getComputedStyle) {
-    var v = document.defaultView.getComputedStyle(this, null).getPropertyValue(property);
+    v = document.defaultView.getComputedStyle(this, null).getPropertyValue(property);
   }
   else if (this.currentStyle)
   {
@@ -113,13 +115,11 @@ Element.prototype.getStyle = function(property)
       var alpha = this.filters["DXImageTransform.Microsoft.Alpha"] || this.filters.alpha || {};
       return (alpha.opacity || 100) / 100.0;
     }
-    var v = this.currentStyle[property.camelize()];
+    v = this.currentStyle[property.camelize('lower')];
   }
-
-  if (Alpha.Color
-    && (v.indexOf('#') > -1 || v.indexOf('rgb') > -1 || v.indexOf('rgba') > -1))
-  {
-    var v = new Alpha.Color(v);
+  
+  if (Color && Color.isColor(v)) {
+    v = new Alpha.Color(v);
   }
   return v;
 }

@@ -160,3 +160,14 @@ Color.prototype.toString = function() {
   return this.toHex();
 }
 
+Color.isColor = function(str)
+{
+  if (str instanceof Color) {
+    return true;
+  }
+  if (typeof str == 'string') {
+    return !!str.match(/^\s*(?:#[0-9a-fA-F]{3}|#[0-9a-fA-F]{6}|rgb\(\s*\d*\s*,\s*\d*\s*,\s*\d*\s*\)|rgba\(\s*\d*\s*,\s*\d*\s*,\s*\d*\s*,\s*(?:[\.\d]*\s*)?\))\s*$/);
+  }
+  return false;
+}
+
