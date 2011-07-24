@@ -7,22 +7,22 @@
   findParentNode(nodeName)::
     returns the first node that matches the nodeName, starting from the element
     itself up to its ancestors. It may return the element itself.
-  
+
   insertAfter(element, node)::
     just like insertBefore, except it inserts the element after the node.
-  
-  addClassName(className)::
-    adds the className unless it has already been added to the element.
-  
-  hasClassName(className)::
-    returns true if element has the given class name, false otherwise.
-  
-  toggleClassName(className)::
-    toggles the presence of class name: adds-it if not defined, otherwise removes it.
-  
-  removeClassName(className)::
-    removes the given class name from the element.
 
+  getPosition()::
+    returns the position in pixels of the element, relative to its offsetParent.
+
+  getStyle(property)::
+    returns the computed CSS value for property; takes care of opacity in IE < 9;
+    colors are returned as instances of Color.
+
+  setStyle(property, value)::
+    sets a single CSS property; takes care of the opacity in IE < 9.
+
+  setStyle(properties)::
+    sets a collection of CSS properties; takes care of the opacity in IE < 9.
 
 === JSONP.Request
 
@@ -31,9 +31,9 @@ for JSON with Padding requests.
 
 .Example
 
-  var request = new JSONP.Request();
-  JSONP.open('http://example.org/path.json', function() {});
-  JSONP.send();
+  var req = new JSONP.Request();
+  req.open('http://example.org/path.json', function() {});
+  req.send();
 
 It creates the script tag, attaches it to the DOM, handles the callback and
 eventually removes the script tag from the DOM.

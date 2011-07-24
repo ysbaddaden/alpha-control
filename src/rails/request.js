@@ -21,6 +21,8 @@ var Rails = {};
  *   r.addEventListener('load',      onsuccess);   // readyState = 4 && status < 400
  *   r.addEventListener('loadend',   oncomplete);  // readyState = 4
  *   r.send();
+ * 
+ * NOTE: encode and post params as application/json instead of application/x-www-form-urlencoded?
  */
 Rails.Request = function() {
   this.xhr = new XMLHttpRequest();
@@ -45,7 +47,7 @@ Rails.Request.prototype.open = function(method, url)
   {
     if (method == 'post' || method == 'put') {
       this.xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    }  
+    }
     
     var csrf_token = Rails.readMeta('csrf-token');
     if (csrf_token) {
@@ -68,11 +70,10 @@ Rails.Request.prototype.onreadystatechange = function()
   }
 }
 
-Rails.Request.prototype.send = function(body)
+Rails.Request.prototype.send = function(body_or_params)
 {
-  if (typeof body == 'object') {
-    body = Rails.toURLEncoded(body);
-  }
+  var body = (typeof body_or_params == 'object') ?
+    Rails.toURLEncoded(body_or_params) : body_or_params;
   this.xhr.send(body || '');
 }
 

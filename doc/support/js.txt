@@ -11,8 +11,8 @@ Adds DOM Events-like support to any object.
 
 .Example
 
-  var Klass = function() {}
-  Eventable(Klass, ['activate', 'deactivate'])
+  var MyKlass = function() {}
+  Eventable(MyKlass, ['activate', 'deactivate'])
 
 .Methods added to the object's prototype
 
@@ -21,18 +21,18 @@ Adds DOM Events-like support to any object.
   - createEvent(type)
   - dispatchEvent(event_or_type)
 
-The previous example would also add `'on' + type` methods:
+`ontype` methods are also supported. For instance with the previous example:
 
   - onactivate(event)
   - ondeactivate(event)
 
 === Function
 
-.Prototype methods
+.Methods
 
   bind(object)::
-    facility to bind an object to a function, whatever the context. It's
-    especially useful for binding `this`.
+    facility to bind an object to a function whatever the calling context.
+    It's especially useful for binding `this`.
 
 === Inflector
 
@@ -62,7 +62,7 @@ Rails.
 
 === String
 
-These methods follow the rules of ruby-core `String` and Ruby on Rails
+These methods follow the rules of the Ruby `String` and Ruby on Rails
 `ActiveSupport::String` classes.
 
 .Prototype methods
@@ -87,8 +87,8 @@ Simplifies options handling to any object. Options are just `{key: value}` objec
 
 .Example:
 
-  var Klass = function() {}
-  Optionable(Klass)
+  var MyKlass = function() {}
+  Optionable(MyKlass)
 
 .Methods added to the object's prototype
 
@@ -96,5 +96,5 @@ Simplifies options handling to any object. Options are just `{key: value}` objec
     overwrites previously set options.
 
   setDefaultOptions(options)::
-    adds options only if they were not defined already.
+    adds options only if they weren't already defined.
 

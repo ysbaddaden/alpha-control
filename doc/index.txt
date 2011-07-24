@@ -12,6 +12,7 @@ actually works. You must know or learn HTML, CSS and the DOM API.
 
 include::support/js.txt[]
 include::support/dom.txt[]
+include::rails.txt[]
 include::ui/ui.txt[]
 include::ui/dialogs.txt[]
 include::ui/pickers.txt[]
