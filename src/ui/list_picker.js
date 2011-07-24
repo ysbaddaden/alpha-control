@@ -10,7 +10,7 @@ UI.ListPicker.prototype.initListPicker = function(input, options)
 {
   this.setDefaultOptions({autoMarkFirst: false});
   this.initPicker(input, options);
-  this.container.addClassName('list-picker');
+  this.container.classList.add('list-picker');
   
   this.relativeElement.setAttribute('autocomplete', 'off');
   this.relativeElement.addEventListener('focus',    this.activate.bind(this),    false);
@@ -76,10 +76,10 @@ UI.ListPicker.prototype.markSelection = function(item)
   if (item)
   {
     if (this.selection) {
-      this.selection.removeClassName('selected');
+      this.selection.classList.remove('selected');
     }
     this.selection = item;
-    this.selection.addClassName('selected');
+    this.selection.classList.add('selected');
   }
 },
 
@@ -87,7 +87,7 @@ UI.ListPicker.prototype.unmarkSelection = function()
 {
   if (this.selection)
   {
-    this.selection.removeClassName('selected');
+    this.selection.classList.remove('selected');
     this.selection = null;
   }
 },

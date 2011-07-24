@@ -125,7 +125,7 @@ UI.Picker.prototype.setPosition = function()
     this.container.style.minWidth = this.relativeElement.offsetWidth + 'px';
   }
   else {
-    this.container.addClassName(position.className);
+    this.container.classList.add(position.className);
   }
   
   this._reset_visibility();

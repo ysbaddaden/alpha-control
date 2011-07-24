@@ -45,7 +45,7 @@ UI.Autocomplete.prototype.search = function(event)
   else if (this.relativeElement.value == this.previousValue) {
     return;
   }
-  this.relativeElement.addClassName('loading');
+  this.relativeElement.classList.add('loading');
   
   // remote request
   if (this.options.jsonp) {
@@ -68,7 +68,7 @@ UI.Autocomplete.prototype.jsonp_request = function()
   this.request = new JSONP.Request();
   this.request.open(this.url(), function(responseJSON)
   {
-    self.relativeElement.removeClassName('loading');
+    self.relativeElement.classList.remove('loading');
     self.setItems(responseJSON);
     self.showOrHide();
   }, {param: this.options.callback});
@@ -89,7 +89,7 @@ UI.Autocomplete.prototype.xhr_request = function()
   {
     if (this.readyState == 4)
     {
-      self.relativeElement.removeClassName('loading');
+      self.relativeElement.classList.remove('loading');
       
       if (this.status >= 200 && this.status < 400)
       {

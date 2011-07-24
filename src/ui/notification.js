@@ -8,7 +8,7 @@ UI.Notification.prototype.initNotification = function(options)
 {
   this.setOptions({timeout: 2500});
   this.initWidget(options);
-  this.container.addClassName('notification');
+  this.container.classList.add('notification');
 }
 
 UI.Notification.prototype.setMessage = function(html, timeout)

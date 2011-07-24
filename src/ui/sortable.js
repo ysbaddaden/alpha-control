@@ -29,7 +29,7 @@ UI.Sortable.prototype.start = function(event)
       return;
     }
     
-    this.dragged.addClassName('dragged');
+    this.dragged.classList.add('dragged');
     this.draggedIdx = this.getItemIndex(this.dragged);
     
     document.body.addEventListener('mousemove', this._drag, false);
@@ -81,7 +81,7 @@ UI.Sortable.prototype.drop = function(event)
   {
     if (this.dispatchEvent('drop') === false) return;
     
-    this.dragged.removeClassName('dragged');
+    this.dragged.classList.remove('dragged');
     this.dragged = null;
     
     document.body.removeEventListener('mousemove', this._drag, false);

@@ -1,10 +1,12 @@
 Element.prototype.findParentNode = function(nodeName)
 {
-  var element = this; nodeName = nodeName.toUpperCase();
-  while(element && element.nodeName != nodeName && element.parentNode) {
-    element = element.get ? element.get('parentNode') : element.parentNode;
+  var elm = this;
+  nodeName = nodeName.toUpperCase();
+  
+  while (elm && elm.nodeName != nodeName && elm.parentNode) {
+    elm = elm.get ? elm.get('parentNode') : elm.parentNode;
   }
-  return element.nodeName == nodeName ? element : null;
+  return elm.nodeName == nodeName ? elm : null;
 }
 
 Element.prototype.insertAfter = function(newElement, referenceElement)
@@ -20,7 +22,7 @@ Element.prototype.insertAfter = function(newElement, referenceElement)
 
 Element.prototype.getPosition = function(parent)
 {
-  var pos = {left: 0, top: 0};
+  var pos = { left: 0, top: 0 };
   if (this.offsetParent)
   {
     var obj = this;
@@ -36,49 +38,46 @@ Element.prototype.getPosition = function(parent)
 
 if (!Element.prototype.hasClassName)
 {
+  // DEPRECATED: elm.hasClassName() -> elm.classList.contains()
   Element.prototype.hasClassName = function(className)
   {
-	  var re = new RegExp("(^|\\s)" + className + "(\\s|$)", 'i');
-	  return re.test(this.className);
+    console && console.warn("DEPRECATION WARNING: elm.hasClassName() is deprecated, use elm.classList.contains() instead.");
+    return this.classList.contains(className);
   }
 }
 
 if (!Element.prototype.addClassName)
 {
+  // DEPRECATED: elm.addClassName() -> elm.classList.add()
   Element.prototype.addClassName = function(className)
   {
-	  if (!this.hasClassName(className))
-	  {
-		  this.className += ' ' + className;
-		  this.className = this.className.replace(/\s+/g, ' ');
-	  }
+    console && console.warn("DEPRECATION WARNING: elm.addClassName() is deprecated, use elm.classList.add() instead.");
+    if (!this.classList.contains(className)) {
+      this.classList.add(className);
+    }
   }
 }
 
 if (!Element.prototype.removeClassName)
 {
+  // DEPRECATED: elm.removeClassName() -> elm.classList.remove()
   Element.prototype.removeClassName = function(className)
   {
-	  var re = new RegExp("(^|\\s)" + className + "(\\s|$)", 'i');
-	  this.className = this.className.replace(re, ' ').replace(/\s+/g, ' ');
+    console && console.warn("DEPRECATION WARNING: elm.removeClassName() is deprecated, use elm.classList.remove() instead.");
+    this.classList.remove(className);
   }
 }
 
 if (!Element.prototype.toggleClassName)
 {
+  // DEPRECATED: elm.toggleClassName() -> elm.classList.toggle()
   Element.prototype.toggleClassName = function(className)
   {
-    if (this.hasClassName(className)) {
-      this.removeClassName(className);
-    }
-    else {
-      this.addClassName(className);
-    }
+    console && console.warn("DEPRECATION WARNING: elm.toggleClassName() is deprecated, use elm.classList.toggle() instead.");
+    var meth = this.classList.contains(className) ? 'remove' : 'add';
+    this.classList[meth](className);
   }
 }
-
-// I don't like this, but Alpha.getStyle(element, property) wouldn't be any
-// prettier, and there is the cross-browser opacity property problem :(
 
 Element.prototype.setStyle = function(property, value)
 {

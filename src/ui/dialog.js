@@ -10,7 +10,7 @@ UI.Dialog.prototype.initDialog = function(options)
     closeOnEscape: true
   });
   this.initWidget(options);
-  this.container.addClassName('dialog');
+  this.container.classList.add('dialog');
   
   if (this.options.titlebar)
   {

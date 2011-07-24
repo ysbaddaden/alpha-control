@@ -4,7 +4,7 @@ UI.ModalDialog.prototype = new UI.Dialog();
 UI.ModalDialog.prototype.initModalDialog = function(options)
 {
   this.initDialog(options);
-  this.container.addClassName('modal');
+  this.container.classList.add('modal');
   
   this.overlay = new UI.Overlay();
   this.overlay.initOverlay();
