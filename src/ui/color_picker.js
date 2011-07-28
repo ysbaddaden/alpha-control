@@ -1,3 +1,4 @@
+/*
 // TODO: Test in all browsers (especially in IE with excanvas).
 // TODO: Colorize input's background, choosing the right color for foreground: white or black.
 
@@ -305,4 +306,4 @@ UI.ColorPicker.Crosshair = function(picker)
   picker.gradient.addEventListener('mousedown', start, false);
   picker.crosshair.addEventListener('mousedown', start, false);
 }
-
+*/

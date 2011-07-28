@@ -15,11 +15,12 @@ SUPPORT_FILES=src/support/function.js \
 UI_FILES=src/ui/widget.js \
 	src/ui/overlay.js \
 	src/ui/notification.js \
+	src/ui/window.js \
 	src/ui/dialog.js \
-	src/ui/modal_dialog.js \
+	src/ui/alert.js \
 	src/ui/picker.js \
 	src/ui/list_picker.js \
-	src/ui/autocomplete.js \
+	src/ui/autocompleter.js \
 	src/ui/sortable.js
 
 # src/ui/date_picker.js

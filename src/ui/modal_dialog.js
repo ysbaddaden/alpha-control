@@ -1,3 +1,4 @@
+/*
 UI.ModalDialog = function() {}
 UI.ModalDialog.prototype = new UI.Dialog();
 
@@ -19,4 +20,4 @@ UI.ModalDialog.prototype.attachToDOM = function()
   this.overlay.attachToDOM();
   UI.Dialog.prototype.attachToDOM.call(this);
 }
-
+*/

@@ -1,163 +1,195 @@
-// TODO: Add events to UI.Widget
-
 var UI = {};
 
-UI.Widget = function() {}
+UI.Widget = function () {}
 
 Optionable(UI.Widget);
-Eventable(UI.Widget, ['show', 'close', 'hide', 'destroy']);
+Eventable(UI.Widget, ['realize', 'unrealize', 'display', 'close', 'hide', 'destroy']);
 
-/**
- * Initializes a Widget.
- * 
- * Options:
- * 
- * - +id+            - widget's Element ID
- * - +className+     - widget's Element className
- * - +onClose+       - the strategy to adopt on close: either +'hide'+ or +'destroy'+.
- * - +closeOnEscape+ - boolean, defaults to false
- */
-UI.Widget.prototype.initWidget = function(options)
-{
+// Initializes the widget.
+UI.Widget.prototype.initWidget = function (options) {
+  this.setDefaultOptions({
+    onClose: 'destroy',
+    closeOnEscape: false,
+    closeOnOuterClick: false
+  });
   this.setOptions(options);
   
   this.container = document.createElement('div');
-  if (this.options.id) this.container.id = this.options.id;
-  if (this.options.className) this.container.className = this.options.className;
+  this.container.className = 'ui-widget';
   
   this.content = document.createElement('div');
-  this.content.className = 'content';
+  this.content.className = 'ui-content';
+  
   this.container.appendChild(this.content);
   
-  if (this.options.closeOnEscape)
-  {
-    this._closeOnEscape = this.close.bind(this);
-    window.addEventListener('keyup', this._closeOnEscape, false);
+  if (this.options.closeOnEscape) {
+    this.setCloseOnEscape();
   }
-  
-  this._hide();
-}
-
-/**
- * Sets Widget's content. Accepts either a String or a DOM Element.
- */
-UI.Widget.prototype.setContent = function(content)
-{
-  if (content.tagName)
-  {
-    this.content.innerHTML = '';
-    this.content.appendChild(content);
-  }
-  else {
-    this.content.innerHTML = content;
+  if (this.options.closeOnOuterClick) {
+    this.setCloseOnOuterClick();
   }
 }
 
-/**
- * Returns the DOM Element of the Widget's content.
- */
-UI.Widget.prototype.getContent = function(content) {
+// Sets the id property of the Widget's container.
+UI.Widget.prototype.setId = function (id) {
+  return this.container.id = this.id = id;
+}
+
+// Returns the widget content Element.
+UI.Widget.prototype.getContent = function () {
   return this.content;
 }
 
-/**
- * Inserts the widget into the DOM. Actually appends the widget to
- * document's body.
- */
-UI.Widget.prototype.attachToDOM = function() {
+// Sets the widget content either as a HTML String or an Element to append.
+UI.Widget.prototype.setContent = function (content) {
+  if (typeof content == 'string') {
+    this.content.innerHTML = content;
+  } else {
+    this.content.appendChild(content);
+  }
+}
+
+// Returns true if the widget has been attached to the DOM, false otherwise.
+UI.Widget.prototype.realized = function () {
+  return !!this.container.parentNode;
+}
+
+// Attaches the widget to the DOM, but doesn't display it.
+UI.Widget.prototype.realize = function () {
+  this.dispatchEvent('realize');
+  
+  this.container.style.display    = 'block';
+  this.container.style.visibility = 'hidden';
+  
   document.body.appendChild(this.container);
 }
 
-/**
- * Actually does nothing by itself. It's just called everytime a Widget is
- * showed, allowing the widgets to position themselves.
- */
-UI.Widget.prototype.setPosition = function() {}
-
-/**
- * Attaches the Widget to the DOM (unless it's already attached to it),
- * then positions it and displays it.
- */
-UI.Widget.prototype.show = function()
-{
-  if (!this.container.parentNode || !this.container.parentNode.tagName) {
-    this.attachToDOM();
-  }
-  if (!this.dispatchEvent('show'))
-  {
-    this.setPosition();
-    this._show();
+// Removes the widget from the DOM.
+UI.Widget.prototype.unrealize = function () {
+  this.dispatchEvent('unrealize');
+  
+  this.container.style.display    = 'none';
+  this.container.style.visibility = 'hidden';
+  
+  if (this.container.parentNode) {
+    this.container.parentNode.removeChild(this.container);
   }
 }
 
-// Hides the Widget.
-UI.Widget.prototype.hide = function() {
-  this._close('hide');
+// Displays the widget.
+UI.Widget.prototype.display = function () {
+  if (!this.dispatchEvent('display')) {
+    this._display();
+  }
 }
 
-// Closes the widgets, using the +onClose+ strategy.
-UI.Widget.prototype.close = function(event)
+// Checks wether the widget is displayed or not.
+UI.Widget.prototype.displayed = function () {
+  return this.container.style.display == 'block' &&
+    this.container.style.visibility == 'visible';
+}
+
+// Closes the widget by either hiding or destroying it, depending on the
+// onClose option (which defaults to 'destroy'):
+UI.Widget.prototype.close = function () {
+  if (!this.dispatchEvent('close')) {
+    switch (this.options.onClose) {
+    case 'hide':
+      this.hide();
+      break;
+    case 'destroy':
+      this.destroy();
+      break;
+    default:
+      throw new Error("Unknown onClose option: " + this.options.onClose + ".");
+    }
+  }
+}
+
+// Hides the widget.
+UI.Widget.prototype.hide = function () {
+  if (!this.dispatchEvent('hide')) {
+    this._hide();
+  }
+}
+
+// Permanently destroys the widget.
+UI.Widget.prototype.destroy = function () {
+  if (!this.dispatchEvent('destroy')) {
+    this._destroy();
+  }
+}
+
+// Positions the widget. Actually does nothing by itself, but children like
+// UI.Window and UI.Picker do need it.
+UI.Widget.prototype.position = function () {
+}
+
+// Actually displays the widget, without dispatching the 'display' event.
+UI.Widget.prototype._display = function ()
 {
-  if (event && event.type == 'keyup' && event.keyCode != 27) return;
-  this._close(this.options.onClose);
+  this.realize();
+  this.position();
+  this.container.style.display    = 'block';
+  this.container.style.visibility = 'visible';
 }
 
-// Removes the Widget from the DOM and destroys it.
-UI.Widget.prototype.destroy = function() {
-  this._close('destroy');
+// Actually hides the widget, without dispatching the 'hide' event.
+UI.Widget.prototype._hide = function ()
+{
+  this.container.style.display    = 'none';
+  this.container.style.visibility = 'hidden';
 }
 
-// :nodoc:
-UI.Widget.prototype._show = function() {
-  if (this.container) this.container.style.display = 'block';
-}
-
-// :nodoc:
-UI.Widget.prototype._hide = function() {
-  if (this.container) this.container.style.display = 'none';
-}
-
-// :nodoc:
+// Actually destroys the widget, without dispatching the 'destroy' event.
 UI.Widget.prototype._destroy = function()
 {
   if (this.container)
   {
-    if (this.container.parentNode)
-    {
-      this._hide(); // IE trick: hide before removing
-      this.container.parentNode.removeChild(this.container);
-    }
-    
-    if (this._bound_destroy) {
-      window.removeEventListener('keyup', this._closeOnEscape, false);
-    }
+    this.unrealize();
+    this._hide();
     
     delete this.content;
     delete this.container;
+    
+    this.id = null;
   }
 }
 
-// :nodoc:
-UI.Widget.prototype._close = function(type)
-{
-  if (!this.dispatchEvent('close'))
-  {
-    switch (type)
-    {
-      case 'hide':    if (!this.dispatchEvent('hide'))    this._hide();    break;
-      case 'destroy': if (!this.dispatchEvent('destroy')) this._destroy(); break;
-      default: throw new Error("Unknown onClose option: " + type);
+UI.Widget.prototype.setCloseOnEscape = function () {
+  var self = this;
+  var closeOnEscape = function (event) {
+    if (event.keyCode == 27) {
+      self.close();
     }
-  }
+  };
+  
+  this.addEventListener('realize', function() {
+    window.addEventListener('keyup', closeOnEscape, false);
+  });
+  this.addEventListener('unrealize', function() {
+    window.removeEventListener('keyup', closeOnEscape, false);
+  });
 }
 
-// Returns true if Widget is currently displayed, false otherwise.
-UI.Widget.prototype.displayed = function() {
-  return (!!this.container && this.container.style.display != 'none');
-}
-
-// Returns true if Widget is currently displayed, false otherwise.
-UI.Widget.prototype.attached = function() {
-  return !!(this.container && this.container.parentNode);
+UI.Widget.prototype.setCloseOnOuterClick = function () {
+  var self = this;
+  var closeOnOuterClick = function (event) {
+    var obj = event.target;
+    do {
+      if (obj == self.container || obj == self.relativeElement) {
+        return;
+      }
+    } while (obj = obj.parentNode);
+    
+    self.close();
+  };
+  
+  this.addEventListener('realize', function () {
+    window.addEventListener('click', closeOnOuterClick, false);
+  });
+  this.addEventListener('unrealize', function () {
+    window.removeEventListener('click', closeOnOuterClick, false);
+  });
 }
 

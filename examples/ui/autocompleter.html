@@ -3,15 +3,15 @@
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<link rel="stylesheet" type="text/css" href="../base.css"/>
-	<title>UI.Autocomplete</title>
+	<title>UI.Autocompleter</title>
 </head>
 <body>
-	<h1>UI.Autocomplete</h1>
+	<h1>UI.Autocompleter</h1>
   
   <form action="#" method="get">
     <div>
-      Simple search (HTML response):<br/>
-      <input type="text" id="autocomplete1" placeholder="First name"/>
+      Simple search (HTML response)<br/>
+      <input type="text" id="autocompleter1" placeholder="First name"/>
     </div>
   </form>
   
@@ -19,8 +19,8 @@
   
   <form action="#" method="get">
     <div>
-      Automatically marks the first item (HTML response):<br/>
-      <input type="text" id="autocomplete2" placeholder="First name"/>
+      Automatically marks the first item (HTML response)<br/>
+      <input type="text" id="autocompleter2" placeholder="First name"/>
     </div>
   </form>
   
@@ -28,9 +28,9 @@
   
   <form action="#" method="get">
     <div>
-      Advanced behavior (JSON response + hidden field ID):<br/>
+      Advanced behavior (JSON response + hidden field ID)<br/>
       <input type="text" id="user_id" placeholder="user_id" disabled="true"/><br/>
-      <input type="text" id="autocomplete3" placeholder="First name"/>
+      <input type="text" id="autocompleter3" placeholder="First name"/>
     </div>
   </form>
   
@@ -38,8 +38,8 @@
   
   <form action="#" method="get">
     <div>
-      Advanced behavior (JSONP response):<br/>
-      <input type="text" id="autocomplete4" placeholder="First name"/>
+      Advanced behavior (JSONP response)<br/>
+      <input type="text" id="autocompleter4" placeholder="First name"/>
     </div>
   </form>
 
@@ -51,14 +51,14 @@ load('..');
 <script>
 // responseText is HTML (a series of LI elements)
 
-var simple = new UI.Autocomplete();
-simple.initAutocomplete(document.getElementById('autocomplete1'), {
+var simple = new UI.Autocompleter();
+simple.initAutocompleter(document.getElementById('autocompleter1'), {
   url: '/search',
   param: "firstname"
 });
 
-var automark = new UI.Autocomplete();
-automark.initAutocomplete(document.getElementById('autocomplete2'), {
+var automark = new UI.Autocompleter();
+automark.initAutocompleter(document.getElementById('autocompleter2'), {
   url: '/search',
   param: "firstname",
   autoMarkFirst: true
@@ -66,58 +66,51 @@ automark.initAutocomplete(document.getElementById('autocomplete2'), {
 
 // responseText is JSON + we want to set an hidden field
 
-var a = new UI.Autocomplete();
+var a3 = new UI.Autocompleter();
 
-a.setItems = function()
-{
+a3.setItems = function() {
   var names = JSON.parse(this.request.responseText),
     fragment = document.createDocumentFragment(), li;
   
-  for (var i=0; i<names.length; i++)
-  {
+  for (var i=0; i<names.length; i++) {
     li = document.createElement('li');
     li.setAttribute('data-id', names[i].id);
     li.innerHTML = names[i].name;
     fragment.appendChild(li);
   }
-  UI.Autocomplete.prototype.setItems.call(this, fragment);
+  UI.Autocompleter.prototype.setItems.call(this, fragment);
 }
 
-a.autocomplete = function(event)
-{
+a3.autocomplete = function(event) {
   $('user_id').value = event.targetElement.getAttribute('data-id');
-  UI.Autocomplete.prototype.setValue.call(this, event.targetElement.innerText);
+  UI.Autocompleter.prototype.setValue.call(this, event.targetElement.innerText);
 }
 
-a.initAutocomplete(document.getElementById('autocomplete3'), {
+a3.initAutocompleter(document.getElementById('autocompleter3'), {
   url: '/search.json',
   param: "firstname",
   autoMarkFirst: true
 });
 
 // JSONP requests
-var a4 = new UI.Autocomplete();
+var a4 = new UI.Autocompleter();
 
-a4.setItems = function(json)
-{
+a4.setItems = function(json) {
   var fragment = document.createDocumentFragment(), li;
-  if (json.length)
-  {
-    for (var i=0; i<json.length; i++)
-    {
+  if (json.length) {
+    for (var i=0; i<json.length; i++) {
       li = document.createElement('li');
       li.setAttribute('data-id', json[i].id);
       li.innerHTML = json[i].name;
       fragment.appendChild(li);
     }
-    UI.Autocomplete.prototype.setItems.call(this, fragment);
-  }
-  else {
+    UI.Autocompleter.prototype.setItems.call(this, fragment);
+  } else {
     this.clearItems();
   }
 }
 
-a4.initAutocomplete(document.getElementById('autocomplete4'), {
+a4.initAutocompleter(document.getElementById('autocompleter4'), {
   url: 'http://' + window.location.host + '/search.json',
   param: "firstname",
   jsonp: true,

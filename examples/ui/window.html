@@ -3,15 +3,15 @@
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<link rel="stylesheet" type="text/css" href="../base.css"/>
-	<title>UI.Dialog &amp; UI.ModalDialog</title>
+	<title>UI.Window</title>
 </head>
 <body>
-	<h1>UI.Dialog &amp; UI.ModalDialog</h1>
+	<h1>UI.Window</h1>
 
   <form action="#">
     <div class="field">
       <label for="title">Title:</label><br/>
-      <input type="text" id="title" value="My Dialog"/>
+      <input type="text" id="title" value="My Window"/>
     </div>
     
     <div class="field">
@@ -38,19 +38,13 @@
       </select>
     </div>
     
-    <div class="field checkboxes">
-      <input type="checkbox" id="modal"/>
-      <label for="modal">modal dialog ?</label>
-      <br/>
-      <input type="checkbox" id="titlebar" checked="true"/>
-      <label for="titlebar">title bar ?</label>
-      <br/>
-      <input type="checkbox" id="closeOnEscape" checked="true"/>
-      <label for="closeOnEscape">close on ESC key?</label>
+    <div class="field check_boxes">
+      <input type="checkbox" id="close_on_escape" checked="true"/>
+      <label for="close_on_escape">Close on ESC key?</label>
     </div>
     
     <div class="actions">
-      <input type="submit" value="Create Dialog"/>
+      <input type="submit" value="Create Window"/>
     </div>
   </form>
 
@@ -62,41 +56,17 @@ load('..');
 <script>
 document.getElementsByTagName('form').item(0).addEventListener('submit', function(event)
 {
-  var options, dialog;
   event.preventDefault();
   
-  options = { titlebar: true };
-  options.titlebar = $('titlebar').checked;
-  options.closeOnEscape = $('closeOnEscape').checked;
+  var options = {
+    closeOnEscape: $('close_on_escape').checked,
+    position: $('position').value
+  };
   
-  switch ($('position').value)
-  {
-    case 'top left': options.position = ['top', 'left']; break;
-    case 'top': options.position = ['top']; break;
-    case 'top right': options.position = ['top', 'right']; break;
-    case 'right': options.position = ['right']; break;
-    case 'bottom right': options.position = ['bottom', 'right']; break;
-    case 'bottom': options.position = ['bottom']; break;
-    case 'bottom left': options.position = ['bottom', 'left']; break;
-    case 'left': options.position = ['left']; break;
-  }
-  
-  if ($('modal').checked)
-  {
-    dialog = new UI.ModalDialog();
-    dialog.initModalDialog(options);
-  }
-  else
-  {
-    dialog = new UI.Dialog();
-    dialog.initDialog(options);
-  }
-  
-  if (options.titlebar) {
-    dialog.setTitle($('title').value);
-  }
-  dialog.setContent($('content').value);
-  dialog.show();
+  var win = UI.createWindow(options);
+  win.setTitle($('title').value);
+  win.setContent($('content').value);
+  win.display();
 }, false);
 </script>
 </body>

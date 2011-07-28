@@ -37,18 +37,16 @@
 
   <script>
   var buttons = document.getElementsByTagName('button');
-  
   Array.prototype.forEach.call(buttons, function(btn)
   {
     btn.addEventListener('click', function()
     {
       if (!btn.picker)
       {
-        btn.picker = new UI.Picker();
-        btn.picker.initPicker(btn, { position: btn.className });
+        btn.picker = UI.createPicker(btn, { position: btn.className });
         btn.picker.setContent('a picker');
       }
-      btn.picker.show();
+      btn.picker.display();
     }, false);
   });
   </script>

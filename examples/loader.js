@@ -11,19 +11,18 @@ function load(relativePath)
     'support/color.js',
     'support/optionable.js',
     'support/eventable.js',
-    
     'support/jsonp.js',
     
     'ui/widget.js',
-    'ui/dialog.js',
     'ui/overlay.js',
-    'ui/modal_dialog.js',
     'ui/notification.js',
+    'ui/window.js',
+    'ui/dialog.js',
+    'ui/alert.js',
     'ui/picker.js',
     'ui/list_picker.js',
-    
-    'ui/sortable.js',
-    'ui/autocomplete.js'
+    'ui/autocompleter.js',
+    'ui/sortable.js'
   ];
   
   if (relativePath) {

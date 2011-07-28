@@ -1,6 +1,7 @@
-// NOTE: shall UI.Sortable inherit from UI.Widget?
+// NOTE: should UI.Sortable inherit from UI.Widget?
 
 UI.Sortable = function() {}
+
 Optionable(UI.Sortable);
 Eventable(UI.Sortable, ['dragstart', 'drop']);
 

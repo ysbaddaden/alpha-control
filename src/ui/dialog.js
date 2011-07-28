@@ -1,112 +1,46 @@
-UI.Dialog = function() {}
-UI.Dialog.prototype = new UI.Widget();
+UI.Dialog = function () {}
+UI.Dialog.prototype = new UI.Window();
 
-UI.Dialog.prototype.initDialog = function(options)
-{
+UI.Dialog.Styles = {
+  Warning:       'warning',
+  Informational: 'informational',
+  Critical:      'critical'
+}
+
+Eventable(UI.Dialog, ['validate', 'cancel']);
+
+UI.createDialog = function () {
+  var dialog = new UI.Dialog();
+  dialog.initDialog.apply(dialog, arguments);
+  return dialog;
+}
+
+UI.Dialog.prototype.initDialog = function (options) {
   this.setDefaultOptions({
-    titlebar:      true,
-    position:      ['center', 'middle'],
-    onClose:       'destroy',
-    closeOnEscape: true
+    modal: true
   });
-  this.initWidget(options);
-  this.container.classList.add('dialog');
+  this.initWindow(options);
+  this.container.classList.add('ui-dialog');
   
-  if (this.options.titlebar)
-  {
-    // titlebar
-    this.titlebar = document.createElement('div');
-    this.titlebar.className = 'titlebar';
-    this.container.insertBefore(this.titlebar, this.content);
-    
-    // title
-    this.title = document.createElement('span');
-    this.title.className = 'title';
-    this.titlebar.appendChild(this.title);
-    
-    // close button
-    this.closeButton = document.createElement('a');
-    this.closeButton.className = 'close';
-    this.closeButton.innerHTML = '<span>X</span>';
-    this.closeButton.addEventListener('click', this.close.bind(this), false);
-    this.titlebar.appendChild(this.closeButton);
+  this.buttons = document.createElement('div');
+  this.buttons.className = 'ui-buttons';
+  this.container.appendChild(this.buttons);
+  
+  if (this.options.modal) {
+    var overlay = UI.createOverlay();
+    this.addEventListener('display', overlay.display.bind(overlay));
+    this.addEventListener('hide',    overlay.hide.bind(overlay));
+    this.addEventListener('destroy', overlay.destroy.bind(overlay));
   }
 }
 
-UI.Dialog.prototype.setTitle = function(title)
-{
-  if (title.tagName) {
-    this.title.appendChild(title);
-  }
-  else {
-    this.title.innerHTML = title;
-  }
-}
-
-UI.Dialog.prototype.getTitle = function() {
-  return this.title;
-}
-
-/**
- * Positions the Dialog within the page. Position is defined by the +position+
- * option, which can be any of 'center', 'middle', 'left', 'right', 'top',
- * 'bottom', or a collection of it, like ['top', 'left'].
- * 
- * The default is ['center', 'middle'].
- */
-UI.Dialog.prototype.setPosition = function()
-{
-  var position = {top: false, right: false, bottom: false, left: false};
-  
-  if (this.options.position.forEach)
-  {
-    this.options.position.forEach(function(pos) {
-      position[pos] = true;
-    });
-  }
-  else {
-    position[this.options.position] = true;
-  }
-  
-  var _display    = this.container.style.display;
-  var _visibility = this.container.style.visibility;
-  
-  this.container.style.position   = 'absolute';
-  this.container.style.display    = 'block';
-  this.container.style.visibility = 'hidden';
-  
-  if (position.top) {
-    this.container.style.top = '0px';
-  }
-  else if (position.bottom) {
-    this.container.style.bottom = '0px';
-  }
-  else
-  {
-    var top = (window.innerHeight - this.container.offsetHeight) / 2 + window.pageYOffset;
-    this.container.style.top = Math.round(top) + 'px';
-  }
-  
-  if (position.left) {
-    this.container.style.left = '0px';
-  }
-  else if (position.right) {
-    this.container.style.right = '0px';
-  }
-  else
-  {
-    var left = (window.innerWidth - this.container.offsetWidth) / 2 + window.pageXOffset;
-    this.container.style.left = Math.round(left) + 'px';
-  }
-  
-  this.container.style.display    = _display;
-  this.container.style.visibility = _visibility;
-}
-
-UI.Dialog.prototype.destroy = function()
-{
-  delete this.title;
-  delete this.titlebar;
-  UI.Widget.prototype.destroy.call(this);
+// Adds a button to the button container. Buttons are placed from the right
+// (most important) to the left (less important).
+UI.Dialog.prototype.addButton = function (label, callback) {
+  var button = document.createElement('button');
+  button.innerText = label;
+  button.onclick = callback;
+  this.buttons.insertBefore(button, this.buttons.firstChild);
+  return button;
 }
 

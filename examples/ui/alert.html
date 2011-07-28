@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<link rel="stylesheet" type="text/css" href="../base.css"/>
+	<title>UI.Alert</title>
+</head>
+<body>
+	<h1>UI.Alert</h1>
+
+  <form action="#">
+    <div class="field">
+      <label for="alert_style">Alert Style</label><br/>
+      <select id="alert_style">
+        <option value="warning">Warning</option>
+        <option value="informational">Informational</option>
+        <option value="critical">Critical</option>
+      </select>
+    </div>
+    
+    <div class="field">
+      <label for="message_text">Message Text</label><br/>
+      <textarea id="message_text">Lorem ipsum dolor sit amet.</textarea>
+    </div>
+    
+    <div class="field">
+      <label for="informative_text">Informative Text</label><br/>
+      <textarea id="informative_text">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</textarea>
+    </div>
+    
+    <div class="field">
+      <label for="position">Position</label><br/>
+      <select id="position">
+        <option value="">center</option>
+        <option value="top left">top left</option>
+        <option value="top">top</option>
+        <option value="top right">top right</option>
+        <option value="right">right</option>
+        <option value="bottom right">bottom right</option>
+        <option value="bottom">bottom</option>
+        <option value="bottom left">bottom left</option>
+        <option value="left">left</option>
+      </select>
+    </div>
+    
+    <div class="field check_boxes">
+      <input type="checkbox" id="modal" checked="true"/>
+      <label for="modal">Modal dialog</label>
+      <br/>
+      <input type="checkbox" id="closeOnEscape" checked="true"/>
+      <label for="closeOnEscape">Close on ESC key</label>
+    </div>
+    
+    <div class="actions">
+      <input type="submit" value="Create Dialog"/>
+    </div>
+  </form>
+
+<script src="../loader.js"></script>
+<script>
+load('..');
+</script>
+
+<script>
+document.getElementsByTagName('form').item(0).addEventListener('submit', function(event)
+{
+  event.preventDefault();
+  
+  var options = {
+    modal: $('modal').checked,
+    closeOnEscape: $('closeOnEscape').checked
+  };
+  if ($('position').value) {
+    options.position = $('position').value;
+  }
+  
+  var dialog;
+  switch ($('alert_style').value)
+  {
+    case 'warning':       dialog = UI.createWarningAlert(options);       break;
+    case 'informational': dialog = UI.createInformationalAlert(options); break;
+    case 'critical':      dialog = UI.createCriticalAlert(options);      break;
+  }
+  dialog.setMessageText($('message_text').value);
+  dialog.setInformativeText($('informative_text').value);
+  dialog.display();
+}, false);
+</script>
+</body>
+</html>
