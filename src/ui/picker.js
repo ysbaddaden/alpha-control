@@ -51,8 +51,7 @@ UI.Picker.prototype.deactivate = function () {
   }
 }
 
-UI.Picker.prototype.realize = function ()
-{
+UI.Picker.prototype.realize = function () {
   UI.Widget.prototype.realize.call(this);
   this.relativeElement.parentNode.appendChild(this.container);
 }

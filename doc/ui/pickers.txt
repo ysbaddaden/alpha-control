@@ -1,19 +1,65 @@
 === Pickers
 
+Pickers are widgets that are relative to another Element.
+
 ==== UI.Picker < UI.Widget
 
 Base picker object.
 
 .Methods
 
-  - initPicker()
-  - initialPosition()
-  - computePosition()
+  initPicker(relativeElement, options = {})::
+    Creates the widget related to an Element.
 
-.TODO
+  position()::
+    Positions the widget around relativeElement, depending on the `position`
+    option.
 
-  - activate()
-  - deactivate()
+  realize()::
+    Overwrites the default realize method by inserting the widget inside the
+    parent Element of the relative Element instead as a child of the document's
+    body.
+
+  activate()::
+    Called when the widget is activated. Dispatches the `activate` event then
+    displays the widget.
+
+  deactivate()::
+    Called when the widget is deactivated. Dispatches the `deactivate` event
+    then closes the widget.
+
+.Options
+
+  onClose::
+    See UI.Widget for documentation. Defaults to `'hide'`.
+
+  closeOnEscape::
+    See UI.Widget for documentation. Defaults to `true`.
+
+  closeOnOuterClick::
+    See UI.Widget for documentation. Defaults to `true`.
+
+  activate::
+    An array of event types that may activate the widget that shall be added
+    to the relative Element. Empty by default.
+
+  deactivate::
+    An array of event types that may deactivate the widget that shall be added
+    to the relative Element. Empty by default.
+
+  position::
+    A string or an array of strings representing the position of the widget.
+    Accepts any combinaison of: `'top'`, `'right'`, `'bottom'` and `'left'`.
+    By default it puts the picker below the relative Element with the minimum
+    width of that relative Element.
+
+.Events
+
+  activate::
+    Dispatched when the widget is activated. Default behavior may be cancelled.
+
+  deactivate::
+    Dispatched when the widget is deactivated. Default behavior may be cancelled.
 
 // === UI.ColorPicker < UI.Picker
 // 
@@ -26,15 +72,19 @@ Base picker object.
 //   - getGradientColor()
 //   - getHueColor()
 
+// === UI.DatePicker < UI.Picker
+// 
+// .Methods
+// 
+//   - initDatePicker()
+
 ==== UI.ListPicker < UI.Picker
 
 .Methods
 
   - initListPicker()
-  - activate()
-  - deactivate()
   - cancel()
-  - showOrHide()
+  - displayOrHide()
   - setItems()
   - getItems()
   - getItem(index)
@@ -46,8 +96,8 @@ Base picker object.
   - moveSelectionDown()
   - selectSelection()
 
-==== UI.Autocomplete < UI.ListPicker
+==== UI.Autocompleter < UI.ListPicker
 
 .TODO
-Write documentation for UI.Autocomplete
+Write documentation for UI.Autocompleter
 

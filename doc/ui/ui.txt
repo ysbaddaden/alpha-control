@@ -1,97 +1,214 @@
 == UI
 
-User Interfaces Widgets.
+User Interface Widgets.
+
+.Object methods
+
+  UI.createNotification(options = {})::
+    Creates and initializes a new UI.Notification() object.
+
+  UI.createOverlay(options = {})::
+    Creates and initializes a new UI.Notification() object.
+
+  UI.createWindow(options = {})::
+    Creates and initializes a new UI.Window() object.
+
+  UI.createDialog(options = {})::
+    Creates and initializes a new UI.Dialog() object.
+
+  UI.createAlert(options = {})::
+    Creates and initializes a new UI.Alert() object.
+
+  UI.createWarningAlert(options = {})::
+    Creates and initializes a new UI.Alert() object with the `Warning` alert
+    style and cancel and OK buttons that call the cancel() or validate()
+    methods when clicked.
+
+  UI.createInformationalAlert(options = {})::
+    Creates and initializes a new UI.Alert() object with the `Informational`
+    alert style and an OK button that calls the validate() method when clicked.
+
+  UI.createCriticalAlert(options = {})::
+    Creates and initializes a new UI.Alert() object with the `Critical` alert
+    style and cancel and OK buttons that call the cancel() or validate()
+    methods when clicked.
 
 === UI.Widget
 
-Base object for (almost) all UI widgets.
+Base object for almost all UI widgets, at least those that require a container
+like UI.Window and UI.Picker.
 
 .Properties
 
   container::
-    the main element of the widget.
+    The main element of the widget.
 
   content::
-    the content element, appended into `container`.
+    The content element, appended into `container`.
+
+  id::
+    The widget Id, as defined by setId().
 
 .Methods
 
   initWidget(options)::
-    initializes the widget by setting the `options` and creating the `container`
-    and `content` elements.
+    Creates the widget by creating the `container` and `content` elements.
 
   setContent(content)::
-    accepts an HTML string, an element or a document fragment.
+    Sets the widget content. Accepts an HTML string, an Element or a Document
+    Fragment.
 
   getContent()::
-    returns the content element.
+    Returns the content element.
 
-  attachToDOM()::
-    attaches the widget to the document's body.
+  setId()::
+    Sets the id property of the Widget's container.
 
-  setPosition()::
-    positions the widget on screen (does nothing by default).
+  realize()::
+    Attaches the widget to the DOM (ie. the document's body) and sets the
+    visibility style to hidden. Dispatches the `realize` event. The Default
+    behavior may not be stopped by event listeners.
 
-  show()::
-    displays the widget on the document.
+  unrealize()::
+    Removes the widget from the document's body. Dispatches the `unrealize`
+    event. The default behavior may not be stopped by event listeners.
 
-  close()::
-    either hides or destroys the widget.
+  realized()::
+    Checks if the widget is attached to the DOM.
 
-  hide()::
-    hides the widget.
+  position()::
+    Positions the widget on display (does nothing by itself).
 
-  destroy()::
-    removes the widget from the DOM, and destroys the `container` and `content`
-    elements. You must call `initWidget()` again to reuse the widget.
+  display()::
+    First realizes the widget, then positions it, and eventually displays the
+    widget by setting its visibility style to visible. Dispatches the `display`
+    event. The default behavior may be stopped by event listeners.
 
   displayed()::
-    checks wether the widget is displayed or not.
+    Checks if the widget is realized and visible.
+
+  close()::
+    Either hide() or destroy() the widget, depending on the `onClose` option.
+    Dispatches the `close` event. The default behavior may be stopped by event
+    listeners.
+
+  hide()::
+    Hides the widget. Dispatches the `hide` event. Dispatches the `hide` event.
+    The default behavior may be stopped by event listeners.
+
+  destroy()::
+    Removes the widget from the DOM then destroys the `container` and `content`
+    elements. You must call `initWidget()` again to reuse the widget. Dispatches
+    the `destroy` event. The default behavior may be stopped by event listeners.
+
+  displayed()::
+    Checks wether the widget is displayed or not.
+
+  _display()::
+    Actual implementation of `display`. Doesn't dispatch any event.
+
+  _hide()::
+    Actual implementation of `hide`. Doesn't dispatch any event.
+
+  _destroy()::
+    Actual implementation of `destroy`. Doesn't dispatch any event.
+
+.Options
+
+  closeOnEscape::
+    Close the widget with the escape key. Defaults to `false`.
+
+  closeOnOuterClick::
+    Close the widget when clicking outside the widget. Defaults to `false`.
+
+  onClose::
+    Action to execute when closing the widget: either `'hide'` or `'destroy'`.
+    Defaults to `'destroy'`.
+
+.Events
+
+  close::
+    Dispatched when closing the widget. Closing  may be cancelled.
+
+  destroy::
+    Dispatched when destroying the widget. The default behavior may be cancelled.
+
+  display::
+    Dispatched when displaying the widget. The default behavior may be cancelled.
+
+  hide::
+    Dispatched when hiding the widget. The default behavior may be cancelled.
+
+  realize::
+    Dispatched when realizing the widget. The default behavior may not be cancelled.
+
+  unrealize::
+    Dispatched when unrealizing the widget. The default behavior may not be cancelled.
 
 === UI.Notification < UI.Widget
 
+Notifications look like desktop notifications, except they appear somewhere
+in your HTML page. They're useful to show the state of your application to
+your users like "Loading...".
+
+.Options
+
+Accepts any other option as accepted by UI.Widget.
+
+  onClose::
+    See UI.Widget for documentation. Defaults to `'hide'`.
+
+  timeout::
+    Timeout in milliseconds after which to close the notification. 0 means no
+    timeout, thus never close the notification. Defaults to 2500.
+
 .Methods
 
-  - initNotification(options)
-  - setMessage(message, timeout)
+  initNotification(options = {})::
+    Creates the widget.
+
+  setMessage(message, timeout = null)::
+    Sets the message as HTML string and displays the notification.
+
+  getMessage()::
+    Returns the notification message as an HTML string.
 
 === UI.Overlay < UI.Widget
 
 .Methods
 
-  - initOverlay()
+  initOverlay()::
+    Creates the widget.
 
 === UI.Sortable
 
 .Properties
 
   dragged::
-    the currently dragged item, also available on drop.
+    The currently dragged item, also available on drop.
 
 .Methods
 
-  initSortable(container, options)::
-    declares a container Element as sortable.
+  initSortable(element, options)::
+    Declares an Element as sortable.
 
   getItemIndex(item)::
-    returns the position of a given item within all items.
+    Returns the position of item within all items.
 
 .Options
 
   selector::
-    a CSS selector to match the sortable items (defaults to `li`).
+    A CSS selector to match the sortable items (defaults to `li`).
 
   handle::
-    a CSS selector to match handles if you want a handle to initiate the drag
+    A CSS selector to match handles if you want a handle to initiate the drag
     instead of using the whole item.
 
 .Events
 
   dragstart::
-    dispatched when an item is about to be dragged.
+    Dispatched when an item is about to be dragged.
 
   drop::
-    dispatched when an item is dropped.
-
-// === UI.Tooltip < UI.Picker
+    Dispatched when an item is dropped.
 

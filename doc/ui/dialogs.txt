@@ -1,66 +1,72 @@
-=== Dialogs
+=== Windows
 
-==== UI.Notification < UI.Widget
+==== UI.Window < UI.Widget
 
-Notifications look like desktop notifications, except they appear somewhere
-in your HTML page. They're useful to show the state of your application to
-your users like "Loading...".
+Base object for windows.
+
+.Properties
+
+  titlebar::
+    A special container for the window's title and close button.
+
+.Methods
+
+  setTitle(text)::
+    Sets the window title as text.
 
 .Options
 
-It accepts any option UI.Widget accepts, plus a +timeout+ option (in milliseconds).
-If timeout is 0, there is no timeout; if timeout is greater than 0, then the
-notification will be hidden automatically after the spent time.
+  closeButton::
+    Set to `false` to disallow the presence of a close button in the titlebar.
+    Defaults to `true`.
+
+  closeOnEscape::
+    See UI.Widget for documentation. Defaults to `true`.
+
+  position::
+    The position when to put the window within the page. May by any combinaison
+    of `'top'`, `'middle'` or `'bottom'` with `'left'`, `'center'` or `'right'`.
+    Defaults to `'center middle'`.
+
+==== UI.Dialog < UI.Window
+
+Dialogs are windows with the addition of a buttons container after the content.
+
+.Properties
+
+  buttons::
+    A special container for buttons. Inserted after `content`.
 
 .Methods
 
-  initNotification(options)::
-    creates the notification element.
-  
-  setMessage(message, timeout)::
-    sets the message as HTML string, and displays the notification.
-    The timeout parameter is optional.
-  
-  getMessage()::
-    returns the notification message as an HTML string.
+  initDialog(options = {})::
+    Creates the widget.
 
+  addButton(label, callback)::
+    Adds a button to the dialog. Buttons are added from right to left.
+    Executes callback when clicked.
 
-==== UI.Dialog < UI.Widget
+==== UI.Alert < UI.Dialog
 
-.Methods
+.Constants
 
-  - initDialog()
-  - setTitle()
-  - getTitle()
-
-// .TODO
-// 
-// - addButton()
-// - on<button>() events
-
-==== UI.ModalDialog < UI.Dialog.Base 
+  Styles::
+    - `Warning`
+    - `Informational`
+    - `Critical`
 
 .Methods
 
-  - initModalDialog()
+  initAlert(options = {})::
+    creates the widget.
 
-// ==== UI.ConfirmDialog < UI.ModalDialog
-// 
-// .Events
-// 
-// - valid
-// - cancel
-// 
-// ==== UI.AlertDialog < UI.ModalDialog
-// 
-// .Events
-// 
-// - valid
-// 
-// ==== UI.PromptDialog < UI.ModalDialog
-// 
-// .Events
-// 
-// - valid
-// - cancel
+  setAlertStyle(style)::
+    this is optional and simply defines an alert type, which will add an
+    `ui-stylename` className to the widget's container.
+
+  setMessageText(text)::
+    sets the alert message text.
+
+  setInformativeText(text)::
+    sets the informative text, which further explains the alert message.
 
