@@ -19,8 +19,11 @@ UI.Widget.prototype.initWidget = function (options) {
   
   this.content = document.createElement('div');
   this.content.className = 'ui-content';
-  
   this.container.appendChild(this.content);
+  
+  if (this.options.id) {
+    this.setId(this.options.id);
+  }
   
   if (this.options.closeOnEscape) {
     this.setCloseOnEscape();

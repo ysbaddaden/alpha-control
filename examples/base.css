@@ -84,34 +84,6 @@ select:active, button:active, input[type=submit]:active {
   background: linear-gradient(top, #f2f2f2 0%,#ececec 47%,#f3f3f3 48%,#ffffff 74%); /* W3C */
 }
 
-/*button, input, select, textarea {*/
-/*  width: 400px;*/
-/*  border: 1px inset #AAA;*/
-/*  background: #FFF;*/
-/*  padding: 4px;*/
-/*  font: normal 14px/1.5 sans-serif;*/
-/*  -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;*/
-/*}*/
-/*button[disabled], input[disabled], select[disabled], textarea[disabled] {*/
-/*  color: #666;*/
-/*  background: #CCC;*/
-/*}*/
-/*textarea { height: 150px; }*/
-/*select { border-style: outset; }*/
-
-/*input[type=checkbox] { width: auto; }*/
-
-/*button, input[type=submit] {*/
-/*  width: auto;*/
-/*  border-style: outset;*/
-/*  padding: 4px 10px;*/
-/*  font-family: sans-serif;*/
-/*  background: #EEE;*/
-/*}*/
-/*input[type=submit] { font-weight: bold; }*/
-/*button:active, input[type=submit]:active { border-style: inset; }*/
-
-
 /* UI.Widget */
 .ui-window, .ui-picker {
   border: 1px solid rgba(0, 0, 0, .4);
@@ -246,5 +218,5 @@ select:active, button:active, input[type=submit]:active {
 }
 
 /* UI.Sortable */
-.dragged { opacity: .5; }
+.ui-dragged { opacity: .5; }
 

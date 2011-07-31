@@ -32,7 +32,7 @@ RAILS_FILES=src/rails/request.js \
 all: support rails ui alpha-control
 
 alpha-control:
-	cat $(SUPPORT_FILES) $(RAILS_FILES) $(UI_FILES) > lib/alpha-control.js
+	cat $(SUPPORT_FILES) $(UI_FILES) > lib/alpha-control.js
 	$(YUICOMP) lib/alpha-control.js > lib/alpha-control-compressed.js
 
 support:
