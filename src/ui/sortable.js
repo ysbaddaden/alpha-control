@@ -5,6 +5,12 @@ UI.Sortable = function () {}
 Optionable(UI.Sortable);
 Eventable(UI.Sortable, ['dragstart', 'drop']);
 
+UI.createSortable = function () {
+  var widget = new UI.Sortable();
+  widget.initSortable.apply(widget, arguments);
+  return widget;
+}
+
 UI.Sortable.prototype.initSortable = function (list, options) {
   this.setDefaultOptions({
     selector: 'li'
