@@ -3,10 +3,16 @@ UI.ListPicker.prototype = new UI.Picker();
 
 Eventable(UI.ListPicker, ['select']);
 
+UI.createListPicker = function () {
+  var widget = new UI.ListPicker();
+  widget.initListPicker.apply(widget, arguments);
+  return widget;
+}
+
 UI.ListPicker.prototype.initListPicker = function (relativeElement, options) {
   this.setDefaultOptions({
     activate:   ['focus', 'click'],
-    deactivate: ['blur'],
+//    deactivate: ['blur'],
     autoMarkFirst: false
   });
   this.initPicker(relativeElement, options);
@@ -14,25 +20,31 @@ UI.ListPicker.prototype.initListPicker = function (relativeElement, options) {
   
   this.list = document.createElement('ul');
   this.list.addEventListener('click', this.clickListener.bind(this), false);
+  this.list.addEventListener('mouseover', this.hoverListener.bind(this), false);
   this.setContent(this.list);
   
   this.relativeElement.setAttribute('autocomplete', 'off');
   this.relativeElement.addEventListener('focus',    this.activate.bind(this),    false);
   this.relativeElement.addEventListener('click',    this.activate.bind(this),    false);
-  this.relativeElement.addEventListener('blur',     this.deactivate.bind(this),  false);
+//  this.relativeElement.addEventListener('blur',     this.deactivate.bind(this),  false);
   this.relativeElement.addEventListener('keypress', this.keypressListener.bind(this), false);
   this.relativeElement.addEventListener('keyup',    this.keyupListener.bind(this),    false);
   
   var self = this;
   this.addEventListener('activate', function (event) {
-    if (!self.hasItems()) event.preventDefault();
+    if (!self.hasItems()) {
+      event.preventDefault();
+    }
   });
 }
 
+//UI.ListPicker.prototype.deactivate = function () {
+//  UI.ListPicker.prototype.deactivate.call(this);
+//}
+
 // items
 
-UI.ListPicker.prototype.setItems = function (items)
-{
+UI.ListPicker.prototype.setItems = function (items) {
   if (typeof items == 'string') {
     this.list.innerHTML = items;
   } else if (items.nodeName == '#document-fragment') {
@@ -152,6 +164,13 @@ UI.ListPicker.prototype.clickListener = function (event) {
   if (element) {
     this.selection = element;
     this.selectSelection();
+  }
+}
+
+UI.ListPicker.prototype.hoverListener = function (event) {
+  var element = event.target.findParentNode('li');
+  if (element) {
+    this.markSelection(element);
   }
 }
 
