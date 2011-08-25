@@ -1,15 +1,13 @@
 UI.Overlay = function() {}
 UI.Overlay.prototype = new UI.Widget();
 
-UI.createOverlay = function()
-{
+UI.createOverlay = function() {
   var overlay = new UI.Overlay();
   overlay.initOverlay.apply(overlay, arguments);
   return overlay;
 }
 
-UI.Overlay.prototype.initOverlay = function(options)
-{
+UI.Overlay.prototype.initOverlay = function(options) {
   this.setDefaultOptions({
     onClose: 'destroy'
   });
@@ -17,8 +15,7 @@ UI.Overlay.prototype.initOverlay = function(options)
   this.content.classList.remove('ui-content');
   this.content.classList.add('ui-overlay');
   
-  if (!!(window.VBArray && document.implementation))
-  {
+  if (!!(window.VBArray && document.implementation)) {
     // we need to trick IE6 with an iframe, otherwise it places SELECT element _over_ the overlay.
     var iframe = document.createElement('iframe');
     iframe.src = "javascript:'<html></html>';";

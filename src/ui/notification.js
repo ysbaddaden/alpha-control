@@ -5,9 +5,9 @@ UI.Notification = function() {}
 UI.Notification.prototype = new UI.Widget();
 
 UI.createNotification = function () {
-  var notification = new UI.Notification();
-  notification.initNotification.call(notification, arguments);
-  return notification;
+  var widget = new UI.Notification();
+  widget.initNotification.apply(widget, arguments);
+  return widget;
 }
 
 UI.Notification.prototype.initNotification = function(options) {
