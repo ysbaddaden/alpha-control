@@ -13,7 +13,7 @@ var Rails = {};
  * 
  * Example:
  * 
- *   var r = new Rails.Request();
+ *   var r = Rails.Request();
  *   r.open('get', '/posts');
  *   r.addEventListener('loadstart', onrequest);   // readyState = 3
  *   r.addEventListener('abort',     onabort);     // abort()
@@ -24,31 +24,33 @@ var Rails = {};
  * 
  * NOTE: encode and post params as application/json instead of application/x-www-form-urlencoded?
  */
-Rails.Request = function() {
+Rails.Request = function () {
   this.xhr = new XMLHttpRequest();
 }
 Eventable(Rails.Request, ['loadstart', 'abort', 'load', 'error', 'loadend']);
 
-Rails.Request.prototype.createEvent = function(type)
-{
+Rails.createRequest = function () {
+  var req = new Rails.Request();
+  req.open.apply(req, arguments);
+  return req;
+}
+
+Rails.Request.prototype.createEvent = function (type) {
   var event = new Eventable.Event();
   event.initEvent(type, false, true);
   event.request = this.xhr;
   return event;
 }
 
-Rails.Request.prototype.open = function(method, url)
-{
+Rails.Request.prototype.open = function (method, url) {
   method = method.toLowerCase();
   this.xhr.open(method.toUpperCase(), url, true);
   this.xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
   
-  if (method != 'get')
-  {
+  if (method != 'get') {
     if (method == 'post' || method == 'put') {
       this.xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     }
-    
     var csrf_token = Rails.readMeta('csrf-token');
     if (csrf_token) {
       this.xhr.setRequestHeader('X-CSRF-Token', csrf_token);
@@ -57,43 +59,37 @@ Rails.Request.prototype.open = function(method, url)
   this.xhr.onreadystatechange = this.onreadystatechange.bind(this);
 }
 
-Rails.Request.prototype.onreadystatechange = function()
-{
+Rails.Request.prototype.onreadystatechange = function () {
   if (this.xhr.readyState == 3) {
     this.dispatchEvent('loadstart');
   }
-  else if (this.xhr.readyState == 4)
-  {
+  else if (this.xhr.readyState == 4) {
     this.dispatchEvent((this.xhr.status < 400) ? 'load' : 'error');
     this.dispatchEvent('loadend');
     this._clear();
   }
 }
 
-Rails.Request.prototype.send = function(body_or_params)
-{
+Rails.Request.prototype.send = function (body_or_params) {
   var body = (typeof body_or_params == 'object') ?
     Rails.toURLEncoded(body_or_params) : body_or_params;
   this.xhr.send(body || '');
 }
 
-Rails.Request.prototype.abort = function()
-{
-  if (this.xhr)
-  {
+Rails.Request.prototype.abort = function () {
+  if (this.xhr) {
     this.xhr.abort();
     this.dispatchEvent('abort');
     this._clear();
   }
 }
 
-Rails.Request.prototype._clear = function() {
+Rails.Request.prototype._clear = function () {
   this.xhr = null;
 }
 
 // IMPROVE: move Rails.toURLEncoded to a HTTP object in AlphaControl?
-Rails.toURLEncoded = function(params)
-{
+Rails.toURLEncoded = function (params) {
   if (typeof params == 'string') {
     return params;
   }
@@ -105,8 +101,7 @@ Rails.toURLEncoded = function(params)
   return query_string.join('&');
 }
 
-Rails.readMeta = function(name)
-{
+Rails.readMeta = function (name) {
   var meta = document.querySelectorAll("meta[name=" + name + "]");
   return (meta.length > 0) ? meta[0].getAttribute('content') : null;
 }
