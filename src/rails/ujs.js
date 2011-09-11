@@ -27,11 +27,11 @@ var UJS = {
       if (target.nodeName == 'A') {
         if (target.getAttribute('data-remote') == 'true') {
           event.preventDefault();
-          UJS.remoteRequest(event.target);
+          UJS.remoteRequest(target);
           return;
         } else if (target.hasAttribute('data-method')) {
           event.preventDefault();
-          UJS.methodRequest(event.target);
+          UJS.methodRequest(target);
           return;
         }
       }
