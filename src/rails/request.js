@@ -26,6 +26,7 @@ var Rails = {};
  */
 Rails.Request = function () {
   this.xhr = new XMLHttpRequest();
+  this.upload = this.xhr.upload;
 }
 Eventable(Rails.Request, ['loadstart', 'abort', 'load', 'error', 'loadend']);
 
@@ -48,9 +49,8 @@ Rails.Request.prototype.open = function (method, url) {
   this.xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
   
   if (method != 'get') {
-    if (method == 'post' || method == 'put') {
-      this.xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    }
+    this.xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
     var csrf_token = Rails.readMeta('csrf-token');
     if (csrf_token) {
       this.xhr.setRequestHeader('X-CSRF-Token', csrf_token);
@@ -70,9 +70,15 @@ Rails.Request.prototype.onreadystatechange = function () {
   }
 }
 
-Rails.Request.prototype.send = function (body_or_params) {
-  var body = (typeof body_or_params == 'object') ?
-    Rails.toURLEncoded(body_or_params) : body_or_params;
+Rails.Request.prototype.send = function (body_or_params, encode) {
+  var body;
+  
+  if (encode || typeof encode == 'undefined') {
+    body = (typeof body_or_params == 'object') ?
+      Rails.toURLEncoded(body_or_params) : body_or_params;
+  } else {
+    body = body_or_params;
+  }
   this.xhr.send(body || '');
 }
 
