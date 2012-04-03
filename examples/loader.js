@@ -12,6 +12,7 @@ function load(relativePath)
     'support/optionable.js',
     'support/eventable.js',
     'support/jsonp.js',
+    'support/i18n.js',
     
     'ui/widget.js',
     'ui/overlay.js',

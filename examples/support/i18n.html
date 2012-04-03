@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<link rel="stylesheet" type="text/css" href="../base.css"/>
+	<title>I18n</title>
+</head>
+<body>
+	<h1>I18n</h1>
+
+<script src="../loader.js"></script>
+<script>
+load('..');
+</script>
+<script src="../locales/en.js"></script>
+<script src="../locales/fr.js"></script>
+
+<script>
+console.log(I18n.translations);
+I18n.locale = 'fr';
+
+console.log(I18n.translate('some_string'));
+console.log(I18n.translate('some_string', { scope: '', locale: 'ru' }));
+console.log(I18n.translate('some_string', { scope: 'filer', locale: 'fr' }));
+console.log(I18n.translate('some_string', { scope: ['filer', 'index'] }));
+
+I18n.development = true;
+console.log('I18n.development');
+console.log(I18n.translate('some_string', { scope: ['filer', 'index'] }));
+console.log(I18n.translate("developer's \"thought\"", { scope: ['filer', 'index'] }));
+</script>
+</body>
+</html>

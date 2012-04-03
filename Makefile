@@ -8,7 +8,8 @@ SUPPORT_FILES=src/support/function.js \
 	src/support/color.js \
 	src/support/optionable.js \
 	src/support/eventable.js \
-	src/support/jsonp.js
+	src/support/jsonp.js \
+	src/support/i18n.js
 
 # src/support/serializer.js
 
