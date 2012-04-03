@@ -1,6 +1,6 @@
 // TODO: Implement an 'auto' position for UI.Picker
 
-UI.Picker = function () {}
+UI.Picker = function () {};
 UI.Picker.prototype = new UI.Widget();
 
 Eventable(UI.Picker, ['activate', 'deactivate']);
@@ -9,7 +9,7 @@ UI.createPicker = function () {
   var widget = new UI.Picker();
   widget.initPicker.apply(widget, arguments);
   return widget;
-}
+};
 
 UI.Picker.prototype.initPicker = function (relativeElement, options) {
   this.setDefaultOptions({
@@ -23,38 +23,38 @@ UI.Picker.prototype.initPicker = function (relativeElement, options) {
   this.initWidget(options);
   this.container.classList.add('ui-picker');
   
-  if (typeof relativeElement == 'undefined') {
+  if (typeof relativeElement === 'undefined') {
     throw new TypeError('Missing required parameter: relativeElement.');
   }
   this.relativeElement = relativeElement;
   
   var activate = this.activate.bind(this);
-  for (var i=0; i<this.options.activate.length; i++) {
+  for (var i = 0; i < this.options.activate.length; i++) {
     this.relativeElement.addEventListener(this.options.activate[i], activate, false);
   }
   
   var deactivate = this.deactivate.bind(this);
-  for (var i=0; i<this.options.deactivate.length; i++) {
-    this.relativeElement.addEventListener(this.options.deactivate[i], deactivate, false);
+  for (var j = 0; j < this.options.deactivate.length; j++) {
+    this.relativeElement.addEventListener(this.options.deactivate[j], deactivate, false);
   }
-}
+};
 
 UI.Picker.prototype.activate = function () {
   if (!this.dispatchEvent('activate')) {
     this.display();
   }
-}
+};
 
 UI.Picker.prototype.deactivate = function () {
   if (!this.dispatchEvent('deactivate')) {
     this.close();
   }
-}
+};
 
 UI.Picker.prototype.realize = function () {
   UI.Widget.prototype.realize.call(this);
   this.relativeElement.parentNode.appendChild(this.container);
-}
+};
 
 // Positions the Picker around the relativeElement.
 // Called automatically on display.
@@ -73,7 +73,7 @@ UI.Picker.prototype.position = function () {
   if (typeof this.options.position == 'string') {
     this.options.position = this.options.position.split(/\s+/);
   }
-  for (var i=0; i<this.options.position.length; i++) {
+  for (var i = 0; i < this.options.position.length; i++) {
     position[this.options.position[i]] = true;
   }
   
@@ -120,5 +120,5 @@ UI.Picker.prototype.position = function () {
   
   this.container.style.top  = Math.round(top)  + 'px';
   this.container.style.left = Math.round(left) + 'px';
-}
+};
 

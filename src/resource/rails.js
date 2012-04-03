@@ -8,28 +8,27 @@
  */
 var Rails = {};
 
-Rails.read = function(url, callback) {
+Rails.read = function (url, callback) {
   Rails.request('get', url, null, callback);
-}
+};
 
-Rails.create = function(url, data, callback) {
+Rails.create = function (url, data, callback) {
   Rails.request('post', url, data, callback);
-}
+};
 
-Rails.update = function(url, data, callback) {
+Rails.update = function (url, data, callback) {
   Rails.request('put', url, data, callback);
-}
+};
 
-Rails.destroy = function(url, callback) {
+Rails.destroy = function (url, callback) {
   Rails.request('delete', url, null, callback);
-}
+};
 
-Rails.request = function(method, url, data, callback)
-{
-  if (!data) data = {};
-  
-  if (method == 'delete' || method == 'put')
-  {
+Rails.request = function (method, url, data, callback) {
+  if (!data) {
+    data = {};
+  }
+  if (method === 'delete' || method === 'put') {
     data[method] = method;
     method = 'post';
   }
@@ -43,10 +42,8 @@ Rails.request = function(method, url, data, callback)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   }
   
-  xhr.onreadystatechange = function()
-  {
-    if (xhr.readyState == 4)
-    {
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4) {
       var response = new Rails.Response()
       response.initResponse(xhr.status, xhr.messageXML);
       callback(response);
@@ -57,10 +54,8 @@ Rails.request = function(method, url, data, callback)
   return xhr;
 }
 
-Rails.toBody = function(data)
-{
+Rails.toBody = function (data) {
   var body = [];
-  
   for (var k in data) {
     body.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
   }
@@ -70,17 +65,14 @@ Rails.toBody = function(data)
 Rails.CSRFParam = null;
 Rails.CSRFToken = null;
 
-Rails.addCSRF = function(body)
-{
-  if (Rails.CSRFParam === null)
-  {
+Rails.addCSRF = function (body) {
+  if (Rails.CSRFParam === null) {
     Rails.CSRFParam = Rails.readMeta('csrf_param');
     Rails.CSRFToken = Rails.readMeta('csrf_token');
   }
 }
 
-Rails.readMeta = function(name)
-{
+Rails.readMeta = function (name) {
   var meta = document.querySelectorAll("meta[name=" + name + "]");
   return (meta.length > 0) ? meta[0].getAttribute('content') : null;
 }
@@ -89,7 +81,8 @@ Rails.readMeta = function(name)
  * Response sent to callbacks by the read, create, update and destroy
  * methods of Rails.
  */
-Rails.Response = function() {}
+Rails.Response = function () {
+};
 
 Rails.Response.StatusCodes = {
   success: 200,
@@ -99,24 +92,30 @@ Rails.Response.StatusCodes = {
   forbidden: 403,
   notFound: 404,
   unprocessableEntity: 422,
-}
+};
 
-Rails.Response.prototype.initResponse = function(status, xml)
-{
+Rails.Response.prototype.initResponse = function (status, xml) {
   this.status = status;
-  this.xml    = xml;
-}
+  this.xml = xml;
+};
 
 for (var status in Rails.Response.StatusCodes) {
-  Rails.Response.prototype[status] = function() { this.status == Rails.Response.StatusCodes[status] }
-}
-Rails.Response.prototype.error       = function() { return (this.status >= 400); }
-Rails.Response.prototype.serverError = function() { return (this.status >= 500); }
+  Rails.Response.prototype[status] = function () {
+    this.status == Rails.Response.StatusCodes[status];
+  }
+};
+
+Rails.Response.prototype.error = function () {
+  return (this.status >= 400);
+};
+
+Rails.Response.prototype.serverError = function () {
+  return (this.status >= 500);
+};
 
 // Parses the XML response, and returns a hash of attributes.
-Rails.response.prototype.data = function()
-{
+Rails.response.prototype.data = function () {
   // TODO: Rails.response.prototype.data()
   console.log(xml);
-}
+};
 

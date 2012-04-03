@@ -1,13 +1,13 @@
 === Rails.Request
 
 Executes an HTTP request to a Ruby on Rails server, transparently handling the
-X-CSRF-Token HTTP header, which is necessary to protect the user against request
-forgery.
+`X-CSRF-Token` HTTP header, which is necessary to protect the user against
+request forgery.
 
 The implementation is modeled after XMLHttpRequest 2 which uses events for
 callbacks. If you ever overwrite the `onreadystatechange` method please be
-sure to call the `Rails.Request.prototype.onreadystatechange` method or events
-won't be dispatched!
+sure to call the original `Rails.Request.prototype.onreadystatechange` method
+or events won't be dispatched!
 
 .Example
 

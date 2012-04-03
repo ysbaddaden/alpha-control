@@ -1,4 +1,4 @@
-UI.ListPicker = function () {}
+UI.ListPicker = function () {};
 UI.ListPicker.prototype = new UI.Picker();
 
 Eventable(UI.ListPicker, ['select']);
@@ -7,7 +7,7 @@ UI.createListPicker = function () {
   var widget = new UI.ListPicker();
   widget.initListPicker.apply(widget, arguments);
   return widget;
-}
+};
 
 UI.ListPicker.prototype.initListPicker = function (relativeElement, options) {
   this.setDefaultOptions({
@@ -36,7 +36,7 @@ UI.ListPicker.prototype.initListPicker = function (relativeElement, options) {
       event.preventDefault();
     }
   });
-}
+};
 
 //UI.ListPicker.prototype.deactivate = function () {
 //  UI.ListPicker.prototype.deactivate.call(this);
@@ -62,23 +62,23 @@ UI.ListPicker.prototype.setItems = function (items) {
   } else {
     this.unmarkSelection();
   }
-}
+};
 
 UI.ListPicker.prototype.getItems = function () {
   return this.list.getElementsByTagName('li');
-}
+};
 
 UI.ListPicker.prototype.getItem = function (index) {
   return this.list.getElementsByTagName('li')[index];
-}
+};
 
 UI.ListPicker.prototype.hasItems = function (items) {
   return this.getItems().length > 0;
-}
+};
 
 UI.ListPicker.prototype.clearItems = function () {
   this.list.innerHTML = '';
-}
+};
 
 // selection
 
@@ -90,14 +90,14 @@ UI.ListPicker.prototype.markSelection = function (item) {
     this.selection = item;
     this.selection.classList.add('ui-selected');
   }
-},
+};
 
 UI.ListPicker.prototype.unmarkSelection = function () {
   if (this.selection) {
     this.selection.classList.remove('ui-selected');
     this.selection = null;
   }
-},
+};
 
 UI.ListPicker.prototype.moveSelectionUp = function () {
   var item, items;
@@ -110,8 +110,8 @@ UI.ListPicker.prototype.moveSelectionUp = function () {
     items = this.getItems();
     item  = items[items.length - 1];
   }
-  this.markSelection(item)
-},
+  this.markSelection(item);
+};
 
 UI.ListPicker.prototype.moveSelectionDown = function () {
   var item;
@@ -124,8 +124,8 @@ UI.ListPicker.prototype.moveSelectionDown = function () {
   else if (this.hasItems()) {
     item = this.getItems()[0];
   }
-  this.markSelection(item)
-},
+  this.markSelection(item);
+};
 
 UI.ListPicker.prototype.selectSelection = function () {
   this.hide();
@@ -136,7 +136,7 @@ UI.ListPicker.prototype.selectSelection = function () {
     this.dispatchEvent(event);
     this.unmarkSelection();
   }
-}
+};
 
 // display
 
@@ -146,7 +146,7 @@ UI.ListPicker.prototype.displayOrHide = function () {
   } else {
     this.hide();
   }
-}
+};
 
 UI.ListPicker.prototype.cancel = function (event) {
   this.deactivate();
@@ -155,7 +155,7 @@ UI.ListPicker.prototype.cancel = function (event) {
     event.stopPropagation();
     event.preventDefault();
   }
-}
+};
 
 // callbacks
 
@@ -165,14 +165,14 @@ UI.ListPicker.prototype.clickListener = function (event) {
     this.selection = element;
     this.selectSelection();
   }
-}
+};
 
 UI.ListPicker.prototype.hoverListener = function (event) {
   var element = event.target.findParentNode('li');
   if (element) {
     this.markSelection(element);
   }
-}
+};
 
 UI.ListPicker.prototype.keypressListener = function (event) {
   switch(event.keyCode) {
@@ -187,7 +187,7 @@ UI.ListPicker.prototype.keypressListener = function (event) {
     }
     return;
   }
-}
+};
 
 UI.ListPicker.prototype.keyupListener = function (event) {
   switch(event.keyCode) {
@@ -204,7 +204,7 @@ UI.ListPicker.prototype.keyupListener = function (event) {
     return;
   }
   this.displayOrHide();
-}
+};
 
 /*
 // TODO: Dispatch activate/deactivate events

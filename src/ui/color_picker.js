@@ -35,17 +35,17 @@ UI.ColorPicker.prototype.initColorPicker = function(input, options)
   // values
   // TODO: Move data to options.
   this.data = {
-	  x: this.gradient.getAttribute('width'),
-	  y: this.gradient.getAttribute('height'),
-	  base: {
-	    r: 255,
-	    g: 0,
-	    b: 0
+    x: this.gradient.getAttribute('width'),
+    y: this.gradient.getAttribute('height'),
+    base: {
+      r: 255,
+      g: 0,
+      b: 0
     },
-	  gradient_w: this.gradient.getAttribute('width'),
-	  gradient_h: this.gradient.getAttribute('height'),
-	  hue_w: this.hue.getAttribute('width'),
-	  hue_h: this.hue.getAttribute('height')
+    gradient_w: this.gradient.getAttribute('width'),
+    gradient_h: this.gradient.getAttribute('height'),
+    hue_w: this.hue.getAttribute('width'),
+    hue_h: this.hue.getAttribute('height')
   };
 
   // the big gradient
@@ -116,18 +116,18 @@ UI.ColorPicker.prototype.newCanvas = function(className, width, height)
 
 UI.ColorPicker.prototype.show = function()
 {
-	this.setColor(this.input.value);
+  this.setColor(this.input.value);
   UI.Picker.prototype.show.call(this);
 }
 
 UI.ColorPicker.prototype.putCrosshair = function(x, y)
 {
-	this.crosshair.style.left = x - Math.floor(this.crosshair.getAttribute('width')  / 2) + 'px';
-	this.crosshair.style.top  = y - Math.floor(this.crosshair.getAttribute('height') / 2) + 'px';
+  this.crosshair.style.left = x - Math.floor(this.crosshair.getAttribute('width')  / 2) + 'px';
+  this.crosshair.style.top  = y - Math.floor(this.crosshair.getAttribute('height') / 2) + 'px';
 }
 
 UI.ColorPicker.prototype.putSlider = function(pos) {
-	this.slider.style.top = pos - Math.floor(this.slider.getAttribute('height') / 2) + 'px';
+  this.slider.style.top = pos - Math.floor(this.slider.getAttribute('height') / 2) + 'px';
 }
 
 // colors
@@ -136,15 +136,15 @@ UI.ColorPicker.prototype.setColor = function(color)
 {
   if (color.trim() == '') return;
   
-	color = new Color(color);
+  color = new Color(color);
   
-	var x = Math.round(this.data.gradient_w / 100 * color.s);
-	var y = Math.round(this.data.gradient_h / 100 * (100 - color.v));
-	this.putCrosshair(x, y);
-	
-	var i = Math.round(this.data.hue_h / 360 * color.h);
-	this.putSlider(i);
-	
+  var x = Math.round(this.data.gradient_w / 100 * color.s);
+  var y = Math.round(this.data.gradient_h / 100 * (100 - color.v));
+  this.putCrosshair(x, y);
+  
+  var i = Math.round(this.data.hue_h / 360 * color.h);
+  this.putSlider(i);
+  
   this.setBaseColor(this.getHueColor(i));
   this.applyColor(color);
 }
@@ -154,112 +154,112 @@ UI.ColorPicker.prototype.setBaseColor = function(color)
 {
   var color = new Color(color);
   this.data.base = color;
-	this.gradient.style.backgroundColor = color.toString();
+  this.gradient.style.backgroundColor = color.toString();
 }
 
 // Sets the picked color.
 UI.ColorPicker.prototype.applyColor = function(color)
 {
-	color = new Color(color);
-	
-	this.preview.style.backgroundColor = color.toString();
+  color = new Color(color);
+  
+  this.preview.style.backgroundColor = color.toString();
   this.input.value = color.toString();
   
-	if (this.options && this.options.onChange) {
-		this.options.onChange(color);
-	}
+  if (this.options && this.options.onChange) {
+    this.options.onChange(color);
+  }
 }
 
 // Computes the gradient color at position (x,y).
 UI.ColorPicker.prototype.getGradientColor = function(x, y)
 {
-	this.data.x = x;
-	this.data.y = y;
-	
-	// checks min & max, then linerizes gradient to full 255 colors
-	x = 255 / (this.data.gradient_w - 1) * Math.max(0, Math.min(x, this.data.gradient_w - 1));
-	y = 255 / (this.data.gradient_h - 1) * Math.max(0, Math.min(y, this.data.gradient_h - 1));
-	
-	// computes color
-	var r = Math.round((1 - (1 - (this.data.base.r / 255)) * (x / 255)) * (255 - y));
-	var g = Math.round((1 - (1 - (this.data.base.g / 255)) * (x / 255)) * (255 - y));
-	var b = Math.round((1 - (1 - (this.data.base.b / 255)) * (x / 255)) * (255 - y));
-	
-	return new Color([r, g, b]);
+  this.data.x = x;
+  this.data.y = y;
+  
+  // checks min & max, then linerizes gradient to full 255 colors
+  x = 255 / (this.data.gradient_w - 1) * Math.max(0, Math.min(x, this.data.gradient_w - 1));
+  y = 255 / (this.data.gradient_h - 1) * Math.max(0, Math.min(y, this.data.gradient_h - 1));
+  
+  // computes color
+  var r = Math.round((1 - (1 - (this.data.base.r / 255)) * (x / 255)) * (255 - y));
+  var g = Math.round((1 - (1 - (this.data.base.g / 255)) * (x / 255)) * (255 - y));
+  var b = Math.round((1 - (1 - (this.data.base.b / 255)) * (x / 255)) * (255 - y));
+  
+  return new Color([r, g, b]);
 }
 
 // Computes the hue color at position (i).
 UI.ColorPicker.prototype.getHueColor = function(i)
 {
-	i -= (this.hue.offsetHeight - this.hue.clientHeight) / 2;
-	i = Math.max(0, Math.min(i, this.data.hue_h));
-	
-	var section = this.data.hue_h / 6; // separates each sections
-	var c  = i % this.data.hue_h;      // row
-	var cs = i % section;              // row in current group
-	var l  = (255 / section) * cs;     // color percentage
-	
-	var h = 255 - l;
-	var r = Math.round(c < section ? 255 : c < section * 2 ? h : c < section * 4 ? 0 : c < section * 5 ? l : 255);
-	var g = Math.round(c < section ? l : c < section * 3 ? 255 : c < section * 4 ? h : 0);
-	var b = Math.round(c < section * 2 ? 0 : c < section * 3 ? l : c < section * 5 ? 255 : h);
-	
-	return new Color([r, g, b]);
+  i -= (this.hue.offsetHeight - this.hue.clientHeight) / 2;
+  i = Math.max(0, Math.min(i, this.data.hue_h));
+  
+  var section = this.data.hue_h / 6; // separates each sections
+  var c  = i % this.data.hue_h;      // row
+  var cs = i % section;              // row in current group
+  var l  = (255 / section) * cs;     // color percentage
+  
+  var h = 255 - l;
+  var r = Math.round(c < section ? 255 : c < section * 2 ? h : c < section * 4 ? 0 : c < section * 5 ? l : 255);
+  var g = Math.round(c < section ? l : c < section * 3 ? 255 : c < section * 4 ? h : 0);
+  var b = Math.round(c < section * 2 ? 0 : c < section * 3 ? l : c < section * 5 ? 255 : h);
+  
+  return new Color([r, g, b]);
 }
 
 // Slider
 
 UI.ColorPicker.Slider = function(picker)
 {
-	var dragging = false;
-	
-	function getPosition(evt)
-	{
-		var pos = picker.hue.getPosition();
-		return Math.min(picker.data.hue_h - 1, Math.max(0, evt.pageY - pos.y));
-	}
-	
+  var dragging = false;
+  
+  function getPosition(evt)
+  {
+    var pos = picker.hue.getPosition();
+    return Math.min(picker.data.hue_h - 1, Math.max(0, evt.pageY - pos.y));
+  }
+  
   function getCrosshairPosition()
   {
-	  var pos   = picker.crosshair.getPosition();
-	  var g_pos = picker.gradient.getPosition();
-	  pos.x -= g_pos.x;
-	  pos.y -= g_pos.y;
+    var pos   = picker.crosshair.getPosition();
+    var g_pos = picker.gradient.getPosition();
+    pos.x -= g_pos.x;
+    pos.y -= g_pos.y;
     return pos;
   }
 
-	function start(evt)
-	{
-		dragging = true;
-		picker.hue.addEventListener('mousemove', move, null);
-		window.addEventListener('mouseup', stop, null);
-		move(evt);
-	}
-	
-	function stop(evt)
-	{
-		dragging = false;
-		picker.hue.removeEventListener('mousemove', move, null);
-		window.removeEventListener('mouseup', stop, null);
-	}
-	
-	function move(evt)
-	{
-		if (dragging)
-		{
-			evt.preventDefault();
-			
-			var s_pos = getPosition(evt);
-			var c_pos = getCrosshairPosition();
-			
-			picker.putSlider(s_pos);
-			picker.setBaseColor(picker.getHueColor(s_pos));
-			picker.applyColor(picker.getGradientColor(c_pos.x, c_pos.y));
-		}
-	}
-	
-	picker.hue.addEventListener('mousedown', start, null);
-	picker.slider.addEventListener('mousedown', start, null);
+  function start(evt)
+  {
+    dragging = true;
+    picker.hue.addEventListener('mousemove', move, null);
+    window.addEventListener('mouseup', stop, null);
+    move(evt);
+  }
+  
+  function stop(evt)
+  {
+    dragging = false;
+    picker.hue.removeEventListener('mousemove', move, null);
+    window.removeEventListener('mouseup', stop, null);
+  }
+  
+  function move(evt)
+  {
+    if (dragging)
+    {
+      evt.preventDefault();
+      
+      var s_pos = getPosition(evt);
+      var c_pos = getCrosshairPosition();
+      
+      picker.putSlider(s_pos);
+      picker.setBaseColor(picker.getHueColor(s_pos));
+      picker.applyColor(picker.getGradientColor(c_pos.x, c_pos.y));
+    }
+  }
+  
+  picker.hue.addEventListener('mousedown', start, null);
+  picker.slider.addEventListener('mousedown', start, null);
 }
 
 // Crosshair
@@ -278,7 +278,7 @@ UI.ColorPicker.Crosshair = function(picker)
   
   function start(evt)
   {
-  	dragging = true;
+    dragging = true;
     picker.gradient.addEventListener('mousemove', move, false);
     window.addEventListener('mouseup', stop, false);
     move(evt);
@@ -295,11 +295,11 @@ UI.ColorPicker.Crosshair = function(picker)
   {
     if (dragging)
     {
-	    evt.preventDefault();
-		
-	    var pos = getPosition(evt);
-	    picker.putCrosshair(pos.x, pos.y);
-	    picker.applyColor(picker.getGradientColor(pos.x, pos.y));
+      evt.preventDefault();
+    
+      var pos = getPosition(evt);
+      picker.putCrosshair(pos.x, pos.y);
+      picker.applyColor(picker.getGradientColor(pos.x, pos.y));
     }
   }
   

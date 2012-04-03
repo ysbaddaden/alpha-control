@@ -2,7 +2,7 @@
  * Inflector is mostly a port of ActiveSupport::Inflector from Ruby on Rails.
  */
 
-var Inflector = {}
+var Inflector = {};
 
 Inflector.transliterateMapping = {
   'À': 'A', 'Á': 'A', 'Â': 'A', 'Ã': 'A', 'Ä': 'A', 'Å': 'A', 'Æ': 'AE', 'Ç':
@@ -15,65 +15,56 @@ Inflector.transliterateMapping = {
   'o', 'ô': 'o', 'õ': 'o', 'ö': 'o', 'ő': 'o', 'ø': 'o', 'ù': 'u', 'ú': 'u',
   'û': 'u', 'ü': 'u', 'ű': 'u', 'ý': 'y', 'þ': 'th', 'ÿ': 'y',
   'œ': 'oe', 'Œ': 'OE'
-}
+};
 
 Inflector.pluralRules      = [];
 Inflector.singularRules    = [];
 Inflector.uncountableRules = [];
 
-Inflector.plural = function(re, replacement) {
+Inflector.plural = function (re, replacement) {
   Inflector.pluralRules.unshift([re, replacement]);
-}
+};
 
-Inflector.singular = function(re, replacement) {
+Inflector.singular = function (re, replacement) {
   Inflector.singularRules.unshift([re, replacement]);
-}
+};
 
-Inflector.irregular = function(singular, plural)
-{
-  Inflector.plural(new RegExp(RegExp.escape(singular) + "$", 'i'), function(word) {
+Inflector.irregular = function (singular, plural) {
+  Inflector.plural(new RegExp(RegExp.escape(singular) + "$", 'i'), function (word) {
     return word.match(/^[A-Z]/) ? plural.capitalize() : plural;
   });
-  Inflector.singular(new RegExp(RegExp.escape(plural) + "$", 'i'), function(word) {
+  Inflector.singular(new RegExp(RegExp.escape(plural) + "$", 'i'), function (word) {
     return word.match(/^[A-Z]/) ? singular.capitalize() : singular;
   });
-}
+};
 
-Inflector.uncountable = function(words)
-{
-  for (var i=0; i<words.length; i++) {
+Inflector.uncountable = function (words) {
+  for (var i = 0, len = words.length; i < len; i++) {
     Inflector.uncountableRules.push(new RegExp(RegExp.escape(words[i]) + '$', 'i'));
   }
-}
+};
 
-Inflector.is_countable = function(word)
-{
-  for (var i=0; i<Inflector.uncountableRules.length; i++)
-  {
+Inflector.is_countable = function (word) {
+  for (var i = 0, len = Inflector.uncountableRules.length; i < len; i++) {
     if (word.match(Inflector.uncountableRules[i])) {
       return false;
     }
   }
   return true;
-}
+};
 
-Inflector.applyRules = function(word, rules)
-{
+Inflector.applyRules = function (word, rules) {
   var i, re;
-  
-  if (word.trim() != "" && Inflector.is_countable(word))
-  {
-    for (i=0; i<rules.length; i++)
-    {
+  if (word.trim() !== "" && Inflector.is_countable(word)) {
+    for (i = 0, len = rules.length; i < len; i++) {
       re = rules[i][0];
-      
       if (word.match(re)) {
         return word.replace(re, rules[i][1]);
       }
     }
   }
   return word;
-}
+};
 
 Inflector.plural(/$/, 's');
 Inflector.plural(/s$/i, 's');
@@ -119,13 +110,12 @@ Inflector.singular(/(matr)ices$/i, '$1ix');
 Inflector.singular(/(quiz)zes$/i, '$1');
 Inflector.singular(/(database)s$/i, '$1');
 
-Inflector.irregular('person', 'people')
-Inflector.irregular('man', 'men')
-Inflector.irregular('child', 'children')
-Inflector.irregular('sex', 'sexes')
-Inflector.irregular('move', 'moves')
-Inflector.irregular('cow', 'kine')
+Inflector.irregular('person', 'people');
+Inflector.irregular('man', 'men');
+Inflector.irregular('child', 'children');
+Inflector.irregular('sex', 'sexes');
+Inflector.irregular('move', 'moves');
+Inflector.irregular('cow', 'kine');
 
-Inflector.uncountable(['equipment', 'information', 'rice', 'money', 'species',
-  'series', 'fish', 'sheep', 'jeans']);
+Inflector.uncountable(['equipment', 'information', 'rice', 'money', 'species', 'series', 'fish', 'sheep', 'jeans']);
 

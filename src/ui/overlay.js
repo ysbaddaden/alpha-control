@@ -1,11 +1,11 @@
-UI.Overlay = function() {}
+UI.Overlay = function() {};
 UI.Overlay.prototype = new UI.Widget();
 
 UI.createOverlay = function() {
   var overlay = new UI.Overlay();
   overlay.initOverlay.apply(overlay, arguments);
   return overlay;
-}
+};
 
 UI.Overlay.prototype.initOverlay = function(options) {
   this.setDefaultOptions({
@@ -22,10 +22,9 @@ UI.Overlay.prototype.initOverlay = function(options) {
     iframe.style.cssText += ';position:absolute;border:0;' +
       'top:0;left:0;width:100%;height:100%;overflow:hidden;filter:alpha(opacity=0);';
     this.container.insertBefore(iframe, this.content);
-    
     this.content.style.cssText += ';position:absolute;border:0;top:0;left:0;width:100%;height:100%;';
   }
-}
+};
 
 // protected
 

@@ -1,11 +1,11 @@
-UI.Dialog = function () {}
+UI.Dialog = function () {};
 UI.Dialog.prototype = new UI.Window();
 
 UI.Dialog.Styles = {
   Warning:       'warning',
   Informational: 'informational',
   Critical:      'critical'
-}
+};
 
 Eventable(UI.Dialog, ['validate', 'cancel']);
 
@@ -13,7 +13,7 @@ UI.createDialog = function () {
   var dialog = new UI.Dialog();
   dialog.initDialog.apply(dialog, arguments);
   return dialog;
-}
+};
 
 UI.Dialog.prototype.initDialog = function (options) {
   this.setDefaultOptions({
@@ -32,7 +32,7 @@ UI.Dialog.prototype.initDialog = function (options) {
     this.addEventListener('hide',    overlay.hide.bind(overlay));
     this.addEventListener('destroy', overlay.destroy.bind(overlay));
   }
-}
+};
 
 // Adds a button to the button container. Buttons are placed from the right
 // (most important) to the left (less important).
@@ -42,5 +42,5 @@ UI.Dialog.prototype.addButton = function (label, callback) {
   button.onclick = callback;
   this.buttons.insertBefore(button, this.buttons.firstChild);
   return button;
-}
+};
 

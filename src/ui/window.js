@@ -1,11 +1,11 @@
-UI.Window = function () {}
+UI.Window = function () {};
 UI.Window.prototype = new UI.Widget();
 
 UI.createWindow = function () {
   var widget = new UI.Window();
   widget.initWindow.apply(widget, arguments);
   return widget;
-}
+};
 
 UI.Window.prototype.initWindow = function (options) {
   this.setDefaultOptions({
@@ -31,12 +31,12 @@ UI.Window.prototype.initWindow = function (options) {
   this.title = document.createElement('span');
   this.title.className = 'ui-title';
   this.titlebar.appendChild(this.title);
-}
+};
 
 // Sets the window title as text.
 UI.Window.prototype.setTitle = function (title) {
   this.title.innerText = title;
-}
+};
 
 // Positions the window. Automatically called on display.
 UI.Window.prototype.position = function () {
@@ -74,12 +74,12 @@ UI.Window.prototype.position = function () {
     var left = (window.innerWidth - this.container.offsetWidth) / 2 + window.pageXOffset;
     this.container.style.left = Math.round(left) + 'px';
   }
-}
+};
 
 UI.Window.prototype._destroy = function () {
   UI.Widget.prototype._destroy.call(this);
   delete this.closeButton;
   delete this.title;
   delete this.titlebar;
-}
+};
 

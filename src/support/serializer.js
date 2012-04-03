@@ -18,41 +18,34 @@
 
 Alpha.Serializer = function() {
   this.data = '';
-}
+};
 
-Alpha.Serializer.prototype.serialize = function(form)
-{
+Alpha.Serializer.prototype.serialize = function (form) {
   var inputs = form.querySelectorAll('input,select,textarea');
-  Array.prototype.forEach.call(inputs, function(input)
-  {
-    if (!input.name
-      || input.disabled
-      || input.type == 'file'
-      || (input.type == 'checkbox' && !input.checked)
-      || (input.type == 'submit' && !input.hasAttribute('submitted')))
-    {
+
+  Array.prototype.forEach.call(inputs, function (input) {
+    if (!input.name || input.disabled || input.type === 'file' ||
+        (input.type === 'checkbox' && !input.checked) ||
+        (input.type === 'submit' && !input.hasAttribute('submitted'))) {
       return;
     }
-    if (input.type == 'select' && input.multiple)
-    {
-      for (var i=0, len=this.selectedOptions.length; i<len; i++) {
+    if (input.type == 'select' && input.multiple) {
+      for (var i = 0, len = this.selectedOptions.length; i < len; i++) {
         this.append(input.name, this.selectedOptions[i].value);
       }
-    }
-    else {
+    } else {
       this.append(input.name, input.value);
     }
   }, this);
-}
+};
 
-Alpha.Serializer.prototype.append = function(key, value)
-{
+Alpha.Serializer.prototype.append = function (key, value) {
   if (value !== null) {
     this.data += (this.data ? '&' : '') + encodeURIComponent(key) + '=' + encodeURIComponent(value);
   }
-}
+};
 
-Alpha.Serializer.prototype.toString = function() {
+Alpha.Serializer.prototype.toString = function () {
   return this.data;
-}
+};
 

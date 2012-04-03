@@ -1,5 +1,5 @@
 /**
- * WARNING: EXPERIMENTAL WORK IN PROGRESS.
+ * WARNING: EXPERIMENTAL EXPERIMENTATION IN PROGRESS.
  * 
  * Tries to implement something like ActiveResource.
  * 
@@ -11,12 +11,11 @@
  *   // User.destroy(1, function(user) { ... });
  */
 
-var Resource = function() {
+var Resource = function () {
   this.guessedAttributes = [];
-}
+};
 
-Resource.create = function(name)
-{
+Resource.create = function (name) {
   var r = function() {}
   r.prototype = new Resource();
   r.prototype.klass = r;
