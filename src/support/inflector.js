@@ -1,7 +1,4 @@
-/**
- * Inflector is mostly a port of ActiveSupport::Inflector from Ruby on Rails.
- */
-
+// Inflector is mostly a port of ActiveSupport::Inflector from Ruby on Rails.
 var Inflector = {};
 
 Inflector.transliterateMapping = {
@@ -22,48 +19,48 @@ Inflector.singularRules    = [];
 Inflector.uncountableRules = [];
 
 Inflector.plural = function (re, replacement) {
-  Inflector.pluralRules.unshift([re, replacement]);
+    Inflector.pluralRules.unshift([re, replacement]);
 };
 
 Inflector.singular = function (re, replacement) {
-  Inflector.singularRules.unshift([re, replacement]);
+    Inflector.singularRules.unshift([re, replacement]);
 };
 
 Inflector.irregular = function (singular, plural) {
-  Inflector.plural(new RegExp(RegExp.escape(singular) + "$", 'i'), function (word) {
-    return word.match(/^[A-Z]/) ? plural.capitalize() : plural;
-  });
-  Inflector.singular(new RegExp(RegExp.escape(plural) + "$", 'i'), function (word) {
-    return word.match(/^[A-Z]/) ? singular.capitalize() : singular;
-  });
+    Inflector.plural(new RegExp(RegExp.escape(singular) + "$", 'i'), function (word) {
+        return word.match(/^[A-Z]/) ? plural.capitalize() : plural;
+    });
+    Inflector.singular(new RegExp(RegExp.escape(plural) + "$", 'i'), function (word) {
+        return word.match(/^[A-Z]/) ? singular.capitalize() : singular;
+    });
 };
 
 Inflector.uncountable = function (words) {
-  for (var i = 0, len = words.length; i < len; i++) {
-    Inflector.uncountableRules.push(new RegExp(RegExp.escape(words[i]) + '$', 'i'));
-  }
+    for (var i = 0, len = words.length; i < len; i++) {
+        Inflector.uncountableRules.push(new RegExp(RegExp.escape(words[i]) + '$', 'i'));
+    }
 };
 
 Inflector.is_countable = function (word) {
-  for (var i = 0, len = Inflector.uncountableRules.length; i < len; i++) {
-    if (word.match(Inflector.uncountableRules[i])) {
-      return false;
+    for (var i = 0, len = Inflector.uncountableRules.length; i < len; i++) {
+        if (word.match(Inflector.uncountableRules[i])) {
+            return false;
+        }
     }
-  }
-  return true;
+    return true;
 };
 
 Inflector.applyRules = function (word, rules) {
-  var i, re;
-  if (word.trim() !== "" && Inflector.is_countable(word)) {
-    for (i = 0, len = rules.length; i < len; i++) {
-      re = rules[i][0];
-      if (word.match(re)) {
-        return word.replace(re, rules[i][1]);
-      }
+    var i, re, len;
+    if (word.trim() !== "" && Inflector.is_countable(word)) {
+        for (i = 0, len = rules.length; i < len; i++) {
+            re = rules[i][0];
+            if (word.match(re)) {
+                return word.replace(re, rules[i][1]);
+            }
+        }
     }
-  }
-  return word;
+    return word;
 };
 
 Inflector.plural(/$/, 's');
@@ -118,4 +115,3 @@ Inflector.irregular('move', 'moves');
 Inflector.irregular('cow', 'kine');
 
 Inflector.uncountable(['equipment', 'information', 'rice', 'money', 'species', 'series', 'fish', 'sheep', 'jeans']);
-

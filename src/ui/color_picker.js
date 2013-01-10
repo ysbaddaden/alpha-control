@@ -9,29 +9,29 @@ UI.ColorPicker.prototype.initColorPicker = function(input, options)
 {
   this.initPicker(input, options);
   this.input.addEventListener('click', this.show.bind(this), false);
-  
+
   this.gradient  = this.newCanvas('gradient',  150, 150);
   this.crosshair = this.newCanvas('crosshair',  15,  15);
   this.hue       = this.newCanvas('hue',        15, 150);
   this.slider    = this.newCanvas('slider',     25,   5);
-  
+
   this.preview = document.createElement('div');
   this.preview.className = 'preview';
-  
+
   var gradient_wrapper = document.createElement('div');
   gradient_wrapper.className = 'gradient-wrapper';
-  gradient_wrapper.appendChild(this.gradient);
-  gradient_wrapper.appendChild(this.crosshair);
+  gradient_wrapper.append(this.gradient);
+  gradient_wrapper.append(this.crosshair);
 
   var hue_wrapper = document.createElement('div');
   hue_wrapper.className = 'hue-wrapper';
-  hue_wrapper.appendChild(this.hue);
-  hue_wrapper.appendChild(this.slider);
-  
-  this.content.appendChild(gradient_wrapper);
-  this.content.appendChild(hue_wrapper);
-  this.content.appendChild(this.preview);
-  
+  hue_wrapper.append(this.hue);
+  hue_wrapper.append(this.slider);
+
+  this.content.append(gradient_wrapper);
+  this.content.append(hue_wrapper);
+  this.content.append(this.preview);
+
   // values
   // TODO: Move data to options.
   this.data = {
@@ -98,7 +98,7 @@ UI.ColorPicker.prototype.initColorPicker = function(input, options)
   ctx.moveTo(0, 0);  ctx.lineTo(5, 2.5);  ctx.lineTo(0, 5);  ctx.lineTo(0, 0);
   ctx.moveTo(25, 0); ctx.lineTo(20, 2.5); ctx.lineTo(25, 5); ctx.lineTo(25, 0);
   ctx.fill();
-  
+
   new UI.ColorPicker.Crosshair(this);
   new UI.ColorPicker.Slider(this);
 }
@@ -135,16 +135,16 @@ UI.ColorPicker.prototype.putSlider = function(pos) {
 UI.ColorPicker.prototype.setColor = function(color)
 {
   if (color.trim() == '') return;
-  
+
   color = new Color(color);
-  
+
   var x = Math.round(this.data.gradient_w / 100 * color.s);
   var y = Math.round(this.data.gradient_h / 100 * (100 - color.v));
   this.putCrosshair(x, y);
-  
+
   var i = Math.round(this.data.hue_h / 360 * color.h);
   this.putSlider(i);
-  
+
   this.setBaseColor(this.getHueColor(i));
   this.applyColor(color);
 }
@@ -161,10 +161,10 @@ UI.ColorPicker.prototype.setBaseColor = function(color)
 UI.ColorPicker.prototype.applyColor = function(color)
 {
   color = new Color(color);
-  
+
   this.preview.style.backgroundColor = color.toString();
   this.input.value = color.toString();
-  
+
   if (this.options && this.options.onChange) {
     this.options.onChange(color);
   }
@@ -175,16 +175,16 @@ UI.ColorPicker.prototype.getGradientColor = function(x, y)
 {
   this.data.x = x;
   this.data.y = y;
-  
+
   // checks min & max, then linerizes gradient to full 255 colors
   x = 255 / (this.data.gradient_w - 1) * Math.max(0, Math.min(x, this.data.gradient_w - 1));
   y = 255 / (this.data.gradient_h - 1) * Math.max(0, Math.min(y, this.data.gradient_h - 1));
-  
+
   // computes color
   var r = Math.round((1 - (1 - (this.data.base.r / 255)) * (x / 255)) * (255 - y));
   var g = Math.round((1 - (1 - (this.data.base.g / 255)) * (x / 255)) * (255 - y));
   var b = Math.round((1 - (1 - (this.data.base.b / 255)) * (x / 255)) * (255 - y));
-  
+
   return new Color([r, g, b]);
 }
 
@@ -193,17 +193,17 @@ UI.ColorPicker.prototype.getHueColor = function(i)
 {
   i -= (this.hue.offsetHeight - this.hue.clientHeight) / 2;
   i = Math.max(0, Math.min(i, this.data.hue_h));
-  
+
   var section = this.data.hue_h / 6; // separates each sections
   var c  = i % this.data.hue_h;      // row
   var cs = i % section;              // row in current group
   var l  = (255 / section) * cs;     // color percentage
-  
+
   var h = 255 - l;
   var r = Math.round(c < section ? 255 : c < section * 2 ? h : c < section * 4 ? 0 : c < section * 5 ? l : 255);
   var g = Math.round(c < section ? l : c < section * 3 ? 255 : c < section * 4 ? h : 0);
   var b = Math.round(c < section * 2 ? 0 : c < section * 3 ? l : c < section * 5 ? 255 : h);
-  
+
   return new Color([r, g, b]);
 }
 
@@ -212,13 +212,13 @@ UI.ColorPicker.prototype.getHueColor = function(i)
 UI.ColorPicker.Slider = function(picker)
 {
   var dragging = false;
-  
+
   function getPosition(evt)
   {
     var pos = picker.hue.getPosition();
     return Math.min(picker.data.hue_h - 1, Math.max(0, evt.pageY - pos.y));
   }
-  
+
   function getCrosshairPosition()
   {
     var pos   = picker.crosshair.getPosition();
@@ -235,29 +235,29 @@ UI.ColorPicker.Slider = function(picker)
     window.addEventListener('mouseup', stop, null);
     move(evt);
   }
-  
+
   function stop(evt)
   {
     dragging = false;
     picker.hue.removeEventListener('mousemove', move, null);
     window.removeEventListener('mouseup', stop, null);
   }
-  
+
   function move(evt)
   {
     if (dragging)
     {
       evt.preventDefault();
-      
+
       var s_pos = getPosition(evt);
       var c_pos = getCrosshairPosition();
-      
+
       picker.putSlider(s_pos);
       picker.setBaseColor(picker.getHueColor(s_pos));
       picker.applyColor(picker.getGradientColor(c_pos.x, c_pos.y));
     }
   }
-  
+
   picker.hue.addEventListener('mousedown', start, null);
   picker.slider.addEventListener('mousedown', start, null);
 }
@@ -267,7 +267,7 @@ UI.ColorPicker.Slider = function(picker)
 UI.ColorPicker.Crosshair = function(picker)
 {
   var dragging = false;
-  
+
   function getPosition(evt)
   {
     var pos = picker.gradient.getPosition();
@@ -275,7 +275,7 @@ UI.ColorPicker.Crosshair = function(picker)
     var y = Math.min(picker.data.gradient_h - 1, Math.max(0, evt.pageY - pos.y));
     return {x: x, y: y};
   }
-  
+
   function start(evt)
   {
     dragging = true;
@@ -283,26 +283,26 @@ UI.ColorPicker.Crosshair = function(picker)
     window.addEventListener('mouseup', stop, false);
     move(evt);
   }
-  
+
   function stop(evt)
   {
     dragging = false;
     picker.gradient.removeEventListener('mousemove', move, false);
     window.removeEventListener('mouseup', stop, false);
   }
-  
+
   function move(evt)
   {
     if (dragging)
     {
       evt.preventDefault();
-    
+
       var pos = getPosition(evt);
       picker.putCrosshair(pos.x, pos.y);
       picker.applyColor(picker.getGradientColor(pos.x, pos.y));
     }
   }
-  
+
   picker.gradient.addEventListener('mousedown', start, false);
   picker.crosshair.addEventListener('mousedown', start, false);
 }

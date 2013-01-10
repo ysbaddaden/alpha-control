@@ -1,2594 +1,1656 @@
-/**
- * http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/Array
- */
+// html5shiv MIT @rem remysharp.com/html5-enabling-script
+// iepp v1.6.2 MIT @jon_neal iecss.com/print-protector
+/*@cc_on(function(m,c){var z="abbr|article|aside|audio|canvas|details|figcaption|figure|footer|header|hgroup|mark|meter|nav|output|progress|section|summary|time|video";function n(d){for(var a=-1;++a<o;)d.createElement(i[a])}function p(d,a){for(var e=-1,b=d.length,j,q=[];++e<b;){j=d[e];if((a=j.media||a)!="screen")q.push(p(j.imports,a),j.cssText)}return q.join("")}var g=c.createElement("div");g.innerHTML="<z>i</z>";if(g.childNodes.length!==1){var i=z.split("|"),o=i.length,s=RegExp("(^|\\s)("+z+")",
+"gi"),t=RegExp("<(/*)("+z+")","gi"),u=RegExp("(^|[^\\n]*?\\s)("+z+")([^\\n]*)({[\\n\\w\\W]*?})","gi"),r=c.createDocumentFragment(),k=c.documentElement;g=k.firstChild;var h=c.createElement("body"),l=c.createElement("style"),f;n(c);n(r);g.insertBefore(l,
+g.firstChild);l.media="print";m.attachEvent("onbeforeprint",function(){var d=-1,a=p(c.styleSheets,"all"),e=[],b;for(f=f||c.body;(b=u.exec(a))!=null;)e.push((b[1]+b[2]+b[3]).replace(s,"$1.iepp_$2")+b[4]);for(l.styleSheet.cssText=e.join("\n");++d<o;){a=c.getElementsByTagName(i[d]);e=a.length;for(b=-1;++b<e;)if(a[b].className.indexOf("iepp_")<0)a[b].className+=" iepp_"+i[d]}r.appendChild(f);k.appendChild(h);h.className=f.className;h.innerHTML=f.innerHTML.replace(t,"<$1font")});m.attachEvent("onafterprint",
+function(){h.innerHTML="";k.removeChild(h);k.appendChild(f);l.styleSheet.cssText=""})}})(this,document);@*/
+// vim: ts=4 sts=4 sw=4 expandtab
+// -- kriskowal Kris Kowal Copyright (C) 2009-2011 MIT License
+// -- tlrobinson Tom Robinson Copyright (C) 2009-2010 MIT License (Narwhal Project)
+// -- dantman Daniel Friesen Copyright (C) 2010 XXX TODO License or CLA
+// -- fschaefer Florian Schäfer Copyright (C) 2010 MIT License
+// -- Gozala Irakli Gozalishvili Copyright (C) 2010 MIT License
+// -- kitcambridge Kit Cambridge Copyright (C) 2011 MIT License
+// -- kossnocorp Sasha Koss XXX TODO License or CLA
+// -- bryanforbes Bryan Forbes XXX TODO License or CLA
+// -- killdream Quildreen Motta Copyright (C) 2011 MIT Licence
+// -- michaelficarra Michael Ficarra Copyright (C) 2011 3-clause BSD License
+// -- sharkbrainguy Gerard Paapu Copyright (C) 2011 MIT License
+// -- bbqsrc Brendan Molloy (C) 2011 Creative Commons Zero (public domain)
+// -- iwyg XXX TODO License or CLA
+// -- DomenicDenicola Domenic Denicola Copyright (C) 2011 MIT License
+// -- xavierm02 Montillet Xavier Copyright (C) 2011 MIT License
+// -- Raynos Jake Verbaten Copyright (C) 2011 MIT Licence
+// -- samsonjs Sami Samhuri Copyright (C) 2010 MIT License
+// -- rwldrn Rick Waldron Copyright (C) 2011 MIT License
+// -- lexer Alexey Zakharov XXX TODO License or CLA
 
-// JavaScript 1.6
+// NOTE: shims that are either dubious or that silently fail are disabled.
 
-if (!Array.prototype.indexOf)
-{
-	Array.prototype.indexOf = function(elt /*, from*/)
-	{
-		var len  = this.length;
-		var from = Number(arguments[1]) || 0;
-		from = (from < 0) ? Math.ceil(from) : Math.floor(from);
-		if (from < 0) {
-			from += len;
-		}
-		for (; from < len; from++)
-		{
-			if (from in this && this[from] === elt) {
-				return from;
-			}
-		}
-		return -1;
-	};
-}
+/*!
+    Copyright (c) 2009, 280 North Inc. http://280north.com/
+    MIT License. http://github.com/280north/narwhal/blob/master/README.md
+*/
 
-if (!Array.prototype.lastIndexOf)
-{
-	Array.prototype.lastIndexOf = function(elt /*, from*/)
-	{
-		var len  = this.length;
-		var from = Number(arguments[1]);
-		if (isNaN(from)) {
-			from = len - 1;
-		}
-		else
-		{
-			from = (from < 0) ? Math.ceil(from) : Math.floor(from);
-			if (from < 0) {
-				from += len;
-			}
-			else if (from >= len) {
-				from = len - 1;
-			}
-		}
-		for (; from > -1; from--)
-		{
-			if (from in this && this[from] === elt) {
-				return from;
-			}
-		}
-		return -1;
-	};
-}
-
-if (!Array.prototype.every)
-{
-	Array.prototype.every = function(fn /*, self*/)
-	{
-		if (typeof fn != "function") {
-			throw new TypeError();
-		}
-		var self = arguments[1];
-		for (var i = 0, len = this.length; i < len; i++)
-		{
-			if (i in this && !fn.call(self, this[i], i, this)) {
-				return false;
-			}
-		}
-		return true;
-	};
-}
-
-if (!Array.prototype.filter)
-{
-	Array.prototype.filter = function(fn /*, self*/)
-	{
-		if (typeof fn != "function") {
-			throw new TypeError();
-		}
-		var res  = new Array();
-		var self = arguments[1];
-		for (var i = 0, len = this.length; i < len; i++)
-		{
-			if (i in this)
-			{
-				var val = this[i]; // in case fn mutates this
-				if (fn.call(self, val, i, this)) {
-					res.push(val);
-				}
-			}
-		}
-		return res;
-	};
-}
-
-if (!Array.prototype.forEach)
-{
-	Array.prototype.forEach = function(fn)
-	{
-		if (typeof fn != "function") {
-			throw new TypeError();
-		}
-		var self = arguments[1];
-		for (var i = 0, len = this.length; i < len; i++)
-		{
-			if (i in this) {
-				fn.call(self, this[i], i, this);
-			}
-		}
-	}
-}
-
-if (!Array.prototype.map)
-{
-	Array.prototype.map = function(fn /*, self*/)
-	{
-		if (typeof fn != "function") {
-			throw new TypeError();
-		}
-		var res  = new Array(len);
-		var self = arguments[1];
-		for (var i = 0, len = this.length; i < len; i++)
-		{
-			if (i in this) {
-				res[i] = fn.call(self, this[i], i, this);
-			}
-		}
-		return res;
-	};
-}
-
-if (!Array.prototype.some)
-{
-	Array.prototype.some = function(fn /*, self*/)
-	{
-		if (typeof fn != "function") {
-			throw new TypeError();
-		}
-		var self = arguments[1];
-		for (var i = 0, len = this.length; i < len; i++)
-		{
-			if (i in this && fn.call(self, this[i], i, this))
-			return true;
-		}
-		return false;
-	};
-}
-
-
-// JavaScript 1.8
-
-if (!Array.prototype.reduce)
-{
-	Array.prototype.reduce = function(fn /*, initial*/)
-	{
-		var len = this.length;
-		if (typeof fn != "function") {
-			throw new TypeError();
-		}
-
-		// no value to return if no initial value and an empty array
-		if (len == 0 && arguments.length == 1) {
-			throw new TypeError();
-		}
-
-		var i = 0;
-		if (arguments.length >= 2) {
-			var rv = arguments[1];
-		}
-		else
-		{
-			do
-			{
-				if (i in this)
-				{
-					rv = this[i++];
-					break;
-				}
-
-				// if array contains no values, no initial value to return
-				if (++i >= len) {
-					throw new TypeError();
-				}
-			}
-			while (true);
-		}
-
-		for (; i < len; i++)
-		{
-			if (i in this) {
-				rv = fn.call(null, rv, this[i], i, this);
-			}
-		}
-
-		return rv;
-	};
-}
-
-if (!Array.prototype.reduceRight)
-{
-	Array.prototype.reduceRight = function(fn /*, initial*/)
-	{
-		var len = this.length;
-		if (typeof fn != "function") {
-			throw new TypeError();
-		}
-
-		// no value to return if no initial value, empty array
-		if (len == 0 && arguments.length == 1) {
-			throw new TypeError();
-		}
-
-		var i = len - 1;
-		if (arguments.length >= 2) {
-			var rv = arguments[1];
-		}
-		else
-		{
-			do
-			{
-				if (i in this)
-				{
-					rv = this[i--];
-					break;
-				}
-
-				// if array contains no values, no initial value to return
-				if (--i < 0) {
-					throw new TypeError();
-				}
-			}
-			while (true);
-		}
-
-		for (; i >= 0; i--)
-		{
-			if (i in this) {
-				rv = fn.call(null, rv, this[i], i, this);
-			}
-		}
-
-		return rv;
-	};
-}
-/* JavaScript 1.8 */
-
-if (!String.prototype.trim)
-{
-  String.prototype.trim = function() {
-    return this.replace(/^\s+/, '').replace(/\s+$/, '');
-  }
-}
+// Module systems magic dance
+//(function (definition) {
+//    // RequireJS
+//    if (typeof define == "function") {
+//        define(definition);
+//    // CommonJS and <script>
+//    } else {
+//        definition();
+//    }
+//})(function () {
 
 /**
- * Core JavaScript backward compatibility.
+ * Brings an environment as close to ECMAScript 5 compliance
+ * as is possible with the facilities of erstwhile engines.
+ *
+ * Annotated ES5: http://es5.github.com/ (specific links below)
+ * ES5 Spec: http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-262.pdf
+ * Required reading: http://javascriptweblog.wordpress.com/2011/12/05/extending-javascript-natives/
  */
 
-var Alpha = {};
+//
+// Function
+// ========
+//
 
-// Internet Explorer browser sniffing (comes handy sometimes).
-Alpha.browser = {
-  ie:  !!(window.VBArray),
-  ie6: !!(window.VBArray && document.implementation)
+// ES-5 15.3.4.5
+// http://es5.github.com/#x15.3.4.5
+
+if (!Function.prototype.bind) {
+    Function.prototype.bind = function bind(that) { // .length is 1
+        // 1. Let Target be the this value.
+        var target = this;
+        // 2. If IsCallable(Target) is false, throw a TypeError exception.
+        if (typeof target != "function") {
+            throw new TypeError(); // TODO message
+        }
+        // 3. Let A be a new (possibly empty) internal list of all of the
+        //   argument values provided after thisArg (arg1, arg2 etc), in order.
+        // XXX slicedArgs will stand in for "A" if used
+        var args = slice.call(arguments, 1); // for normal call
+        // 4. Let F be a new native ECMAScript object.
+        // 11. Set the [[Prototype]] internal property of F to the standard
+        //   built-in Function prototype object as specified in 15.3.3.1.
+        // 12. Set the [[Call]] internal property of F as described in
+        //   15.3.4.5.1.
+        // 13. Set the [[Construct]] internal property of F as described in
+        //   15.3.4.5.2.
+        // 14. Set the [[HasInstance]] internal property of F as described in
+        //   15.3.4.5.3.
+        var bound = function () {
+
+            if (this instanceof bound) {
+                // 15.3.4.5.2 [[Construct]]
+                // When the [[Construct]] internal method of a function object,
+                // F that was created using the bind function is called with a
+                // list of arguments ExtraArgs, the following steps are taken:
+                // 1. Let target be the value of F's [[TargetFunction]]
+                //   internal property.
+                // 2. If target has no [[Construct]] internal method, a
+                //   TypeError exception is thrown.
+                // 3. Let boundArgs be the value of F's [[BoundArgs]] internal
+                //   property.
+                // 4. Let args be a new list containing the same values as the
+                //   list boundArgs in the same order followed by the same
+                //   values as the list ExtraArgs in the same order.
+                // 5. Return the result of calling the [[Construct]] internal
+                //   method of target providing args as the arguments.
+
+                var F = function(){};
+                F.prototype = target.prototype;
+                var self = new F;
+
+                var result = target.apply(
+                    self,
+                    args.concat(slice.call(arguments))
+                );
+                if (Object(result) === result) {
+                    return result;
+                }
+                return self;
+
+            } else {
+                // 15.3.4.5.1 [[Call]]
+                // When the [[Call]] internal method of a function object, F,
+                // which was created using the bind function is called with a
+                // this value and a list of arguments ExtraArgs, the following
+                // steps are taken:
+                // 1. Let boundArgs be the value of F's [[BoundArgs]] internal
+                //   property.
+                // 2. Let boundThis be the value of F's [[BoundThis]] internal
+                //   property.
+                // 3. Let target be the value of F's [[TargetFunction]] internal
+                //   property.
+                // 4. Let args be a new list containing the same values as the
+                //   list boundArgs in the same order followed by the same
+                //   values as the list ExtraArgs in the same order.
+                // 5. Return the result of calling the [[Call]] internal method
+                //   of target providing boundThis as the this value and
+                //   providing args as the arguments.
+
+                // equiv: target.call(this, ...boundArgs, ...args)
+                return target.apply(
+                    that,
+                    args.concat(slice.call(arguments))
+                );
+
+            }
+
+        };
+        // XXX bound.length is never writable, so don't even try
+        //
+        // 15. If the [[Class]] internal property of Target is "Function", then
+        //     a. Let L be the length property of Target minus the length of A.
+        //     b. Set the length own property of F to either 0 or L, whichever is
+        //       larger.
+        // 16. Else set the length own property of F to 0.
+        // 17. Set the attributes of the length own property of F to the values
+        //   specified in 15.3.5.1.
+
+        // TODO
+        // 18. Set the [[Extensible]] internal property of F to true.
+
+        // TODO
+        // 19. Let thrower be the [[ThrowTypeError]] function Object (13.2.3).
+        // 20. Call the [[DefineOwnProperty]] internal method of F with
+        //   arguments "caller", PropertyDescriptor {[[Get]]: thrower, [[Set]]:
+        //   thrower, [[Enumerable]]: false, [[Configurable]]: false}, and
+        //   false.
+        // 21. Call the [[DefineOwnProperty]] internal method of F with
+        //   arguments "arguments", PropertyDescriptor {[[Get]]: thrower,
+        //   [[Set]]: thrower, [[Enumerable]]: false, [[Configurable]]: false},
+        //   and false.
+
+        // TODO
+        // NOTE Function objects created using Function.prototype.bind do not
+        // have a prototype property or the [[Code]], [[FormalParameters]], and
+        // [[Scope]] internal properties.
+        // XXX can't delete prototype in pure-js.
+
+        // 22. Return F.
+        return bound;
+    };
+}
+
+// Shortcut to an often accessed properties, in order to avoid multiple
+// dereference that costs universally.
+// _Please note: Shortcuts are defined after `Function.prototype.bind` as we
+// us it in defining shortcuts.
+var call = Function.prototype.call;
+var prototypeOfArray = Array.prototype;
+var prototypeOfObject = Object.prototype;
+var slice = prototypeOfArray.slice;
+// Having a toString local variable name breaks in Opera so use _toString.
+var _toString = call.bind(prototypeOfObject.toString);
+var owns = call.bind(prototypeOfObject.hasOwnProperty);
+
+// If JS engine supports accessors creating shortcuts.
+var defineGetter;
+var defineSetter;
+var lookupGetter;
+var lookupSetter;
+var supportsAccessors;
+if ((supportsAccessors = owns(prototypeOfObject, "__defineGetter__"))) {
+    defineGetter = call.bind(prototypeOfObject.__defineGetter__);
+    defineSetter = call.bind(prototypeOfObject.__defineSetter__);
+    lookupGetter = call.bind(prototypeOfObject.__lookupGetter__);
+    lookupSetter = call.bind(prototypeOfObject.__lookupSetter__);
+}
+
+//
+// Array
+// =====
+//
+
+// ES5 15.4.3.2
+// http://es5.github.com/#x15.4.3.2
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/isArray
+if (!Array.isArray) {
+    Array.isArray = function isArray(obj) {
+        return _toString(obj) == "[object Array]";
+    };
+}
+
+// The IsCallable() check in the Array functions
+// has been replaced with a strict check on the
+// internal class of the object to trap cases where
+// the provided function was actually a regular
+// expression literal, which in V8 and
+// JavaScriptCore is a typeof "function".  Only in
+// V8 are regular expression literals permitted as
+// reduce parameters, so it is desirable in the
+// general case for the shim to match the more
+// strict and common behavior of rejecting regular
+// expressions.
+
+// ES5 15.4.4.18
+// http://es5.github.com/#x15.4.4.18
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/array/forEach
+if (!Array.prototype.forEach) {
+    Array.prototype.forEach = function forEach(fun /*, thisp*/) {
+        var self = toObject(this),
+            thisp = arguments[1],
+            i = -1,
+            length = self.length >>> 0;
+
+        // If no callback function or if callback is not a callable function
+        if (_toString(fun) != "[object Function]") {
+            throw new TypeError(); // TODO message
+        }
+
+        while (++i < length) {
+            if (i in self) {
+                // Invoke the callback function with call, passing arguments:
+                // context, property value, property key, thisArg object context
+                fun.call(thisp, self[i], i, self);
+            }
+        }
+    };
+}
+
+// ES5 15.4.4.19
+// http://es5.github.com/#x15.4.4.19
+// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/map
+if (!Array.prototype.map) {
+    Array.prototype.map = function map(fun /*, thisp*/) {
+        var self = toObject(this),
+            length = self.length >>> 0,
+            result = Array(length),
+            thisp = arguments[1];
+
+        // If no callback function or if callback is not a callable function
+        if (_toString(fun) != "[object Function]") {
+            throw new TypeError(); // TODO message
+        }
+
+        for (var i = 0; i < length; i++) {
+            if (i in self)
+                result[i] = fun.call(thisp, self[i], i, self);
+        }
+        return result;
+    };
+}
+
+// ES5 15.4.4.20
+// http://es5.github.com/#x15.4.4.20
+// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/filter
+if (!Array.prototype.filter) {
+    Array.prototype.filter = function filter(fun /*, thisp */) {
+        var self = toObject(this),
+            length = self.length >>> 0,
+            result = [],
+            value,
+            thisp = arguments[1];
+
+        // If no callback function or if callback is not a callable function
+        if (_toString(fun) != "[object Function]") {
+            throw new TypeError(); // TODO message
+        }
+
+        for (var i = 0; i < length; i++) {
+            if (i in self) {
+                value = self[i];
+                if (fun.call(thisp, value, i, self)) {
+                    result.push(value);
+                }
+            }
+        }
+        return result;
+    };
+}
+
+// ES5 15.4.4.16
+// http://es5.github.com/#x15.4.4.16
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/every
+if (!Array.prototype.every) {
+    Array.prototype.every = function every(fun /*, thisp */) {
+        var self = toObject(this),
+            length = self.length >>> 0,
+            thisp = arguments[1];
+
+        // If no callback function or if callback is not a callable function
+        if (_toString(fun) != "[object Function]") {
+            throw new TypeError(); // TODO message
+        }
+
+        for (var i = 0; i < length; i++) {
+            if (i in self && !fun.call(thisp, self[i], i, self)) {
+                return false;
+            }
+        }
+        return true;
+    };
+}
+
+// ES5 15.4.4.17
+// http://es5.github.com/#x15.4.4.17
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some
+if (!Array.prototype.some) {
+    Array.prototype.some = function some(fun /*, thisp */) {
+        var self = toObject(this),
+            length = self.length >>> 0,
+            thisp = arguments[1];
+
+        // If no callback function or if callback is not a callable function
+        if (_toString(fun) != "[object Function]") {
+            throw new TypeError(); // TODO message
+        }
+
+        for (var i = 0; i < length; i++) {
+            if (i in self && fun.call(thisp, self[i], i, self)) {
+                return true;
+            }
+        }
+        return false;
+    };
+}
+
+// ES5 15.4.4.21
+// http://es5.github.com/#x15.4.4.21
+// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduce
+if (!Array.prototype.reduce) {
+    Array.prototype.reduce = function reduce(fun /*, initial*/) {
+        var self = toObject(this),
+            length = self.length >>> 0;
+
+        // If no callback function or if callback is not a callable function
+        if (_toString(fun) != "[object Function]") {
+            throw new TypeError(); // TODO message
+        }
+
+        // no value to return if no initial value and an empty array
+        if (!length && arguments.length == 1) {
+            throw new TypeError(); // TODO message
+        }
+
+        var i = 0;
+        var result;
+        if (arguments.length >= 2) {
+            result = arguments[1];
+        } else {
+            do {
+                if (i in self) {
+                    result = self[i++];
+                    break;
+                }
+
+                // if array contains no values, no initial value to return
+                if (++i >= length) {
+                    throw new TypeError(); // TODO message
+                }
+            } while (true);
+        }
+
+        for (; i < length; i++) {
+            if (i in self) {
+                result = fun.call(void 0, result, self[i], i, self);
+            }
+        }
+
+        return result;
+    };
+}
+
+// ES5 15.4.4.22
+// http://es5.github.com/#x15.4.4.22
+// https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/reduceRight
+if (!Array.prototype.reduceRight) {
+    Array.prototype.reduceRight = function reduceRight(fun /*, initial*/) {
+        var self = toObject(this),
+            length = self.length >>> 0;
+
+        // If no callback function or if callback is not a callable function
+        if (_toString(fun) != "[object Function]") {
+            throw new TypeError(); // TODO message
+        }
+
+        // no value to return if no initial value, empty array
+        if (!length && arguments.length == 1) {
+            throw new TypeError(); // TODO message
+        }
+
+        var result, i = length - 1;
+        if (arguments.length >= 2) {
+            result = arguments[1];
+        } else {
+            do {
+                if (i in self) {
+                    result = self[i--];
+                    break;
+                }
+
+                // if array contains no values, no initial value to return
+                if (--i < 0) {
+                    throw new TypeError(); // TODO message
+                }
+            } while (true);
+        }
+
+        do {
+            if (i in this) {
+                result = fun.call(void 0, result, self[i], i, self);
+            }
+        } while (i--);
+
+        return result;
+    };
+}
+
+// ES5 15.4.4.14
+// http://es5.github.com/#x15.4.4.14
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf
+if (!Array.prototype.indexOf) {
+    Array.prototype.indexOf = function indexOf(sought /*, fromIndex */ ) {
+        var self = toObject(this),
+            length = self.length >>> 0;
+
+        if (!length) {
+            return -1;
+        }
+
+        var i = 0;
+        if (arguments.length > 1) {
+            i = toInteger(arguments[1]);
+        }
+
+        // handle negative indices
+        i = i >= 0 ? i : Math.max(0, length + i);
+        for (; i < length; i++) {
+            if (i in self && self[i] === sought) {
+                return i;
+            }
+        }
+        return -1;
+    };
+}
+
+// ES5 15.4.4.15
+// http://es5.github.com/#x15.4.4.15
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/lastIndexOf
+if (!Array.prototype.lastIndexOf) {
+    Array.prototype.lastIndexOf = function lastIndexOf(sought /*, fromIndex */) {
+        var self = toObject(this),
+            length = self.length >>> 0;
+
+        if (!length) {
+            return -1;
+        }
+        var i = length - 1;
+        if (arguments.length > 1) {
+            i = Math.min(i, toInteger(arguments[1]));
+        }
+        // handle negative indices
+        i = i >= 0 ? i : length - Math.abs(i);
+        for (; i >= 0; i--) {
+            if (i in self && sought === self[i]) {
+                return i;
+            }
+        }
+        return -1;
+    };
+}
+
+//
+// Object
+// ======
+//
+
+//// ES5 15.2.3.2
+//// http://es5.github.com/#x15.2.3.2
+//if (!Object.getPrototypeOf) {
+//    // https://github.com/kriskowal/es5-shim/issues#issue/2
+//    // http://ejohn.org/blog/objectgetprototypeof/
+//    // recommended by fschaefer on github
+//    Object.getPrototypeOf = function getPrototypeOf(object) {
+//        return object.__proto__ || (
+//            object.constructor
+//                ? object.constructor.prototype
+//                : prototypeOfObject
+//        );
+//    };
+//}
+
+//// ES5 15.2.3.3
+//// http://es5.github.com/#x15.2.3.3
+//if (!Object.getOwnPropertyDescriptor) {
+//    var ERR_NON_OBJECT = "Object.getOwnPropertyDescriptor called on a non-object: ";
+
+//    Object.getOwnPropertyDescriptor = function getOwnPropertyDescriptor(object, property) {
+//        if ((typeof object != "object" && typeof object != "function") || object === null) {
+//            throw new TypeError(ERR_NON_OBJECT + object);
+//        }
+//        // If object does not owns property return undefined immediately.
+//        if (!owns(object, property)) {
+//            return;
+//        }
+
+//        // If object has a property then it's for sure both `enumerable` and
+//        // `configurable`.
+//        var descriptor =  { enumerable: true, configurable: true };
+
+//        // If JS engine supports accessor properties then property may be a
+//        // getter or setter.
+//        if (supportsAccessors) {
+//            // Unfortunately `__lookupGetter__` will return a getter even
+//            // if object has own non getter property along with a same named
+//            // inherited getter. To avoid misbehavior we temporary remove
+//            // `__proto__` so that `__lookupGetter__` will return getter only
+//            // if it's owned by an object.
+//            var prototype = object.__proto__;
+//            object.__proto__ = prototypeOfObject;
+
+//            var getter = lookupGetter(object, property);
+//            var setter = lookupSetter(object, property);
+
+//            // Once we have getter and setter we can put values back.
+//            object.__proto__ = prototype;
+
+//            if (getter || setter) {
+//                if (getter) {
+//                    descriptor.get = getter;
+//                }
+//                if (setter) {
+//                    descriptor.set = setter;
+//                }
+//                // If it was accessor property we're done and return here
+//                // in order to avoid adding `value` to the descriptor.
+//                return descriptor;
+//            }
+//        }
+
+//        // If we got this far we know that object has an own property that is
+//        // not an accessor so we set it as a value and return descriptor.
+//        descriptor.value = object[property];
+//        return descriptor;
+//    };
+//}
+
+//// ES5 15.2.3.4
+//// http://es5.github.com/#x15.2.3.4
+//if (!Object.getOwnPropertyNames) {
+//    Object.getOwnPropertyNames = function getOwnPropertyNames(object) {
+//        return Object.keys(object);
+//    };
+//}
+
+//// ES5 15.2.3.5
+//// http://es5.github.com/#x15.2.3.5
+//if (!Object.create) {
+//    Object.create = function create(prototype, properties) {
+//        var object;
+//        if (prototype === null) {
+//            object = { "__proto__": null };
+//        } else {
+//            if (typeof prototype != "object") {
+//                throw new TypeError("typeof prototype["+(typeof prototype)+"] != 'object'");
+//            }
+//            var Type = function () {};
+//            Type.prototype = prototype;
+//            object = new Type();
+//            // IE has no built-in implementation of `Object.getPrototypeOf`
+//            // neither `__proto__`, but this manually setting `__proto__` will
+//            // guarantee that `Object.getPrototypeOf` will work as expected with
+//            // objects created using `Object.create`
+//            object.__proto__ = prototype;
+//        }
+//        if (properties !== void 0) {
+//            Object.defineProperties(object, properties);
+//        }
+//        return object;
+//    };
+//}
+
+//// ES5 15.2.3.6
+//// http://es5.github.com/#x15.2.3.6
+
+//// Patch for WebKit and IE8 standard mode
+//// Designed by hax <hax.github.com>
+//// related issue: https://github.com/kriskowal/es5-shim/issues#issue/5
+//// IE8 Reference:
+////     http://msdn.microsoft.com/en-us/library/dd282900.aspx
+////     http://msdn.microsoft.com/en-us/library/dd229916.aspx
+//// WebKit Bugs:
+////     https://bugs.webkit.org/show_bug.cgi?id=36423
+
+//function doesDefinePropertyWork(object) {
+//    try {
+//        Object.defineProperty(object, "sentinel", {});
+//        return "sentinel" in object;
+//    } catch (exception) {
+//        // returns falsy
+//    }
+//}
+
+//// check whether defineProperty works if it's given. Otherwise,
+//// shim partially.
+//if (Object.defineProperty) {
+//    var definePropertyWorksOnObject = doesDefinePropertyWork({});
+//    var definePropertyWorksOnDom = typeof document == "undefined" ||
+//        doesDefinePropertyWork(document.createElement("div"));
+//    if (!definePropertyWorksOnObject || !definePropertyWorksOnDom) {
+//        var definePropertyFallback = Object.defineProperty;
+//    }
+//}
+
+//if (!Object.defineProperty || definePropertyFallback) {
+//    var ERR_NON_OBJECT_DESCRIPTOR = "Property description must be an object: ";
+//    var ERR_NON_OBJECT_TARGET = "Object.defineProperty called on non-object: "
+//    var ERR_ACCESSORS_NOT_SUPPORTED = "getters & setters can not be defined " +
+//                                      "on this javascript engine";
+
+//    Object.defineProperty = function defineProperty(object, property, descriptor) {
+//        if ((typeof object != "object" && typeof object != "function") || object === null) {
+//            throw new TypeError(ERR_NON_OBJECT_TARGET + object);
+//        }
+//        if ((typeof descriptor != "object" && typeof descriptor != "function") || descriptor === null) {
+//            throw new TypeError(ERR_NON_OBJECT_DESCRIPTOR + descriptor);
+//        }
+//        // make a valiant attempt to use the real defineProperty
+//        // for I8's DOM elements.
+//        if (definePropertyFallback) {
+//            try {
+//                return definePropertyFallback.call(Object, object, property, descriptor);
+//            } catch (exception) {
+//                // try the shim if the real one doesn't work
+//            }
+//        }
+
+//        // If it's a data property.
+//        if (owns(descriptor, "value")) {
+//            // fail silently if "writable", "enumerable", or "configurable"
+//            // are requested but not supported
+//            /*
+//            // alternate approach:
+//            if ( // can't implement these features; allow false but not true
+//                !(owns(descriptor, "writable") ? descriptor.writable : true) ||
+//                !(owns(descriptor, "enumerable") ? descriptor.enumerable : true) ||
+//                !(owns(descriptor, "configurable") ? descriptor.configurable : true)
+//            )
+//                throw new RangeError(
+//                    "This implementation of Object.defineProperty does not " +
+//                    "support configurable, enumerable, or writable."
+//                );
+//            */
+
+//            if (supportsAccessors && (lookupGetter(object, property) ||
+//                                      lookupSetter(object, property)))
+//            {
+//                // As accessors are supported only on engines implementing
+//                // `__proto__` we can safely override `__proto__` while defining
+//                // a property to make sure that we don't hit an inherited
+//                // accessor.
+//                var prototype = object.__proto__;
+//                object.__proto__ = prototypeOfObject;
+//                // Deleting a property anyway since getter / setter may be
+//                // defined on object itself.
+//                delete object[property];
+//                object[property] = descriptor.value;
+//                // Setting original `__proto__` back now.
+//                object.__proto__ = prototype;
+//            } else {
+//                object[property] = descriptor.value;
+//            }
+//        } else {
+//            if (!supportsAccessors) {
+//                throw new TypeError(ERR_ACCESSORS_NOT_SUPPORTED);
+//            }
+//            // If we got that far then getters and setters can be defined !!
+//            if (owns(descriptor, "get")) {
+//                defineGetter(object, property, descriptor.get);
+//            }
+//            if (owns(descriptor, "set")) {
+//                defineSetter(object, property, descriptor.set);
+//            }
+//        }
+//        return object;
+//    };
+//}
+
+//// ES5 15.2.3.7
+//// http://es5.github.com/#x15.2.3.7
+if (!Object.defineProperties) {
+    Object.defineProperties = function defineProperties(object, properties) {
+        for (var property in properties) {
+            if (owns(properties, property) && property != "__proto__") {
+                Object.defineProperty(object, property, properties[property]);
+            }
+        }
+        return object;
+    };
+}
+
+//// ES5 15.2.3.8
+//// http://es5.github.com/#x15.2.3.8
+//if (!Object.seal) {
+//    Object.seal = function seal(object) {
+//        // this is misleading and breaks feature-detection, but
+//        // allows "securable" code to "gracefully" degrade to working
+//        // but insecure code.
+//        return object;
+//    };
+//}
+
+//// ES5 15.2.3.9
+//// http://es5.github.com/#x15.2.3.9
+//if (!Object.freeze) {
+//    Object.freeze = function freeze(object) {
+//        // this is misleading and breaks feature-detection, but
+//        // allows "securable" code to "gracefully" degrade to working
+//        // but insecure code.
+//        return object;
+//    };
+//}
+
+//// detect a Rhino bug and patch it
+//try {
+//    Object.freeze(function () {});
+//} catch (exception) {
+//    Object.freeze = (function freeze(freezeObject) {
+//        return function freeze(object) {
+//            if (typeof object == "function") {
+//                return object;
+//            } else {
+//                return freezeObject(object);
+//            }
+//        };
+//    })(Object.freeze);
+//}
+
+//// ES5 15.2.3.10
+//// http://es5.github.com/#x15.2.3.10
+//if (!Object.preventExtensions) {
+//    Object.preventExtensions = function preventExtensions(object) {
+//        // this is misleading and breaks feature-detection, but
+//        // allows "securable" code to "gracefully" degrade to working
+//        // but insecure code.
+//        return object;
+//    };
+//}
+
+//// ES5 15.2.3.11
+//// http://es5.github.com/#x15.2.3.11
+//if (!Object.isSealed) {
+//    Object.isSealed = function isSealed(object) {
+//        return false;
+//    };
+//}
+
+//// ES5 15.2.3.12
+//// http://es5.github.com/#x15.2.3.12
+//if (!Object.isFrozen) {
+//    Object.isFrozen = function isFrozen(object) {
+//        return false;
+//    };
+//}
+
+//// ES5 15.2.3.13
+//// http://es5.github.com/#x15.2.3.13
+//if (!Object.isExtensible) {
+//    Object.isExtensible = function isExtensible(object) {
+//        // 1. If Type(O) is not Object throw a TypeError exception.
+//        if (Object(object) === object) {
+//            throw new TypeError(); // TODO message
+//        }
+//        // 2. Return the Boolean value of the [[Extensible]] internal property of O.
+//        var name = '';
+//        while (owns(object, name)) {
+//            name += '?';
+//        }
+//        object[name] = true;
+//        var returnValue = owns(object, name);
+//        delete object[name];
+//        return returnValue;
+//    };
+//}
+
+// ES5 15.2.3.14
+// http://es5.github.com/#x15.2.3.14
+if (!Object.keys) {
+    // http://whattheheadsaid.com/2010/10/a-safer-object-keys-compatibility-implementation
+    var hasDontEnumBug = true,
+        dontEnums = [
+            "toString",
+            "toLocaleString",
+            "valueOf",
+            "hasOwnProperty",
+            "isPrototypeOf",
+            "propertyIsEnumerable",
+            "constructor"
+        ],
+        dontEnumsLength = dontEnums.length;
+
+    for (var key in {"toString": null}) {
+        hasDontEnumBug = false;
+    }
+
+    Object.keys = function keys(object) {
+
+        if ((typeof object != "object" && typeof object != "function") || object === null) {
+            throw new TypeError("Object.keys called on a non-object");
+        }
+
+        var keys = [];
+        for (var name in object) {
+            if (owns(object, name)) {
+                keys.push(name);
+            }
+        }
+
+        if (hasDontEnumBug) {
+            for (var i = 0, ii = dontEnumsLength; i < ii; i++) {
+                var dontEnum = dontEnums[i];
+                if (owns(object, dontEnum)) {
+                    keys.push(dontEnum);
+                }
+            }
+        }
+        return keys;
+    };
+
+}
+
+//
+// Date
+// ====
+//
+
+// ES5 15.9.5.43
+// http://es5.github.com/#x15.9.5.43
+// This function returns a String value represent the instance in time
+// represented by this Date object. The format of the String is the Date Time
+// string format defined in 15.9.1.15. All fields are present in the String.
+// The time zone is always UTC, denoted by the suffix Z. If the time value of
+// this object is not a finite Number a RangeError exception is thrown.
+if (!Date.prototype.toISOString || (new Date(-62198755200000).toISOString().indexOf('-000001') === -1)) {
+    Date.prototype.toISOString = function toISOString() {
+        var result, length, value, year;
+        if (!isFinite(this)) {
+            throw new RangeError;
+        }
+
+        // the date time string format is specified in 15.9.1.15.
+        result = [this.getUTCMonth() + 1, this.getUTCDate(),
+            this.getUTCHours(), this.getUTCMinutes(), this.getUTCSeconds()];
+        year = this.getUTCFullYear();
+        year = (year < 0 ? '-' : (year > 9999 ? '+' : '')) + ('00000' + Math.abs(year)).slice(0 <= year && year <= 9999 ? -4 : -6);
+
+        length = result.length;
+        while (length--) {
+            value = result[length];
+            // pad months, days, hours, minutes, and seconds to have two digits.
+            if (value < 10) {
+                result[length] = "0" + value;
+            }
+        }
+        // pad milliseconds to have three digits.
+        return year + "-" + result.slice(0, 2).join("-") + "T" + result.slice(2).join(":") + "." +
+            ("000" + this.getUTCMilliseconds()).slice(-3) + "Z";
+    }
+}
+
+// ES5 15.9.4.4
+// http://es5.github.com/#x15.9.4.4
+if (!Date.now) {
+    Date.now = function now() {
+        return new Date().getTime();
+    };
+}
+
+// ES5 15.9.5.44
+// http://es5.github.com/#x15.9.5.44
+// This function provides a String representation of a Date object for use by
+// JSON.stringify (15.12.3).
+if (!Date.prototype.toJSON) {
+    Date.prototype.toJSON = function toJSON(key) {
+        // When the toJSON method is called with argument key, the following
+        // steps are taken:
+
+        // 1.  Let O be the result of calling ToObject, giving it the this
+        // value as its argument.
+        // 2. Let tv be ToPrimitive(O, hint Number).
+        // 3. If tv is a Number and is not finite, return null.
+        // XXX
+        // 4. Let toISO be the result of calling the [[Get]] internal method of
+        // O with argument "toISOString".
+        // 5. If IsCallable(toISO) is false, throw a TypeError exception.
+        if (typeof this.toISOString != "function") {
+            throw new TypeError(); // TODO message
+        }
+        // 6. Return the result of calling the [[Call]] internal method of
+        //  toISO with O as the this value and an empty argument list.
+        return this.toISOString();
+
+        // NOTE 1 The argument is ignored.
+
+        // NOTE 2 The toJSON function is intentionally generic; it does not
+        // require that its this value be a Date object. Therefore, it can be
+        // transferred to other kinds of objects for use as a method. However,
+        // it does require that any such object have a toISOString method. An
+        // object is free to use the argument key to filter its
+        // stringification.
+    };
+}
+
+// ES5 15.9.4.2
+// http://es5.github.com/#x15.9.4.2
+// based on work shared by Daniel Friesen (dantman)
+// http://gist.github.com/303249
+if (!Date.parse || Date.parse("+275760-09-13T00:00:00.000Z") !== 8.64e15) {
+    // XXX global assignment won't work in embeddings that use
+    // an alternate object for the context.
+    Date = (function(NativeDate) {
+
+        // Date.length === 7
+        var Date = function Date(Y, M, D, h, m, s, ms) {
+            var length = arguments.length;
+            if (this instanceof NativeDate) {
+                var date = length == 1 && String(Y) === Y ? // isString(Y)
+                    // We explicitly pass it through parse:
+                    new NativeDate(Date.parse(Y)) :
+                    // We have to manually make calls depending on argument
+                    // length here
+                    length >= 7 ? new NativeDate(Y, M, D, h, m, s, ms) :
+                    length >= 6 ? new NativeDate(Y, M, D, h, m, s) :
+                    length >= 5 ? new NativeDate(Y, M, D, h, m) :
+                    length >= 4 ? new NativeDate(Y, M, D, h) :
+                    length >= 3 ? new NativeDate(Y, M, D) :
+                    length >= 2 ? new NativeDate(Y, M) :
+                    length >= 1 ? new NativeDate(Y) :
+                                  new NativeDate();
+                // Prevent mixups with unfixed Date object
+                date.constructor = Date;
+                return date;
+            }
+            return NativeDate.apply(this, arguments);
+        };
+
+        // 15.9.1.15 Date Time String Format.
+        var isoDateExpression = new RegExp("^" +
+            "(\\d{4}|[\+\-]\\d{6})" + // four-digit year capture or sign + 6-digit extended year
+            "(?:-(\\d{2})" + // optional month capture
+            "(?:-(\\d{2})" + // optional day capture
+            "(?:" + // capture hours:minutes:seconds.milliseconds
+                "T(\\d{2})" + // hours capture
+                ":(\\d{2})" + // minutes capture
+                "(?:" + // optional :seconds.milliseconds
+                    ":(\\d{2})" + // seconds capture
+                    "(?:\\.(\\d{3}))?" + // milliseconds capture
+                ")?" +
+            "(?:" + // capture UTC offset component
+                "Z|" + // UTC capture
+                "(?:" + // offset specifier +/-hours:minutes
+                    "([-+])" + // sign capture
+                    "(\\d{2})" + // hours offset capture
+                    ":(\\d{2})" + // minutes offset capture
+                ")" +
+            ")?)?)?)?" +
+        "$");
+
+        // Copy any custom methods a 3rd party library may have added
+        for (var key in NativeDate) {
+            Date[key] = NativeDate[key];
+        }
+
+        // Copy "native" methods explicitly; they may be non-enumerable
+        Date.now = NativeDate.now;
+        Date.UTC = NativeDate.UTC;
+        Date.prototype = NativeDate.prototype;
+        Date.prototype.constructor = Date;
+
+        // Upgrade Date.parse to handle simplified ISO 8601 strings
+        Date.parse = function parse(string) {
+            var match = isoDateExpression.exec(string);
+            if (match) {
+                match.shift(); // kill match[0], the full match
+                // parse months, days, hours, minutes, seconds, and milliseconds
+                for (var i = 1; i < 7; i++) {
+                    // provide default values if necessary
+                    match[i] = +(match[i] || (i < 3 ? 1 : 0));
+                    // match[1] is the month. Months are 0-11 in JavaScript
+                    // `Date` objects, but 1-12 in ISO notation, so we
+                    // decrement.
+                    if (i == 1) {
+                        match[i]--;
+                    }
+                }
+
+                // parse the UTC offset component
+                var minuteOffset = +match.pop(), hourOffset = +match.pop(), sign = match.pop();
+
+                // compute the explicit time zone offset if specified
+                var offset = 0;
+                if (sign) {
+                    // detect invalid offsets and return early
+                    if (hourOffset > 23 || minuteOffset > 59) {
+                        return NaN;
+                    }
+
+                    // express the provided time zone offset in minutes. The offset is
+                    // negative for time zones west of UTC; positive otherwise.
+                    offset = (hourOffset * 60 + minuteOffset) * 6e4 * (sign == "+" ? -1 : 1);
+                }
+
+                // Date.UTC for years between 0 and 99 converts year to 1900 + year
+                // The Gregorian calendar has a 400-year cycle, so
+                // to Date.UTC(year + 400, .... ) - 12622780800000 == Date.UTC(year, ...),
+                // where 12622780800000 - number of milliseconds in Gregorian calendar 400 years
+                var year = +match[0];
+                if (0 <= year && year <= 99) {
+                    match[0] = year + 400;
+                    return NativeDate.UTC.apply(this, match) + offset - 12622780800000;
+                }
+
+                // compute a new UTC date value, accounting for the optional offset
+                return NativeDate.UTC.apply(this, match) + offset;
+            }
+            return NativeDate.parse.apply(this, arguments);
+        };
+
+        return Date;
+    })(Date);
+}
+
+//
+// String
+// ======
+//
+
+// ES5 15.5.4.20
+// http://es5.github.com/#x15.5.4.20
+var ws = "\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003" +
+    "\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028" +
+    "\u2029\uFEFF";
+if (!String.prototype.trim || ws.trim()) {
+    // http://blog.stevenlevithan.com/archives/faster-trim-javascript
+    // http://perfectionkills.com/whitespace-deviations/
+    ws = "[" + ws + "]";
+    var trimBeginRegexp = new RegExp("^" + ws + ws + "*"),
+        trimEndRegexp = new RegExp(ws + ws + "*$");
+    String.prototype.trim = function trim() {
+        return String(this).replace(trimBeginRegexp, "").replace(trimEndRegexp, "");
+    };
+}
+
+//
+// Util
+// ======
+//
+
+// ES5 9.4
+// http://es5.github.com/#x9.4
+// http://jsperf.com/to-integer
+var toInteger = function (n) {
+    n = +n;
+    if (n !== n) { // isNaN
+        n = 0;
+    } else if (n !== 0 && n !== (1/0) && n !== -(1/0)) {
+        n = (n > 0 || -1) * Math.floor(Math.abs(n));
+    }
+    return n;
 };
 
-// NodeList emulator
-Alpha.NodeList = function(nodes)
-{
-  for(var i=0, len=nodes.length; i<len; i++) {
-    this[i] = nodes[i];
-  }
-  this.length = nodes.length;
-}
-Alpha.NodeList.prototype.item = function(i) {
-  return this[i];
-}
-
-// Shortcut for document.getElementById, and element extender for MSIE < 8.
-Alpha.$ = function(element)
-{
-  if (typeof element == "string") {
-    element = document.getElementById(element)
-  }
-  else if (Alpha.extendElement) {
-    element = Alpha.extendElement(element);
-  }
-  return element;
-}
-
-// Shortcut: $ => Alpha.$
-if (typeof window.$ == "undefined") {
-  window.$ = Alpha.$;
-}
-
-/**
- * Tries to emulate the DOM Element prototype in MSIE < 8.
- */
-
-// The following tries to fix the DOM Element in MSIE < 8.
-if (typeof Element == 'undefined')
-{
-  // Garbage Collector, to prevent memory leaks
-  Alpha.garbage = [];
-  window.attachEvent('onunload', function()
-  {
-    for (var i=0, len=Alpha.garbage.length; i<len; i++)
-    {
-      var element = Alpha.garbage[i];
-      if (element)
-      {
-        // FIXME: Calling elm.clearAttributes() on unload crashes IE7?!
-//        if (element.clearAttributes) {
-//          element.clearAttributes();
-//        }
-        if (element.clearEvents) {
-          element.clearEvents();
-        }
-      }
-      delete Alpha.garbage[i];
+var prepareString = "a"[0] != "a";
+    // ES5 9.9
+    // http://es5.github.com/#x9.9
+var toObject = function (o) {
+    if (o == null) { // this matches both null and undefined
+        throw new TypeError(); // TODO message
     }
-  });
-  
-  // Generic Object prototype emulator
-  Alpha.prototypeEmulator = function()
-  {
-    var Obj       = {};
-    Obj.prototype = {};
-
-    Obj._alpha_extend = function(o)
-    {
-      if (/*typeof o == 'object' &&*/ !o._alpha_extended)
-      {
-        Alpha.garbage.push(o);
-
-        for (var method in Obj.prototype)
-        {
-          // saves the original method
-          if (o[method] && !o['_alpha_' + method]) {
-            o['_alpha_' + method] = o[method];
-          }
-          
-          // creates (or overwrites) the method
-          o[method] = Obj.prototype[method];
-        }
-        
-        // extra extend for classList
-        if (typeof Alpha.ClassList != "undefined") {
-          o.classList = new Alpha.ClassList(o);
-        }
-        
-        o._alpha_extended = true;
-      }
-      return o;
+    // If the implementation doesn't support by-index access of
+    // string characters (ex. IE < 9), split the string
+    if (prepareString && typeof o == "string" && o) {
+        return o.split("");
     }
-    return Obj;
-  }
-
-  // Emulates the DOM Element prototype
-  Element = new Alpha.prototypeEmulator();
-
-  // Manually extends an element
-  Alpha.extendElement = function(elm) {
-    return Element._alpha_extend(elm);
-  }
-
-  // Manually extends many elements
-  Alpha.extendElements = function(elms)
-  {
-    var rs = [];
-    for (var i=0, len=elms.length; i<len; i++) {
-      rs.push(Alpha.extendElement(elms[i]));
-    }
-    return rs;
-  }
-
-  // document.createElement should return an already extended element
-  // also extends <canvas> elements if excanvas.js is loaded
-  Alpha._msie_createElement = document.createElement;
-  document.createElement = function(tagName)
-  {
-    var elm = Alpha._msie_createElement(tagName);
-    if (tagName == 'canvas' && window.G_vmlCanvasManager) {
-      elm = G_vmlCanvasManager.initElement(elm);
-    }
-    return Alpha.extendElement(elm);
-  }
-
-  // document.getElementById should return an extended element
-  Alpha._msie_getElementById = document.getElementById;
-  document.getElementById = function(id)
-  {
-    var elm = Alpha._msie_getElementById(id);
-    return elm ? Alpha.extendElement(elm) : elm;
-  }
-
-  // document.getElementsByName should return extended elements
-  Alpha._msie_getElementsByName = document.getElementsByName;
-  document.getElementsByName = function(id)
-  {
-    var elms = Alpha._msie_getElementsByName(id);
-    return elms.length ? new Alpha.NodeList(Alpha.extendElements(elms)) : elms;
-  }
-
-  // document.getElementsByTagName should return extended elements
-  Alpha._msie_getElementsByTagName = document.getElementsByTagName;
-  document.getElementsByTagName = function(id)
-  {
-    var elms = Alpha._msie_getElementsByTagName(id);
-    return elms.length ? new Alpha.NodeList(Alpha.extendElements(elms)) : elms;
-  }
-
-  // elm.getElementsByTagName should return extended elements
-  Element.prototype.getElementsByTagName = function(id)
-  {
-    var elms = this._alpha_getElementsByTagName(id);
-    return elms.length ? new Alpha.NodeList(Alpha.extendElements(elms)) : elms;
-  }
-
-  // fixes a pseudo-leak in MSIE
-  Element.prototype.removeChild = function(child)
-  {
-    var garbage = document.getElementById('_alpha_msie_leak_garbage');
-    if (!garbage)
-    {
-      garbage = document.createElement('div');
-      garbage.id = '_alpha_msie_leak_garbage';
-      garbage.style.display    = 'none';
-      garbage.style.visibility = 'hidden';
-      document.body.appendChild(garbage);
-    }
-    
-    // removes the child
-    this._alpha_removeChild(child);
-    
-    // destroys the reference
-    garbage.appendChild(child);
-    garbage.innerHTML = '';
-  }
-}
-
-(function()
-{
-  var elm = document.createElement('div');
-  
-//  if (typeof elm.textContent == 'undefined')
-//  {
-//    Element.prototype._alpha_get_textContent = function ()
-//    {
-//      if (typeof this.innerText != 'undefined') {
-//        return this.innerText;
-//      }
-//      var r = this.ownerDocument.createRange();
-//      r.selectNodeContents(this);
-//      return r.toString();
-//    }
-//    
-//    if (Object.defineProperty)
-//    {
-//      Object.defineProperty(Element.prototype, 'textContent', {
-//        get: Element.prototype._alpha_get_textContent});
-//    }
-//    else if (Element.prototype.__defineGetter__)
-//    {
-//      Element.prototype.__defineGetter__('textContent',
-//        Element.prototype._alpha_get_textContent);
-//    }
-//  }
-
-  // It's simpler to implement the non-standard innerText in non-IE browsers
-  // than implementing the standard textContent in IE < 8.
-  if (typeof elm.innerText == 'undefined')
-  {
-    Element.prototype._alpha_get_innerText = function() {
-      return this.textContent;
-    }
-    
-    Element.prototype._alpha_set_innerText = function(text) {
-      return this.textContent = text;
-    }
-    
-    if (Object.defineProperty)
-    {
-      Object.defineProperty(Element.prototype, 'innerText', {
-        get: Element.prototype._alpha_get_innerText,
-        set: Element.prototype._alpha_set_innerText
-      });
-    }
-    else if (Element.prototype.__defineGetter__)
-    {
-      Element.prototype.__defineGetter__('innerText', Element.prototype._alpha_get_innerText);
-      Element.prototype.__defineSetter__('innerText', Element.prototype._alpha_set_innerText);
-    }
-  }
-
-  if (typeof elm.children == 'undefined')
-  {
-    Element.prototype._alpha_get_children = function()
-    {
-      var children = [];
-      var child = this.firstChild;
-      while (child)
-      {
-        if (child.nodeType == 1) {
-          children.push(child);
-        }
-        child = child.nextSibling;
-      }
-      return Alpha.extendElements ? Alpha.extendElements(children) : children;
-    }
-    
-    if (Object.defineProperty)
-    {
-      Object.defineProperty(Element.prototype, 'children', {
-        get: Element.prototype._alpha_get_children});
-    }
-    else if (Element.prototype.__defineGetter__)
-    {
-      Element.prototype.__defineGetter__('children',
-        Element.prototype._alpha_get_children);
-    }
-  }
-
-  if (typeof elm.childElementCount == 'undefined')
-  {
-    Element.prototype._alpha_get_childElementCount = function() {
-      return this.children.length;
-    }
-
-    Element.prototype._alpha_get_firstElementChild = function()
-    {
-      var child = this.firstChild;
-      while (child && child.nodeType != 1) {
-        child = child.nextSibling;
-      }
-      return (child && child.nodeType == 1) ? Alpha.$(child) : null;
-    }
-
-    Element.prototype._alpha_get_lastElementChild = function()
-    {
-      var child = this.lastChild;
-      while (child && child.nodeType != 1) {
-        child = child.previousSibling;
-      }
-      return (child && child.nodeType == 1) ? Alpha.$(child) : null;
-    }
-
-    Element.prototype._alpha_get_nextElementSibling = function()
-    {
-      var sibling = this.nextSibling;
-      while (sibling && sibling.nodeType != 1) {
-        sibling = sibling.nextSibling;
-      }
-      return (sibling && sibling.nodeType == 1) ? Alpha.$(sibling) : null;
-    }
-
-    Element.prototype._alpha_get_previousElementSibling = function()
-    {
-      var sibling = this.previousSibling;
-      while (sibling && sibling.nodeType != 1) {
-        sibling = sibling.previousSibling;
-      }
-      return (sibling && sibling.nodeType == 1) ? Alpha.$(sibling) : null;
-    }
-    
-    if (Object.defineProperty)
-    {
-      Object.defineProperty(Element.prototype, 'childElementCount',      {get: Element.prototype._alpha_get_childElementCount});
-      Object.defineProperty(Element.prototype, 'firstElementChild',      {get: Element.prototype._alpha_get_firstElementChild});
-      Object.defineProperty(Element.prototype, 'lastElementChild',       {get: Element.prototype._alpha_get_lastElementChild});
-      Object.defineProperty(Element.prototype, 'nextElementSibling',     {get: Element.prototype._alpha_get_nextElementSibling});
-      Object.defineProperty(Element.prototype, 'previousElementSibling', {get: Element.prototype._alpha_get_previousElementSibling});
-    }
-    else if (Element.prototype.__defineGetter__)
-    {
-      Element.prototype.__defineGetter__('childElementCount',      Element.prototype._alpha_get_childElementCount);
-      Element.prototype.__defineGetter__('firstElementChild',      Element.prototype._alpha_get_firstElementChild);
-      Element.prototype.__defineGetter__('lastElementChild',       Element.prototype._alpha_get_lastElementChild);
-      Element.prototype.__defineGetter__('nextElementSibling',     Element.prototype._alpha_get_nextElementSibling);
-      Element.prototype.__defineGetter__('previousElementSibling', Element.prototype._alpha_get_previousElementSibling);
-    }
-  }
-  
-  // makes getAttribute('class') and setAttribute('class') to work in IE < 8
-  elm.className = 'something';
-  
-  if (elm.getAttribute('class') != 'something')
-  {
-    Element.prototype.getAttribute = function(attr)
-    {
-      if (attr.toLowerCase() == 'class') {
-        attr = 'className';
-      }
-      return this._alpha_getAttribute(attr);
-    }
-    
-    Element.prototype.setAttribute = function(attr, value)
-    {
-      if (attr.toLowerCase() == 'class') {
-        attr = 'className';
-      }
-      return this._alpha_setAttribute(attr, value);
-    }
-  }
-
-  // elm.hasAttribute(name) is missing in IE < 8
-  if (typeof elm.hasAttribute == 'undefined')
-  {
-    Element.prototype.hasAttribute = function(attr) {
-      return (this.getAttribute(attr) === null) ? false : true;
-    }
-  }
-})();
-
-/**
- * Returns attributes as extended elements. Also permits
- * to create pseudo getters in MSIE < 8.
- * 
- * Use only if you want or need compatibility with MSIE < 8.
- * 
- *   elm.get('nextSibling');
- *   elm.get('parentNode');
- *   elm.get('children');
- *   elm.get('nextElementSibling');
- * 
- * You may also use the following syntax, in order to restricy loading of this
- * file only to Internet Explorer 6 and 7:
- * 
- *   elm.get ? elm.get('nextSibling') : elm.nextSibling
- */
-Element.prototype.get = function(attribute)
-{
-  if (this['_alpha_get_' + attribute]) {
-    return this['_alpha_get_' + attribute]();
-  }
-  
-  if (typeof this[attribute] != 'undefined')
-  {
-    if (this[attribute] && this[attribute].nodeType == 1) {
-      return Alpha.$(this[attribute]);
-    }
-    return this[attribute];
-  }
-}
-
-/**
- * Emulates DOM Events in IE < 9.
- * 
- * - document.createEvent()
- * - Element.dispatchEvent()
- * - Element.addEventListener()
- * - Element.removeEventListener()
- * 
- * Custom event dispatching is inspired by Prototype.js
- * by Sam Stephenson http://www.prototypejs.org/
- */
-
-if (!Element.prototype.addEventListener)
-{
-  var ALPHA_CUSTOM_EVENTS_COUNT = 'data-alpha-custom-events-counter';
-  
-  // adds support for DOMContentLoaded
-  if (document.attachEvent)
-  {
-    document.attachEvent('onreadystatechange', function()
-    {
-      if (document.readyState == 'complete')
-      {
-        var e = document.createEvent('HTMLEvents');
-        e.initEvent('DOMContentLoaded', true, true);
-        document.dispatchEvent(e);
-      }
-    });
-  }
-
-  // fixes the Event DOM prototype
-  if (typeof Event == 'undefined') {
-    Event = new Alpha.prototypeEmulator();
-  }
-
-  Event.prototype.preventDefault = function() {
-    this.returnValue = false;
-  }
-
-  Event.prototype.stopPropagation = function() {
-    this.cancelBubble = true;
-  }
-
-  Alpha.event = function(currentTarget)
-  {
-    // clones current event
-    var event = {};
-    for (var i in window.event) {
-      event[i] = window.event[i];
-    }
-    
-    // adds missing methods
-    for (var method in Event.prototype) {
-      event[method] = Event.prototype[method];
-    }
-    
-    // custom event
-    if (event._alpha_event_type) {
-      event.type = event._alpha_event_type;
-    }
-    
-    // target: the element the event happened on
-    if (event.target) {
-      event.target = Alpha.$(event.target);
-    }
-    else if (event.srcElement) {
-      event.target = Alpha.$(event.srcElement);
-    }
-    
-    // currentTarget: the element that handles the event
-    if (!event.currentTarget && currentTarget) {
-      event.currentTarget = Alpha.$(currentTarget);
-    }
-    
-    if (event.type == 'mouseover')
-    {
-      // relatedTarget: the element the mouse came from
-      event.relatedTarget = Alpha.$(event.fromElement);
-    }
-    else if (event.type == 'mouseout')
-    {
-      // relatedTarget: the element the mouse left to
-      event.relatedTarget = Alpha.$(event.toElement);
-    }
-    else {
-      event.relatedTarget = null;
-    }
-    
-    // fixes values
-    event.pageX = event.clientX + document.scrollLeft;
-    event.pageY = event.clientY + document.scrollTop;
-    
-    return event;
-  }
-
-  Element.prototype.addEventListener = function(type, listener, useCapture)
-  {
-    if (useCapture) {
-      throw new Error("Capture mode isn't supported by MSIE (and isn't emulated).");
-    }
-
-    // creates the list of listeners to call (per type)
-    if (!this._alpha_events) {
-      this._alpha_events = {};
-    }
-
-    // creates the real listener for event type
-    if (!this._alpha_events[type])
-    {
-      var self = this;
-      var _event    = '_alpha_event_' + type + '_event';
-      var _listener = '_alpha_event_' + type + '_listener';
-      
-      this._alpha_events[type] = {
-        listeners: [],
-        real_listener: function()
-        {
-          // the event object
-          self[_event] = Alpha.event(self);
-          
-          // runs the list of listeners for event type. we use a custom launcher
-          // in order for failing listeners not to stop the event dispatch.
-          // see http://deanedwards.me.uk/weblog/2009/03/callbacks-vs-events/ for explanations.
-          for (var i = 0, len = self._alpha_events[type].listeners.length; i < len; i++) {
-            self[_listener] = self._alpha_events[type].listeners[i];
-          }
-          
-          // copies properties for preventDefault() and stopPropagation() to have any effect
-          window.event.returnValue  = self[_event].returnValue;
-          window.event.cancelBubble = self[_event].cancelBubble;
-        },
-        custom_launcher: function(evt)
-        {
-          if (evt.propertyName == _listener) {
-            self[_listener].call(self, self[_event]);
-          }
-        }
-      };
-      
-      // attaches the real listener
-      if (typeof this['on' + type] != 'undefined') {
-        this.attachEvent('on' + type, this._alpha_events[type].real_listener);
-      }
-      else
-      {
-        // We can't use custom event types in IE, we thus use uncommon types,
-        // and we have to listen for both (one that bubbles, and one that doesn't).
-        // 
-        // We also use a counter in order to not multiply the listerners, which
-        // would multiple the event calls, each time we listen for a new custom
-        // event.
-        if (this.getAttribute(ALPHA_CUSTOM_EVENTS_COUNT) === null)
-        {
-          this.attachEvent('ondataavailable', this._alpha_events[type].real_listener);
-          this.attachEvent('onlosecapture',   this._alpha_events[type].real_listener);
-        }
-        this.setAttribute(ALPHA_CUSTOM_EVENTS_COUNT, this.getAttribute(ALPHA_CUSTOM_EVENTS_COUNT) + 1);
-      }
-      
-      this.attachEvent('onpropertychange', this._alpha_events[type].custom_launcher);
-    }
-
-    // adds the listener to internal list
-    this._alpha_events[type].listeners.push(listener);
-  }
-
-  Element.prototype.removeEventListener = function(type, listener, useCapture)
-  {
-    if (useCapture) {
-      return new Error("Capture mode isn't supported by MSIE (and isn't emulated).");
-    }
-    
-    if (this._alpha_events)
-    {
-      if (this._alpha_events[type])
-      {
-        // removes the listener
-        var idx = this._alpha_events[type].listeners.indexOf(listener);
-        if (idx > -1)
-        {
-          delete this._alpha_events[type].listeners[idx];
-          this._alpha_events[type].listeners.splice(idx, 1);
-        }
-        
-        // no more listeners: let's detach the real one and clean up
-        if (this._alpha_events[type].listeners.length == 0)
-        {
-          this._alpha_remove_event_listener(type);
-          delete this._alpha_events[type];
-        }
-      }
-      
-      // no more listeners: let's clean up
-      if (this._alpha_events.length == 0) {
-        delete this._alpha_events;
-      }
-    }
-  }
-
-  Element.prototype.clearEvents = function()
-  {
-    if (this._alpha_events)
-    {
-      for (var type in this._alpha_events)
-      {
-        if (this._alpha_events[type].listeners)
-        {
-          for (var i=0, len=this._alpha_events[type].listeners.length; i<len; i++) {
-            delete this._alpha_events[type].listeners[i];
-          }
-          this._alpha_remove_event_listener(type);
-        }
-        delete this._alpha_events[type];
-      }
-    }
-  }
-
-  Element.prototype._alpha_remove_event_listener = function(type)
-  {
-    if (typeof this['on' + type] != 'undefined') {
-      this.detachEvent('on' + type, this._alpha_events[type].real_listener);
-    }
-    else if (this.getAttribute(ALPHA_CUSTOM_EVENTS_COUNT) == 1)
-    {
-      // custom event: we listen for two event types (one that bubbles, and one that doesn't)
-      this.detachEvent('ondataavailable', this._alpha_events[type].real_listener);
-      this.detachEvent('onlosecapture',   this._alpha_events[type].real_listener);
-      this.removeAttribute(ALPHA_CUSTOM_EVENTS_COUNT);
-    }
-    else {
-      this.setAttribute(ALPHA_CUSTOM_EVENTS_COUNT, this.getAttribute(ALPHA_CUSTOM_EVENTS_COUNT) - 1);
-    }
-    this.detachEvent('onpropertychange', this._alpha_events[type].custom_launcher);
-  }
-
-
-  // custom events
-
-  Alpha.events = {};
-
-  Alpha.events.Event = function() {}
-  Alpha.events.Event.prototype.initEvent = function(type, canBubble, cancelable)
-  {
-    this.type = type;
-    this.event = document.createEventObject();
-    this.event.eventType = canBubble ? 'ondataavailable' : 'onlosecapture';
-    this.event._alpha_event_type = type;
-  }
-  Alpha.events.HTMLEvents = function() {}
-  Alpha.events.HTMLEvents.prototype = new Alpha.events.Event();
-
-  document.createEvent = function(className) {
-    return new Alpha.events[className];
-  }
-
-  Element.prototype.dispatchEvent = function(event)
-  {
-    for (var i in event)
-    {
-      if (i != 'type' && i != 'event'
-        && typeof event.event[i] == undefined)
-      {
-        event.event[i] = event;
-      }
-    }
-    return this.fireEvent(event.event.eventType, event.event);
-  }
-
-  document.addEventListener    = Element.prototype.addEventListener;
-  document.removeEventListener = Element.prototype.removeEventListener;
-  document.clearEvents         = Element.prototype.clearEvents;
-  document.dispatchEvent       = Element.prototype.dispatchEvent;
-
-  document.documentElement.addEventListener    = Element.prototype.addEventListener;
-  document.documentElement.removeEventListener = Element.prototype.removeEventListener;
-  document.documentElement.clearEvents         = Element.prototype.clearEvents;
-  document.documentElement.dispatchEvent       = Element.prototype.dispatchEvent;
-
-  window.addEventListener = function(type, listener, useCapture) {
-    return document.documentElement.addEventListener(type, listener, useCapture);
-  }
-  window.removeEventListener = function(type, listener, useCapture) {
-    return document.documentElement.removeEventListener(type, listener, useCapture);
-  }
-  window.clearEvents = function() {
-    return document.documentElement.clearEvents();
-  }
-  window.dispatchEvent = function(event) {
-    return document.documentElement.dispatchEvent(event);
-  }
-
-  document.body.addEventListener    = Element.prototype.addEventListener;
-  document.body.removeEventListener = Element.prototype.removeEventListener;
-  document.body.clearEvents         = Element.prototype.clearEvents;
-  document.body.dispatchEvent       = Element.prototype.dispatchEvent;
-}
-(function()
-{
-  if (typeof document.createElement('div').classList == "undefined")
-  {
-    Alpha.ClassList = function(node) {
-      this.node = node;
-    }
-
-    Alpha.ClassList.prototype = {
-      add: function(name)
-      {
-        if (!this.contains(name)) {
-          this._add(name);
-        }
-      },
-
-      contains: function(name) {
-        return (this._list().indexOf(name) != -1);
-      },
-
-      item: function(index) {
-        return this._list()[index];
-      },
-
-      remove: function(name)
-      {
-        if (this.contains(name)) {
-          this._remove(name);
-        }
-      },
-
-      toggle: function(name)
-      {
-        var method = this.contains(name) ? '_remove' : '_add';
-        this[method](name);
-      },
-
-      // private
-
-        _list: function() {
-          return this.node.className.trim().split(/\s+/);
-        },
-
-        _add: function(name)
-        {
-          var list = this._list();
-          list.push(name);
-          this._set(list);
-        },
-
-        _remove: function(name)
-        {
-          var list = this._list();
-          var idx = list.indexOf(name);
-          delete list[idx];
-          this._set(list);
-        },
-
-        _set: function(classNames) {
-          this.node.className = classNames.join(' ');
-        }
-    }
-
-    Element.prototype._alpha_get_classList = function()
-    {
-      if (!this._alpha_classList) {
-        this._alpha_classList = new Alpha.ClassList(this);
-      }
-      return this._alpha_classList;
-    }
-
-    if (Object.defineProperty)
-    {
-      Object.defineProperty(Element.prototype, 'classList', {
-        get: Element.prototype._alpha_get_classList
-      });
-    }
-    else if (Element.prototype.__defineGetter__) {
-      Element.prototype.__defineGetter__('classList', Element.prototype._alpha_get_classList);
-    }
-  }
-})();
-// window dimensions are undefined in IE
-if (typeof window.innerWidth == 'undefined')
-{
-  if (Object.defineProperty)
-  {
-    // IE 8
-    Object.defineProperty(window, 'innerWidth', {get: function() {
-      return document.documentElement.clientWidth;
-    }});
-    Object.defineProperty(window, 'innerHeight', {get: function() {
-      return document.documentElement.clientHeight;
-    }});
-    Object.defineProperty(window, 'pageXOffset', {get: function() {
-      return document.documentElement.scrollLeft;
-    }});
-    Object.defineProperty(window, 'pageYOffset', {get: function() {
-      return document.documentElement.scrollTop;
-    }});
-  }
-  else
-  {
-    // IE 6-7
-    Alpha.__msie_onresize = function()
-    {
-      window.innerWidth  = document.documentElement.clientWidth;
-      window.innerHeight = document.documentElement.clientHeight;
-      window.pageXOffset = document.documentElement.scrollWidth;
-      window.pageYOffset = document.documentElement.scrollHeight;
-    }
-    Alpha.__msie_onresize();
-    window.attachEvent('onresize', Alpha.__msie_onresize);
-  }
-}
-
-/**
- * Implements querySelectorAll and querySelector when missing.
- * 
- * This is a fork of Sly v1.0rc2 <http://sly.digitarald.com>
- * Copyright (c) 2009 Harald Kirschner <http://digitarald.de>
- * Open source under MIT License
- * 
- * Sly's code and pattern are inspired by several open source developers.
- * 
- * Valerio Proietti & MooTools contributors
- *  - Idea of modular combinator and pseudo filters
- *  - Code for several pseudo filters
- *  - Slickspeed benchmark framework
- * Steven Levithan
- *  - Improved Sly.parse expression
- * Diego Perini
- *  - Research on querySelectorAll and browser quirks
- *  - Patches for Sly.parse expression
- *  - Combined tests from jQuery and Prototype
- * Thomas Aylott & Slick contributors
- *   - Idea of using regular expressions in attribute filter.
- * John Resig & jQuery/Sizzle contributors
- *  - Browser feature/quirks detection
- *  - Additional pseudo filters
- *  - Extensive Unit Tests, (c) 2008 John Resig, Jörn Zaefferer, MIT/GPL dual license
- * Sam Stephenson & Prototype contributors
- *  - Extensive Unit Tests, (c) 2005-2008 Sam Stephenson, MIT-style license
- * Alan Kang & JSSpec contributors
- *  - JSSpec BDD framework
- * 
- * 
- * Modifications from original Sly:
- * 
- *  - implements querySelector() & querySelectorAll().
- *  - use of querySelectorAll() has been removed (no use, we actually replace it when missing or obviously limited).
- *  - non standard selectors/operators have been removed (ie :contains).
- *  - integrated missing CSS 3 pseudo selectors (ie. :root and :target).
- */
-
-Alpha.fullQSASupport = function()
-{
-  // older browsers
-  if (!document.querySelectorAll) {
-    return false;
-  }
-  
-  try
-  {
-    // IE8 proposes querySelectorAll but limited in features
-    document.querySelectorAll('p:last-child');
-  }
-  catch(e) {
-    return false;
-  }
-  
-  // any good browser, even IE9
-  return true;
-}
-
-if (!Alpha.fullQSASupport())
-{
-  var Sly   = (function()
-  {
-    var cache = {};
-
-    /**
-     * Sly::constructor
-     * 
-     * Acts also as shortcut for Sly::search if context argument is given.
-     */
-    var Sly = function(text, context, results, options) {
-	    // normalise
-	    text = (typeof(text) == 'string') ? text.replace(/^\s+|\s+$/, '') : '';
-	
-	    var cls = cache[text] || (cache[text] = new Sly.initialize(text));
-	    return (context == null) ? cls : cls.search(context, results, options);
-    };
-
-    Sly.initialize = function(text) {
-	    this.text = text;
-    };
-
-    var proto = Sly.initialize.prototype = Sly.prototype;
-
-
-    /**
-     * Sly.implement
-     */
-    Sly.implement = function(key, properties) {
-	    for (var prop in properties) Sly[key][prop] = properties[prop];
-    };
-
-
-    /**
-     * Sly.support
-     *
-     * Filled with experiment results.
-     */
-    var support = Sly.support = {};
-
-    // Checks similar to NWMatcher, Sizzle
-    (function() {
-	
-	    // Our guinea pig
-	    var testee = document.createElement('div'), id = (new Date()).getTime();
-	    testee.innerHTML = '<a name="' + id + '" class="€ b"></a>';
-	    testee.appendChild(document.createComment(''));
-	
-	    // IE returns comment nodes for getElementsByTagName('*')
-	    support.byTagAddsComments = (testee.getElementsByTagName('*').length > 1);
-	
-	    // Safari can't handle uppercase or unicode characters when in quirks mode.
-//	    support.hasQsa = !!(testee.querySelectorAll && testee.querySelectorAll('.€').length);
-	
-	    support.hasByClass = (function() {
-		    if (!testee.getElementsByClassName || !testee.getElementsByClassName('b').length) return false;
-		    testee.firstChild.className = 'c';
-		    return (testee.getElementsByClassName('c').length == 1);
-	    })();
-	
-	    var root = document.documentElement;
-	    root.insertBefore(testee, root.firstChild);
-	
-	    // IE returns named nodes for getElementById(name)
-	    support.byIdAddsName = !!(document.getElementById(id));
-	
-	    root.removeChild(testee);
-	
-    })();
-
-
-    var locateFast = function() {
-	    return true;
-    };
-
-    /**
-     * Sly::search
-     */
-    proto.search = function(context, results, options) {
-	    options = options || {};
-	
-	    var iterate, i, item;
-
-	    if (!context) {
-		    context = document;
-	    } else if (context.nodeType != 1 && context.nodeType != 9) {
-		    if (typeof(context) == 'string') {
-			    context = Sly.search(context);
-			    iterate = true;
-		    } else if (Object.prototype.toString.call(context) == '[object Array]' || (typeof(context.length) == 'number' && context.item)) { // simple isArray
-			    var filtered = [];
-			    for (i = 0; (item = context[i]); i++) {
-				    if (item.nodeType == 1 || item.nodeType == 9) filtered.push(item);
-			    }
-			    iterate = (filtered.length > 1);
-			    context = (iterate) ? filtered : (filtered[0] || document);
-		    }
-	    }
-	
-	    var mixed, // results need to be sorted, comma
-		    combined, // found nodes from one iteration process
-		    nodes, // context nodes from one iteration process
-		    all = {}, // unique ids for overall result
-		    state = {}; // matchers temporary state
-	    var current = all; // unique ids for one iteration process
-
-	    // unifiers
-	    var getUid = Sly.getUid;
-	    var locateCurrent = function(node) {
-		    var uid = getUid(node);
-		    return (current[uid]) ? null : (current[uid] = true);
-	    };
-	
-	    if (results && results.length) { // fills unique ids, does not alter the given results
-		    for (i = 0; (item = results[i]); i++) locateCurrent(item);
-	    }
-	    
-      /*
-	    if (support.hasQsa && !iterate && context.nodeType == 9 && !(/\[/).test(this.text)) {
-		    try {
-			    var query = context.querySelectorAll(this.text);
-		    } catch(e) {}
-		    if (query) {
-			    if (!results) return Sly.toArray(query);
-			    for (i = 0; (item = query[i]); i++) {
-				    if (locateCurrent(item)) results.push(item);
-			    }
-			    if (!options.unordered) results.sort(Sly.compare);
-			    return results;
-		    }
-	    }
-	    */
-
-	    var parsed = this.parse();
-	    if (!parsed.length) return [];
-
-	    for (var i = 0, selector; (selector = parsed[i]); i++) {
-
-		    var locate = locateCurrent;
-
-		    if (selector.first) {
-			    if (!results) locate = locateFast;
-			    else mixed = true;
-			    if (iterate) nodes = context;
-			    else if (selector.combinator) nodes = [context]; // allows combinators before selectors
-		    }
-
-		    if (selector.last && results) {
-			    current = all;
-			    combined = results;
-		    } else {
-			    // default stack
-			    current = {};
-			    combined = [];
-		    }
-
-		    if (!selector.combinator && !iterate) {
-			    // without prepended combinator
-			    combined = selector.combine(combined, context, selector, state, locate, !(combined.length));
-		    } else {
-			    // with prepended combinators
-			    for (var k = 0, l = nodes.length; k < l; k++) {
-				    combined = selector.combine(combined, nodes[k], selector, state, locate);
-			    }
-		    }
-
-		    if (selector.last) {
-			    if (combined.length) results = combined;
-		    } else {
-			    nodes = combined;
-		    }
-	    }
-
-	    if (!options.unordered && mixed && results) results.sort(Sly.compare);
-
-	    return results || [];
-    };
-
-    /**
-     * Sly::find
-     */
-    proto.find = function(context, results, options) {
-	    return this.search(context, results, options)[0];
-    };
-
-
-    /**
-     * Sly::match
-     */
-    proto.match = function(node, parent) {
-	    var parsed = this.parse();
-	    if (parsed.length == 1) return !!(this.parse()[0].match(node, {}));
-	    if (!parent) {
-		    parent = node;
-		    while (parent.parentNode) parent = parent.parentNode
-	    }
-	    var found = this.search(parent), i = found.length;
-	    if (!i--) return false;
-	    while (i--) {
-		    if (found[i] == node) return true;
-	    }
-	    return false;
-    };
-
-
-    /**
-     * Sly::filter
-     */
-    proto.filter = function(nodes) {
-	    var results = [], match = this.parse()[0].match;
-	    for (var i = 0, node; (node = nodes[i]); i++) {
-		    if (match(node)) results.push(node);
-	    }
-	    return results;
-    };
-
-
-    /**
-     * Sly.recompile()
-     */
-    var pattern;
-
-    Sly.recompile = function() {
-
-	    var key, combList = [','], operList = ['!'];
-
-	    for (key in combinators) {
-		    if (key != ' ') {
-			    combList[(key.length > 1) ? 'unshift' : 'push'](Sly.escapeRegExp(key));
-		    }
-	    }
-	    for (key in operators) operList.push(key);
-
-	    /**
-		    The regexp is a group of every possible selector part including combinators.
-		    "|" separates the possible selectors.
-
-		    Capturing parentheses:
-		    1 - Combinator (only requires to allow multiple-character combinators)
-		    2 - Attribute name
-		    3 - Attribute operator
-		    4, 5, 6 - The value
-		    7 - Pseudo name
-		    8, 9, 10 - The value
-	     */
-
-	    pattern = new RegExp(
-		    // A tagname
-		    '[\\w\\u00a1-\\uFFFF][\\w\\u00a1-\\uFFFF-]*|' +
-
-		    // An id or the classname
-		    '[#.](?:[\\w\\u00a1-\\uFFFF-]|\\\\:|\\\\.)+|' +
-
-		    // Whitespace (descendant combinator)
-		    '[ \\t\\r\\n\\f](?=[\\w\\u00a1-\\uFFFF*#.[:])|' +
-
-		    // Other combinators and the comma
-		    '[ \\t\\r\\n\\f]*(' + combList.join('|') + ')[ \\t\\r\\n\\f]*|' +
-
-		    // An attribute, with the various and optional value formats ([name], [name=value], [name="value"], [name='value']
-		    '\\[([\\w\\u00a1-\\uFFFF-]+)[ \\t\\r\\n\\f]*(?:([' + operList.join('') + ']?=)[ \\t\\r\\n\\f]*(?:"([^"]*)"|\'([^\']*)\'|([^\\]]*)))?]|' +
-
-		    // A pseudo-class, with various formats
-		    ':([-\\w\\u00a1-\\uFFFF]+)(?:\\((?:"([^"]*)"|\'([^\']*)\'|([^)]*))\\))?|' +
-
-		    // The universial selector, not process
-		    '\\*|(.+)', 'g'
-	    );
-    };
-
-
-    // I prefer it outside, not sure if this is faster
-    var create = function(combinator) {
-	    return {
-		    ident: [],
-		    classes: [],
-		    attributes: [],
-		    pseudos: [],
-		    combinator: combinator
-	    };
-    };
-
-    var blank = function($0) {
-	    return $0;
-    };
-
-    /**
-     * Sly::parse
-     *
-     * Returns an array with one object for every selector:
-     *
-     * {
-     *   tag: (String) Tagname (defaults to null for universal *)
-     *   id: (String) Id
-     *   classes: (Array) Classnames
-     *   attributes: (Array) Attribute objects with "name", "operator" and "value"
-     *   pseudos: (Array) Pseudo objects with "name" and "value"
-     *   operator: (Char) The prepended operator (not comma)
-     *   first: (Boolean) true if it is the first selector or the first after a comma
-     *   last: (Boolean) true if it is the last selector or the last before a comma
-     *   ident: (Array) All parsed matches, can be used as cache identifier.
-     * }
-     */
-    proto.parse = function(plain) {
-	    var save = (plain) ? 'plain' : 'parsed';
-	    if (this[save]) return this[save];
-	
-	    var text = this.text;
-	    var compute = (plain) ? blank : this.compute;
-
-	    var parsed = [], current = create(null);
-	    current.first = true;
-
-	    var refresh = function(combinator) {
-		    parsed.push(compute(current));
-		    current = create(combinator);
-	    };
-
-	    pattern.lastIndex = 0; // to fix some weird behavior
-	    var match, $0;
-	
-	    while ((match = pattern.exec(text))) {
-		
-		    if (match[11]) {
-			    if (Sly.verbose) throw SyntaxError('Syntax error, "' + $0 + '" unexpected at #' + pattern.lastIndex + ' in "' + text + '"');
-			    return (this[save] = []);
-		    }
-		
-		    $0 = match[0];
-		
-		    switch ($0.charAt(0)) {
-			    case '.':
-				    current.classes.push($0.slice(1).replace(/\\/g, ''));
-				    break;
-			    case '#':
-				    current.id = $0.slice(1).replace(/\\/g, '');
-				    break;
-			    case '[':
-				    current.attributes.push({
-					    name: match[2],
-					    operator: match[3] || null,
-					    value: match[4] || match[5] || match[6] || null
-				    });
-				    break;
-			    case ':':
-				    current.pseudos.push({
-					    name: match[7],
-					    value: match[8] || match[9] || match[10] || null
-				    });
-				    break;
-			    case ' ': case '\t': case '\r': case '\n': case '\f':
-				    match[1] = match[1] || ' ';
-			    default:
-				    var combinator = match[1];
-				    if (combinator) {
-					    if (combinator == ',') {
-						    current.last = true;
-						    refresh(null);
-						    current.first = true;
-						    continue;
-					    }
-					    if (current.first && !current.ident.length) current.combinator = combinator;
-					    else refresh(combinator);
-				    } else {
-					    if ($0 != '*') current.tag = $0;
-				    }
-		    }
-		    current.ident.push($0);
-	    }
-
-	    current.last = true;
-	    parsed.push(compute(current));
-
-	    return (this[save] = parsed);
-    };
-
-
-    // chains two given functions
-
-    function chain(prepend, append, aux, unshift) {
-	    return (prepend) ? ((unshift) ? function(node, state) {
-		    return append(node, aux, state) && prepend(node, state);
-	    } : function(node, state) {
-		    return prepend(node, state) && append(node, aux, state);
-	    }) : function(node, state) {
-		    return append(node, aux, state);
-	    };
-	    // fn.$slyIndex = (prepend) ? (prepend.$slyIndex + 1) : 0;
-    };
-
-
-    // prepared match comperators, probably needs namespacing
-    var empty = function() {
-	    return true;
-    };
-
-    var matchId = function(node, id) {
-	    return (node.id == id);
-    };
-
-    var matchTag = function(node, tag) {
-	    return (node.nodeName.toUpperCase() == tag);
-    };
-
-    var prepareClass = function(name) {
-	    return (new RegExp('(?:^|[ \\t\\r\\n\\f])' + name + '(?:$|[ \\t\\r\\n\\f])'));
-    };
-
-    var matchClass = function(node, expr) {
-	    return node.className && expr.test(node.className);
-    };
-
-    var prepareAttribute = function(attr) {
-	    attr.getter = Sly.lookupAttribute(attr.name) || Sly.getAttribute;
-	    if (!attr.operator || !attr.value) return attr;
-	    var parser = operators[attr.operator];
-	    if (parser) { // @todo: Allow functions, not only regex
-		    attr.escaped = Sly.escapeRegExp(attr.value);
-		    attr.pattern = new RegExp(parser(attr.value, attr.escaped, attr));
-	    }
-	    return attr;
-    };
-
-    var matchAttribute = function(node, attr) {
-	    var read = attr.getter(node, attr.name);
-	    switch (attr.operator) {
-		    case null: return read;
-		    case '=': return (read == attr.value);
-		    case '!=': return (read != attr.value);
-	    }
-	    if (!read && attr.value) return false;
-	    return attr.pattern.test(read);
-    };
-
-
-    /**
-     * Sly::compute
-     *
-     * Attaches the following methods to the selector object:
-     *
-     * {
-     *   search: Uses the most convinient properties (id, tag and/or class) of the selector as search.
-     *   matchAux: If search does not contain all selector properties, this method matches an element against the rest.
-     *   match: Matches an element against all properties.
-     *   simple: Set when matchAux is not needed.
-     *   combine: The callback for the combinator
-     * }
-     */
-    proto.compute = function(selector) {
-
-	    var i, item, match, search, matchSearch, tagged,
-		    tag = selector.tag,
-		    id = selector.id,
-		    classes = selector.classes;
-
-	    var nodeName = (tag) ? tag.toUpperCase() : null;
-
-	    if (id) {
-		    tagged = true;
-
-		    matchSearch = chain(null, matchId, id);
-
-		    search = function(context) {
-			    if (context.getElementById) {
-				    var el = context.getElementById(id);
-				    return (el
-					    && (!nodeName || el.nodeName.toUpperCase() == nodeName)
-					    && (!support.getIdAdds || el.id == id))
-						    ? [el]
-						    : [];
-			    }
-
-			    var query = context.getElementsByTagName(tag || '*');
-			    for (var j = 0, node; (node = query[j]); j++) {
-				    if (node.id == id) return [node];
-			    }
-			    return [];
-		    };
-	    }
-
-	    if (classes.length > 0) {
-
-		    if (!search && support.hasByClass) {
-
-			    for (i = 0; (item = classes[i]); i++) {
-				    matchSearch = chain(matchSearch, matchClass, prepareClass(item));
-			    }
-
-			    var joined = classes.join(' ');
-			    search = function(context) {
-				    return context.getElementsByClassName(joined);
-			    };
-
-		    } else if (!search && classes.length == 1) { // optimised for typical .one-class-only
-
-			    tagged = true;
-
-			    var expr = prepareClass(classes[0]);
-			    matchSearch = chain(matchSearch, matchClass, expr);
-
-			    search = function(context) {
-				    var query = context.getElementsByTagName(tag || '*');
-				    var found = [];
-				    for (var i = 0, node; (node = query[i]); i++) {
-					    if (node.className && expr.test(node.className)) found.push(node);
-				    }
-				    return found;
-			    };
-
-		    } else {
-
-			    for (i = 0; (item = classes[i]); i++) {
-				    match = chain(match, matchClass, prepareClass(item));
-			    }
-
-		    }
-	    }
-
-	    if (tag) {
-
-		    if (!search) {
-			    matchSearch = chain(matchSearch, matchTag, nodeName);
-
-			    search = function(context) {
-				    return context.getElementsByTagName(tag);
-			    };
-		    } else if (!tagged) { // search does not filter by tag yet
-			    match = chain(match, matchTag, nodeName);
-		    }
-
-	    } else if (!search) { // default engine
-
-		    search = function(context) {
-			    var query = context.getElementsByTagName('*');
-			    if (!support.byTagAddsComments) return query;
-			    var found = [];
-			    for (var i = 0, node; (node = query[i]); i++) {
-				    if (node.nodeType === 1) found.push(node);
-			    }
-			    return found;
-		    };
-
-	    }
-
-	    for (i = 0; (item = selector.pseudos[i]); i++) {
-
-		    if (item.name == 'not') { // optimised :not(), fast as possible
-			    var not = Sly(item.value);
-			    match = chain(match, function(node, not) {
-				    return !not.match(node);
-			    }, (not.parse().length == 1) ? not.parsed[0] : not);
-		    } else {
-			    var parser = pseudos[item.name];
-			    if (parser) match = chain(match, parser, item.value);
-		    }
-
-	    }
-
-	    for (i = 0; (item = selector.attributes[i]); i++) {
-		    match = chain(match, matchAttribute, prepareAttribute(item));
-	    }
-
-	    if ((selector.simple = !(match))) {
-		    selector.matchAux = empty;
-	    } else {
-		    selector.matchAux = match;
-		    matchSearch = chain(matchSearch, match);
-	    }
-
-	    selector.match = matchSearch || empty;
-
-	    selector.combine = Sly.combinators[selector.combinator || ' '];
-
-	    selector.search = search;
-
-	    return selector;
-    };
-
-    // Combinators/Pseudos partly from MooTools 1.2-pre, (c) 2006-2009 Valerio Proietti, MIT License
-
-    /**
-     * Combinators
-     */
-    var combinators = Sly.combinators = {
-
-	    ' ': function(combined, context, selector, state, locate, fast) {
-		    var nodes = selector.search(context);
-		    if (fast && selector.simple) return Sly.toArray(nodes);
-		    for (var i = 0, node, aux = selector.matchAux; (node = nodes[i]); i++) {
-			    if (locate(node) && aux(node, state)) combined.push(node);
-		    }
-		    return combined;
-	    },
-
-	    '>': function(combined, context, selector, state, locate) {
-		    var nodes = selector.search(context);
-		    for (var i = 0, node; (node = nodes[i]); i++) {
-			    if (node.parentNode == context && locate(node) && selector.matchAux(node, state)) combined.push(node);
-		    }
-		    return combined;
-	    },
-
-	    '+': function(combined, context, selector, state, locate) {
-		    while ((context = context.nextSibling)) {
-			    if (context.nodeType == 1) {
-				    if (locate(context) && selector.match(context, state)) combined.push(context);
-				    break;
-			    }
-
-		    }
-		    return combined;
-	    },
-
-	    '~': function(combined, context, selector, state, locate) {
-		    while ((context = context.nextSibling)) {
-			    if (context.nodeType == 1) {
-				    if (!locate(context)) break;
-				    if (selector.match(context, state)) combined.push(context);
-			    }
-		    }
-		    return combined;
-	    }
-
-    };
-
-
-    /**
-     * Pseudo-Classes
-     */
-    var pseudos = Sly.pseudos = {
-
-	    // w3c pseudo classes
-
-	    'first-child': function(node) {
-		    return pseudos.index(node, 0);
-	    },
-
-	    'last-child': function(node) {
-		    while ((node = node.nextSibling)) {
-			    if (node.nodeType === 1) return false;
-		    }
-		    return true;
-	    },
-
-	    'only-child': function(node) {
-		    var prev = node;
-		    while ((prev = prev.previousSibling)) {
-			    if (prev.nodeType === 1) return false;
-		    }
-		    var next = node;
-		    while ((next = next.nextSibling)) {
-			    if (next.nodeType === 1) return false;
-		    }
-		    return true;
-	    },
-
-	    'nth-child': function(node, value, state) {
-		    var parsed = Sly.parseNth(value || 'n');
-		    if (parsed.special != 'n') return pseudos[parsed.special](node, parsed.a, state);
-		    state = state || {}; // just to be sure
-		    state.positions = state.positions || {};
-		    var uid = Sly.getUid(node) ;
-		    if (!state.positions[uid]) {
-			    var count = 0;
-			    while ((node = node.previousSibling)) {
-				    if (node.nodeType != 1) continue;
-				    count++;
-				    var position = state.positions[Sly.getUid(node)];
-				    if (position != undefined) {
-					    count = position + count;
-					    break;
-				    }
-			    }
-			    state.positions[uid] = count;
-		    }
-		    return (state.positions[uid] % parsed.a == parsed.b);
-	    },
-
-	    'empty': function(node) {
-		    return !(node.innerText || node.textContent || '').length;
-	    },
-
-	    'index': function(node, index) {
-		    var count = 0;
-		    while ((node = node.previousSibling)) {
-			    if (node.nodeType == 1 && ++count > index) return false;
-		    }
-		    return (count == index);
-	    },
-
-	    'even': function(node, value, state) {
-		    return pseudos['nth-child'](node, '2n+1', state);
-	    },
-
-	    'odd': function(node, value, state) {
-		    return pseudos['nth-child'](node, '2n', state);
-	    },
-
-	    // http://www.w3.org/TR/css3-selectors/#root-pseudo
-	    'root': function(node) {
-		    return (node.parentNode == node.ownerDocument);
-	    },
-
-      // http://www.w3.org/TR/css3-selectors/#target-pseudo
-      'target': function(node) {
-        var hash = location.hash;
-        return (node.id && hash && node.id == hash.slice(1));
-      }
-    };
-
-    pseudos.first = pseudos['first-child'];
-    pseudos.last = pseudos['last-child'];
-    pseudos.nth = pseudos['nth-child'];
-    pseudos.eq = pseudos.index;
-
-
-    /**
-     * Attribute operators
-     */
-    var operators = Sly.operators = {
-
-	    '*=': function(value, escaped) {
-		    return escaped;
-	    },
-
-	    '^=': function(value, escaped) {
-		    return '^' + escaped;
-	    },
-
-	    '$=': function(value, escaped) {
-		    return value + '$';
-	    },
-
-	    '~=': function(value, escaped) {
-		    return '(?:^|[ \\t\\r\\n\\f])' + escaped + '(?:$|[ \\t\\r\\n\\f])';
-	    },
-
-	    '|=': function(value, escaped) {
-	      return '(?:^|-)' + escaped + '(?:$|-)';
-	    }
-
-    };
-
-
-    // public, overridable
-
-    /**
-     * Sly.getAttribute & Sly.lookupAttribute
-     * 
-     * @todo add more translations
-     */
-    var translate = {
-	    'class': 'className'
-    }
-
-    Sly.lookupAttribute = function(name) {
-	    var prop = translate[name];
-	    if (prop) {
-		    return function(node) {
-			    return node[prop];
-		    }
-	    }
-	    var flag = /^(?:src|href|action)$/.test(name) ? 2 : 0;
-	    return function(node) {
-		    return node.getAttribute(name, flag);
-	    }
-    };
-
-    Sly.getAttribute = function(node, name) {
-	    return node.getAttribute(name);
-    };
-
-    /**
-     * Sly.toArray
-     */
-    var toArray = Array.slice || function(nodes) {
-	    return Array.prototype.slice.call(nodes);
-    };
-
-    try {
-	    toArray(document.documentElement.childNodes);
-    } catch (e) {
-	    toArray = function(nodes) {
-		    if (nodes instanceof Array) return nodes;
-		    var i = nodes.length, results = new Array(i);
-		    while (i--) results[i] = nodes[i];
-		    return results;
-	    };
-    }
-
-    Sly.toArray = toArray;
-
-    Sly.compare = (document.compareDocumentPosition) ? function (a, b) {
-	    return (3 - (a.compareDocumentPosition(b) & 6));
-    } : function (a, b) {
-	    return (a.sourceIndex - b.sourceIndex);
-    };
-
-    /**
-     * Sly.getUid
-     */
-    var nextUid = 1;
-
-    Sly.getUid = (window.ActiveXObject) ? function(node) {
-	    return (node.$slyUid || (node.$slyUid = {id: nextUid++})).id;
-    } : function(node) {
-	    return node.$slyUid || (node.$slyUid = nextUid++);
-    };
-
-
-    var nthCache = {};
-
-    Sly.parseNth = function(value) {
-	    if (nthCache[value]) return nthCache[value];
-
-	    var parsed = value.match(/^([+-]?\d*)?([a-z]+)?([+-]?\d*)?$/);
-	    if (!parsed) return false;
-
-	    var a = parseInt(parsed[1], 10), b = (parseInt(parsed[3], 10) || 0) - 1;
-
-	    if ((a = (isNaN(a)) ? 1 : a)) {
-		    while (b < 1) b += a;
-		    while (b >= a) b -= a;
-	    }
-	    switch (parsed[2]) {
-		    case 'n': parsed = {a: a, b: b, special: 'n'}; break;
-		    case 'odd': parsed = {a: 2, b: 0, special: 'n'}; break;
-		    case 'even': parsed = {a: 2, b: 1, special: 'n'}; break;
-		    case 'first': parsed = {a: 0, special: 'index'}; break;
-		    case 'last': parsed = {special: 'last-child'}; break;
-		    case 'only': parsed = {special: 'only-child'}; break;
-		    default: parsed = {a: (a) ? (a - 1) : b, special: 'index'};
-	    }
-
-	    return (nthCache[value] = parsed);
-    };
-
-
-    Sly.escapeRegExp = function(text) {
-	    return text.replace(/[-.*+?^${}()|[\]\/\\]/g, '\\$&');
-    };
-
-
-    // generic accessors
-
-    Sly.generise = function(name) {
-	    Sly[name] = function(text) {
-		    var cls = Sly(text);
-		    return cls[name].apply(cls, Array.prototype.slice.call(arguments, 1));
-	    }
-    };
-
-    var generics = ['parse', 'search', 'find', 'match', 'filter'];
-    for (var i = 0; generics[i]; i++)
-      Sly.generise(generics[i]);
-
-    // compile pattern for the first time
-    Sly.recompile();
-
-    return Sly;
-  })();
-  
-  Element.prototype.querySelectorAll = function(cssRule) {
-    return Sly.search(cssRule, this);
-  }
-  
-  Element.prototype.querySelector = function(cssRule) {
-    return Sly.find(cssRule, this);
-  }
-  
-  document.querySelectorAll = function(cssRule) {
-    return Sly.search(cssRule, document);
-  }
-  
-  document.querySelector = function(cssRule) {
-    return Sly.find(cssRule, document);
-  }
-}
-  
-// Shortcut: $$ => document.querySelectorAll.
-if (typeof window.$$ == "undefined") {
-  window.$$ = document.querySelectorAll;
-}
-
-/**
- * Original code developed by Robert Nyman, http://www.robertnyman.com
- * Code/licensing: http://code.google.com/p/getelementsbyclassname/
- */
-
-if (!document.getElementsByClassName)
-{
-  /*if (document.querySelectorAll)
-  {
-    // querySelectorAll (MSIE 8)
-    // deactivated, because we will overwrite querySelectorAll (and there is
-    // no way to call/apply a renamed native function).
-    Element.prototype._msie_querySelectorAll = Element.prototype.querySelectorAll;
-    Alpha.getElementsByClassName = function(parent, className)
-    {
-      var classes = className.split(" ");
-      var cssRule = "";
-
-      for (var i=0, ilen = classes.length; i<ilen; i++) {
-        cssRule += (classes[i][0] == '.') ? classes[i] : '.' + classes[i];
-      }
-      return Element.prototype._msie_querySelectorAll.call(this, cssRule);
-//      return this.querySelectorAll(cssRule);
-    }
-  }
-  else*/ if (document.evaluate)
-  {
-    // XPATH
-    Alpha.getElementsByClassName = function(parent, className)
-    {
-      var classes = className.split(" ");
-      var classesToCheck = "";
-      var xhtmlNamespace = "http://www.w3.org/1999/xhtml";
-      var namespaceResolver = (document.documentElement.namespaceURI === xhtmlNamespace) ? xhtmlNamespace : null;
-      var returnElements = [];
-      var elements;
-      var node;
-
-      for (var i=0, ilen = classes.length; i<ilen; i++) {
-        classesToCheck += "[contains(concat(' ', @class, ' '), ' " + classes[i] + " ')]";
-      }
-
-      try	{
-        elements = document.evaluate(".//*" + classesToCheck, parent, namespaceResolver, 0, null);
-      }
-      catch (e) {
-        elements = document.evaluate(".//*" + classesToCheck, parent, null, 0, null);
-      }
-
-      while ((node = elements.iterateNext())) {
-        returnElements.push(node);
-      }
-      return new Alpha.NodeList(returnElements);
-    }
-  }
-  else
-  {
-    // DOM PARSING (IE6+, IE7, etc.)
-    Alpha.getElementsByClassName = function(parent, className)
-    {
-      var classes = className.split(" ");
-      var classesToCheck = [];
-      var elements = (parent.all) ? parent.all : parent.getElementsByTagName('*');
-      var current;
-      var returnElements = [];
-      var match;
-
-      for (var i=0, ilen=classes.length; i<ilen; i++) {
-        classesToCheck.push(new RegExp("(^|\\s)" + classes[i] + "(\\s|$)", 'i'));
-      }
-
-      for (var i=0, ilen=elements.length; i<ilen; i++)
-      {
-        current = elements[i];
-        match   = false;
-
-        for (var j=0, jlen=classesToCheck.length; j<jlen; j++)
-        {
-          match = classesToCheck[j].test(current.className);
-          if (!match) {
-            break;
-          }
-        }
-
-        if (match) {
-          returnElements.push(current);
-        }
-      }
-
-      returnElements = Alpha.extendElements ? Alpha.extendElements(returnElements) : returnElements;
-      return new Alpha.NodeList(returnElements);
-    }
-  }
-
-  Element.prototype.getElementsByClassName = function(className) {
-    return Alpha.getElementsByClassName(this, className);
-  }
-
-  document.getElementsByClassName = function(className) {
-    return Alpha.getElementsByClassName(document, className);
-  }
-}
-
-// Code extracted from http://en.wikipedia.org/wiki/XMLHttpRequest
-if (typeof XMLHttpRequest == "undefined")
-{
-  XMLHttpRequest = function()
-  {
-    try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); } catch(e) {}
-    try { return new ActiveXObject("Msxml2.XMLHTTP.3.0"); } catch(e) {}
-    try { return new ActiveXObject("Msxml2.XMLHTTP");     } catch(e) {}
-    try { return new ActiveXObject("Microsoft.XMLHTTP");  } catch(e) {}
-    throw new Error("This browser does not support XMLHttpRequest.");
-  };
-}
-/*
-    http://www.JSON.org/json2.js
-    2008-11-19
-
-    Public Domain.
-
-    NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
-
-    See http://www.JSON.org/js.html
-
-    This file creates a global JSON object containing two methods: stringify
-    and parse.
-
-        JSON.stringify(value, replacer, space)
-            value       any JavaScript value, usually an object or array.
-
-            replacer    an optional parameter that determines how object
-                        values are stringified for objects. It can be a
-                        function or an array of strings.
-
-            space       an optional parameter that specifies the indentation
-                        of nested structures. If it is omitted, the text will
-                        be packed without extra whitespace. If it is a number,
-                        it will specify the number of spaces to indent at each
-                        level. If it is a string (such as '\t' or '&nbsp;'),
-                        it contains the characters used to indent at each level.
-
-            This method produces a JSON text from a JavaScript value.
-
-            When an object value is found, if the object contains a toJSON
-            method, its toJSON method will be called and the result will be
-            stringified. A toJSON method does not serialize: it returns the
-            value represented by the name/value pair that should be serialized,
-            or undefined if nothing should be serialized. The toJSON method
-            will be passed the key associated with the value, and this will be
-            bound to the object holding the key.
-
-            For example, this would serialize Dates as ISO strings.
-
-                Date.prototype.toJSON = function (key) {
-                    function f(n) {
-                        // Format integers to have at least two digits.
-                        return n < 10 ? '0' + n : n;
+    return Object(o);
+};
+//});
+// DOM Events support for IE8
+//
+// Custom event dispatching is inspired by Prototype.js
+// by Sam Stephenson http://www.prototypejs.org/
+//
+// Shim on the Event object is from Joshua Bell's polyfill
+// http://calormen.com/polyfill/
+//
+// The real listener fixes the current target of event, then
+// indirectly calls the custom launcher through the
+// onpropertychange event, this in order for a failing listener
+// to not affect the execution of other listeners
+//
+(function () {
+    if (!Element.prototype.addEventListener) {
+        var CUSTOM_EVENTS_COUNTER = 'data-custom-events-counter';
+
+        Event.NONE            = 0;
+        Event.AT_TARGET       = 1;
+        Event.BUBBLING_PHASE  = 2;
+        Event.CAPTURING_PHASE = 3;
+
+        var bubblingEventTypes = [
+            'click', 'dblclick', 'mousedown', 'mouseup', 'mouseover', 'mousemove', 'mouseout', 'mousewheel',
+            'keydown', 'keypress', 'keyup',
+            'resize', 'scroll',
+            'select', 'change', 'submit', 'reset',
+            'ondataavailable'
+        ];
+
+        var cancelableEventTypes = [
+            'click', 'dblclick', 'mousedown', 'mouseup', 'mouseover', 'mouseout', 'mousewheel',
+            'keydown', 'keypress', 'keyup',
+            'submit',
+            'ondataavailable', 'onlosecapture'
+        ];
+
+        Object.defineProperties(Event.prototype, {
+            NONE:            { get: function () { return 0; } },
+            AT_TARGET:       { get: function () { return 1; } },
+            BUBBLING_PHASE:  { get: function () { return 2; } },
+            CAPTURING_PHASE: { get: function () { return 3; } },
+
+            type: { get: function () {
+                return this._type;
+            }},
+
+            target: { get: function () {
+                return this._target;
+            }},
+
+            currentTarget: { get: function () {
+                return this._currentTarget;
+            }},
+
+            relatedTarget: { get: function () {
+                switch (this.type) {
+                case 'mouseover': return this.fromElement;
+                case 'mouseout':  return this.toElement;
+                }
+                return null;
+            }},
+
+            eventPhase: { get: function () {
+                return (this.srcElement === this.currentTarget) ? Event.AT_TARGET : Event.BUBBLING_PHASE;
+            }},
+
+            bubbles: { get: function () {
+                return bubblingEventTypes.indexOf(this.type) !== -1;
+            }},
+
+            cancelable: { get: function () {
+                return cancelableEventTypes.indexOf(this.type) !== -1;
+            }},
+
+            defaultPrevented: { get: function () {
+                return this._returnValue === false;
+            }},
+
+            pageX: { get: function () {
+                return this.clientX + document.scrollLeft;
+            }},
+
+            pageY: { get: function () {
+                return this.clientY + document.scrollTop;
+            }}
+        });
+
+        Event.prototype.preventDefault = function () {
+            this._returnValue = false;
+            this.returnValue = false;
+        };
+
+        Event.prototype.stopPropagation = function () {
+            this._cancelBubble = true;
+            this.cancelBubble = true;
+        };
+
+        Event.prototype.initEvent = function (type, canBubble, cancelable) {
+            this.eventType = canBubble ? 'ondataavailable' : 'onlosecapture';
+            this._type = type;
+        };
+
+        var createRealListener = function (self, type) {
+            var _listener      = '_' + type + '_listener';
+            var _event         = '_' + type + '_event';
+
+            self._events[type] = {
+                listeners: [],
+
+                realListener: function (event) {
+                    event._type = type;
+                    event._currentTarget = self;
+
+                    if (event._target === undefined) {
+                        // Fix: we must set the target once, because srcElement
+                        // is only the right value before the event bubbles up:
+                        event._target = event.srcElement;
+                    }
+                    self[_event] = event;
+
+                    for (var i = 0, l = self._events[type].listeners.length; i < l; i++) {
+                        self[_listener] = self._events[type].listeners[i];
                     }
 
-                    return this.getUTCFullYear()   + '-' +
-                         f(this.getUTCMonth() + 1) + '-' +
-                         f(this.getUTCDate())      + 'T' +
-                         f(this.getUTCHours())     + ':' +
-                         f(this.getUTCMinutes())   + ':' +
-                         f(this.getUTCSeconds())   + 'Z';
-                };
+                    // Fix: the original values are resetted by IE8 after the
+                    // customLauncher returns. We thus rely on copied values,
+                    // and we reapply them here:
+                    event.cancelBubble = event._cancelBubble;
+                    event.returnValue  = event._returnValue;
+                },
 
-            You can provide an optional replacer method. It will be passed the
-            key and value of each member, with this bound to the containing
-            object. The value that is returned from your method will be
-            serialized. If your method returns undefined, then the member will
-            be excluded from the serialization.
-
-            If the replacer parameter is an array of strings, then it will be
-            used to select the members to be serialized. It filters the results
-            such that only members with keys listed in the replacer array are
-            stringified.
-
-            Values that do not have JSON representations, such as undefined or
-            functions, will not be serialized. Such values in objects will be
-            dropped; in arrays they will be replaced with null. You can use
-            a replacer function to replace those with JSON values.
-            JSON.stringify(undefined) returns undefined.
-
-            The optional space parameter produces a stringification of the
-            value that is filled with line breaks and indentation to make it
-            easier to read.
-
-            If the space parameter is a non-empty string, then that string will
-            be used for indentation. If the space parameter is a number, then
-            the indentation will be that many spaces.
-
-            Example:
-
-            text = JSON.stringify(['e', {pluribus: 'unum'}]);
-            // text is '["e",{"pluribus":"unum"}]'
-
-
-            text = JSON.stringify(['e', {pluribus: 'unum'}], null, '\t');
-            // text is '[\n\t"e",\n\t{\n\t\t"pluribus": "unum"\n\t}\n]'
-
-            text = JSON.stringify([new Date()], function (key, value) {
-                return this[key] instanceof Date ?
-                    'Date(' + this[key] + ')' : value;
-            });
-            // text is '["Date(---current time---)"]'
-
-
-        JSON.parse(text, reviver)
-            This method parses a JSON text to produce an object or array.
-            It can throw a SyntaxError exception.
-
-            The optional reviver parameter is a function that can filter and
-            transform the results. It receives each of the keys and values,
-            and its return value is used instead of the original value.
-            If it returns what it received, then the structure is not modified.
-            If it returns undefined then the member is deleted.
-
-            Example:
-
-            // Parse the text. Values that look like ISO date strings will
-            // be converted to Date objects.
-
-            myData = JSON.parse(text, function (key, value) {
-                var a;
-                if (typeof value === 'string') {
-                    a =
-/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/.exec(value);
-                    if (a) {
-                        return new Date(Date.UTC(+a[1], +a[2] - 1, +a[3], +a[4],
-                            +a[5], +a[6]));
+                customLauncher: function (event) {
+                    // we use a custom launcher in order to prevent a failing
+                    // listener to stop the listeners chain. It also prevents to
+                    // rely on a try catch block, which would block any error
+                    // generated by a failing listener:
+                    if (event.propertyName === _listener) {
+                        self[_listener].call(self, self[_event]);
                     }
                 }
-                return value;
-            });
+            };
 
-            myData = JSON.parse('["Date(09/09/2001)"]', function (key, value) {
-                var d;
-                if (typeof value === 'string' &&
-                        value.slice(0, 5) === 'Date(' &&
-                        value.slice(-1) === ')') {
-                    d = new Date(value.slice(5, -1));
-                    if (d) {
-                        return d;
+            if (self['on' + type] !== undefined) {
+                self.attachEvent('on' + type, self._events[type].realListener);
+            } else {
+                if (self.getAttribute(CUSTOM_EVENTS_COUNTER) === null) {
+                    self.attachEvent('ondataavailable', self._events[type].realListener);
+                    self.attachEvent('onlosecapture',   self._events[type].realListener);
+                }
+                self.setAttribute(CUSTOM_EVENTS_COUNTER, self.getAttribute(CUSTOM_EVENTS_COUNTER) + 1);
+            }
+            self.attachEvent('onpropertychange', self._events[type].customLauncher);
+        };
+
+        var deleteRealListener = function (self) {
+            if (typeof self['on' + type] != 'undefined') {
+                self.detachEvent('on' + type, self._events[type].realListener);
+            } else if (self.getAttribute(CUSTOM_EVENTS_COUNTER) === 1) {
+                self.detachEvent('ondataavailable', self._events[type].realListener);
+                self.detachEvent('onlosecapture',   self._events[type].realListener);
+                self.removeAttribute(CUSTOM_EVENTS_COUNTER);
+            } else {
+                self.setAttribute(CUSTOM_EVENTS_COUNTER, self.getAttribute(CUSTOM_EVENTS_COUNTER) - 1);
+            }
+            self.detachEvent('onpropertychange', self._events[type].customLauncher);
+
+            delete self._events[type].realListener;
+            delete self._events[type].customLauncher;
+            delete self._events[type];
+        };
+
+        var addEventListener = function (type, listener, useCapture) {
+            if (useCapture) {
+                throw Error("Capture mode isn't supported by MSIE and isn't emulated.");
+            }
+            if (!this._events) {
+                this._events = {};
+            }
+            if (!this._events[type]) {
+                createRealListener(this, type);
+            }
+            this._events[type].listeners.push(listener);
+        };
+
+        var removeEventListener = function (type, listener, useCapture) {
+            if (useCapture) {
+                throw Error("Capture mode isn't supported by MSIE and isn't emulated.");
+            }
+            if (this._events) {
+                if (this._events[type]) {
+                    var idx = this._events[type].listeners.indexOf(listener);
+                    if (idx > -1) {
+                        delete this._events[type].listeners[idx];
+                        this._events[type].listeners.splice(idx, 1);
+                    }
+                    if (this._events[type].listeners.length === 0) {
+                        deleteRealListener(this, type);
                     }
                 }
-                return value;
+                if (this._events.length === 0) {
+                    delete this._events;
+                }
+            }
+        };
+
+        document.createEvent = function () {
+            return document.createEventObject();
+        };
+
+        var dispatchEvent = function (event) {
+            return this.fireEvent(event.eventType, event);
+        };
+
+        Window.prototype.addEventListener    = HTMLDocument.prototype.addEventListener    = Element.prototype.addEventListener    = addEventListener;
+        Window.prototype.removeEventListener = HTMLDocument.prototype.removeEventListener = Element.prototype.removeEventListener = removeEventListener;
+        Window.prototype.dispatchEvent       = HTMLDocument.prototype.dispatchEvent       = Element.prototype.dispatchEvent       = dispatchEvent;
+
+        if (document.attachEvent) {
+            document.attachEvent('onreadystatechange', function () {
+                var e = document.createEvent('HTMLEvents');
+                e.initEvent('DOMContentLoaded', true, true);
+                document.dispatchEvent(e);
             });
-
-
-    This is a reference implementation. You are free to copy, modify, or
-    redistribute.
-
-    This code should be minified before deployment.
-    See http://javascript.crockford.com/jsmin.html
-
-    USE YOUR OWN COPY. IT IS EXTREMELY UNWISE TO LOAD CODE FROM SERVERS YOU DO
-    NOT CONTROL.
-*/
-
-/*jslint evil: true */
-
-/*global JSON */
-
-/*members "", "\b", "\t", "\n", "\f", "\r", "\"", JSON, "\\", apply,
-    call, charCodeAt, getUTCDate, getUTCFullYear, getUTCHours,
-    getUTCMinutes, getUTCMonth, getUTCSeconds, hasOwnProperty, join,
-    lastIndex, length, parse, prototype, push, replace, slice, stringify,
-    test, toJSON, toString, valueOf
-*/
-
-// Create a JSON object only if one does not already exist. We create the
-// methods in a closure to avoid creating global variables.
-
-if (!this.JSON) {
-    JSON = {};
+        }
+    }
+}());
+if (!document.getElementsByClassName) {
+    (function (getElementsByClassName) {
+        document.getElementsByClassName = function(className) {
+            return getElementsByClassName(document, className);
+        };
+        Element.prototype.getElementsByClassName = function(className) {
+            return getElementsByClassName(this, className);
+        };
+    }(function (elm, className) {
+        var selector = className.replace(/\s+$/, '').replace(/^\s*|\s+/g, '.');
+        return elm.querySelectorAll(selector);
+    }));
 }
 (function () {
+    var div = document.createElement('div');
 
-    function f(n) {
-        // Format integers to have at least two digits.
-        return n < 10 ? '0' + n : n;
-    }
-
-    if (typeof Date.prototype.toJSON !== 'function') {
-
-        Date.prototype.toJSON = function (key) {
-
-            return this.getUTCFullYear()   + '-' +
-                 f(this.getUTCMonth() + 1) + '-' +
-                 f(this.getUTCDate())      + 'T' +
-                 f(this.getUTCHours())     + ':' +
-                 f(this.getUTCMinutes())   + ':' +
-                 f(this.getUTCSeconds())   + 'Z';
+    if (div.classList === undefined || div.relList === undefined) {
+        var list = function (node, property) {
+            var value = node[property].trim();
+            return (value === "") ? [] : value.split(/\s+/);
         };
 
-        String.prototype.toJSON =
-        Number.prototype.toJSON =
-        Boolean.prototype.toJSON = function (key) {
-            return this.valueOf();
+        var set = function (node, property, tokens) {
+            return node[property] = tokens.join(' ');
         };
-    }
 
-    var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
-        escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
-        gap,
-        indent,
-        meta = {    // table of character substitutions
-            '\b': '\\b',
-            '\t': '\\t',
-            '\n': '\\n',
-            '\f': '\\f',
-            '\r': '\\r',
-            '"' : '\\"',
-            '\\': '\\\\'
-        },
-        rep;
+        var validate = function (token) {
+            for (var i = 0, l = arguments.length; i < l; i++) {
+                if (arguments[i] === "") {
+                    throw SyntaxError("Token cannot be the empty string.");
+                }
+                if (/\s/.test(arguments[i])) {
+                    //throw InvalidCharacterError("Token cannot contain any space character.");
+                    throw SyntaxError("Token cannot contain any space character.");
+                }
+            }
+        };
 
+        var DOMTokenList = function (node, property) {
+            this.node = node;
+            this.property = property;
+        };
 
-    function quote(string) {
-
-// If the string contains no control characters, no quote characters, and no
-// backslash characters, then we can safely slap some quotes around it.
-// Otherwise we must also replace the offending characters with safe escape
-// sequences.
-
-        escapable.lastIndex = 0;
-        return escapable.test(string) ?
-            '"' + string.replace(escapable, function (a) {
-                var c = meta[a];
-                return typeof c === 'string' ? c :
-                    '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
-            }) + '"' :
-            '"' + string + '"';
-    }
-
-
-    function str(key, holder) {
-
-// Produce a string from holder[key].
-
-        var i,          // The loop counter.
-            k,          // The member key.
-            v,          // The member value.
-            length,
-            mind = gap,
-            partial,
-            value = holder[key];
-
-// If the value has a toJSON method, call it to obtain a replacement value.
-
-        if (value && typeof value === 'object' &&
-                typeof value.toJSON === 'function') {
-            value = value.toJSON(key);
+        try {
+            Object.defineProperty(DOMTokenList.prototype, 'length', {
+                get: function () {
+                    return list(this.node, this.property).length;
+                }
+            });
+        } catch (ex) {
         }
 
-// If we were called with a replacer function, then call the replacer to
-// obtain a replacement value.
+        DOMTokenList.prototype.item = function (index) {
+            return list(this.node, this.property)[index];
+        };
 
-        if (typeof rep === 'function') {
-            value = rep.call(holder, key, value);
+        DOMTokenList.prototype.contains = function (token) {
+            validate(token);
+            return list(this.node, this.property).indexOf(token) !== -1;
+        };
+
+        DOMTokenList.prototype.add = function (token) {
+            validate.apply(null, arguments);
+            var tokens = list(this.node, this.property);
+            for (var i = 0, l = arguments.length; i < l; i++) {
+                if (tokens.indexOf(arguments[i]) === -1) {
+                    tokens.push(arguments[i]);
+                }
+            }
+            set(this.node, this.property, tokens);
+        };
+
+        DOMTokenList.prototype.remove = function (token) {
+            validate.apply(null, arguments);
+            var tokens = list(this.node, this.property);
+            for (var i = 0, l = arguments.length; i < l; i++) {
+                var idx = tokens.indexOf(token);
+                if (idx !== -1) {
+                    tokens.splice(idx, 1);
+                }
+            }
+            set(this.node, this.property, tokens);
+        };
+
+        DOMTokenList.prototype.toggle = function (token, force) {
+            validate(token);
+            var tokens = list(this.node, this.property);
+            var idx = tokens.indexOf(token);
+            var ret = force;
+            if (idx !== -1) {
+                if (force !== true) {
+                    tokens.splice(idx, 1);
+                    ret = false;
+                }
+            } else if (force !== false) {
+                tokens.push(token);
+                ret = true;
+            }
+            set(this.node, this.property, tokens);
+            return ret;
+        };
+
+        DOMTokenList.prototype.toString = function () {
+            return this.node[this.property];
+        };
+
+        if (div.classList === undefined) {
+            Object.defineProperty(Element.prototype, 'classList', {
+                get: function () {
+                    if (!this._classList) {
+                        this._classList = new DOMTokenList(this, 'className');
+                    }
+                    return this._classList;
+                }
+            });
         }
 
-// What happens next depends on the value's type.
-
-        switch (typeof value) {
-        case 'string':
-            return quote(value);
-
-        case 'number':
-
-// JSON numbers must be finite. Encode non-finite numbers as null.
-
-            return isFinite(value) ? String(value) : 'null';
-
-        case 'boolean':
-        case 'null':
-
-// If the value is a boolean or null, convert it to a string. Note:
-// typeof null does not produce 'null'. The case is included here in
-// the remote chance that this gets fixed someday.
-
-            return String(value);
-
-// If the type is 'object', we might be dealing with an object or an array or
-// null.
-
-        case 'object':
-
-// Due to a specification blunder in ECMAScript, typeof null is 'object',
-// so watch out for that case.
-
-            if (!value) {
-                return 'null';
-            }
-
-// Make an array to hold the partial results of stringifying this object value.
-
-            gap += indent;
-            partial = [];
-
-// Is the value an array?
-
-            if (Object.prototype.toString.apply(value) === '[object Array]') {
-
-// The value is an array. Stringify every element. Use null as a placeholder
-// for non-JSON values.
-
-                length = value.length;
-                for (i = 0; i < length; i += 1) {
-                    partial[i] = str(i, value) || 'null';
-                }
-
-// Join all of the elements together, separated with commas, and wrap them in
-// brackets.
-
-                v = partial.length === 0 ? '[]' :
-                    gap ? '[\n' + gap +
-                            partial.join(',\n' + gap) + '\n' +
-                                mind + ']' :
-                          '[' + partial.join(',') + ']';
-                gap = mind;
-                return v;
-            }
-
-// If the replacer is an array, use it to select the members to be stringified.
-
-            if (rep && typeof rep === 'object') {
-                length = rep.length;
-                for (i = 0; i < length; i += 1) {
-                    k = rep[i];
-                    if (typeof k === 'string') {
-                        v = str(k, value);
-                        if (v) {
-                            partial.push(quote(k) + (gap ? ': ' : ':') + v);
-                        }
+        if (div.relList === undefined) {
+            Object.defineProperty(Element.prototype, 'relList', {
+                get: function () {
+                    if (!this._relList) {
+                        this._relList = new DOMTokenList(this, 'rel');
                     }
+                    return this._relList;
                 }
-            } else {
-
-// Otherwise, iterate through all of the keys in the object.
-
-                for (k in value) {
-                    if (Object.hasOwnProperty.call(value, k)) {
-                        v = str(k, value);
-                        if (v) {
-                            partial.push(quote(k) + (gap ? ': ' : ':') + v);
-                        }
-                    }
-                }
-            }
-
-// Join all of the member texts together, separated with commas,
-// and wrap them in braces.
-
-            v = partial.length === 0 ? '{}' :
-                gap ? '{\n' + gap + partial.join(',\n' + gap) + '\n' +
-                        mind + '}' : '{' + partial.join(',') + '}';
-            gap = mind;
-            return v;
+            });
         }
-    }
-
-// If the JSON object does not yet have a stringify method, give it one.
-
-    if (typeof JSON.stringify !== 'function') {
-        JSON.stringify = function (value, replacer, space) {
-
-// The stringify method takes a value and an optional replacer, and an optional
-// space parameter, and returns a JSON text. The replacer can be a function
-// that can replace values, or an array of strings that will select the keys.
-// A default replacer method can be provided. Use of the space parameter can
-// produce text that is more easily readable.
-
-            var i;
-            gap = '';
-            indent = '';
-
-// If the space parameter is a number, make an indent string containing that
-// many spaces.
-
-            if (typeof space === 'number') {
-                for (i = 0; i < space; i += 1) {
-                    indent += ' ';
-                }
-
-// If the space parameter is a string, it will be used as the indent string.
-
-            } else if (typeof space === 'string') {
-                indent = space;
-            }
-
-// If there is a replacer, it must be a function or an array.
-// Otherwise, throw an error.
-
-            rep = replacer;
-            if (replacer && typeof replacer !== 'function' &&
-                    (typeof replacer !== 'object' ||
-                     typeof replacer.length !== 'number')) {
-                throw new Error('JSON.stringify');
-            }
-
-// Make a fake root object containing our value under the key of ''.
-// Return the result of stringifying the value.
-
-            return str('', {'': value});
-        };
-    }
-
-
-// If the JSON object does not yet have a parse method, give it one.
-
-    if (typeof JSON.parse !== 'function') {
-        JSON.parse = function (text, reviver) {
-
-// The parse method takes a text and an optional reviver function, and returns
-// a JavaScript value if the text is a valid JSON text.
-
-            var j;
-
-            function walk(holder, key) {
-
-// The walk method is used to recursively walk the resulting structure so
-// that modifications can be made.
-
-                var k, v, value = holder[key];
-                if (value && typeof value === 'object') {
-                    for (k in value) {
-                        if (Object.hasOwnProperty.call(value, k)) {
-                            v = walk(value, k);
-                            if (v !== undefined) {
-                                value[k] = v;
-                            } else {
-                                delete value[k];
-                            }
-                        }
-                    }
-                }
-                return reviver.call(holder, key, value);
-            }
-
-
-// Parsing happens in four stages. In the first stage, we replace certain
-// Unicode characters with escape sequences. JavaScript handles many characters
-// incorrectly, either silently deleting them, or treating them as line endings.
-
-            cx.lastIndex = 0;
-            if (cx.test(text)) {
-                text = text.replace(cx, function (a) {
-                    return '\\u' +
-                        ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
-                });
-            }
-
-// In the second stage, we run the text against regular expressions that look
-// for non-JSON patterns. We are especially concerned with '()' and 'new'
-// because they can cause invocation, and '=' because it can cause mutation.
-// But just to be safe, we want to reject all unexpected forms.
-
-// We split the second stage into 4 regexp operations in order to work around
-// crippling inefficiencies in IE's and Safari's regexp engines. First we
-// replace the JSON backslash pairs with '@' (a non-JSON character). Second, we
-// replace all simple value tokens with ']' characters. Third, we delete all
-// open brackets that follow a colon or comma or that begin the text. Finally,
-// we look to see that the remaining characters are only whitespace or ']' or
-// ',' or ':' or '{' or '}'. If that is so, then the text is safe for eval.
-
-            if (/^[\],:{}\s]*$/.
-test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@').
-replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
-replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-
-// In the third stage we use the eval function to compile the text into a
-// JavaScript structure. The '{' operator is subject to a syntactic ambiguity
-// in JavaScript: it can begin a block or an object literal. We wrap the text
-// in parens to eliminate the ambiguity.
-
-                j = eval('(' + text + ')');
-
-// In the optional fourth stage, we recursively walk the new structure, passing
-// each name/value pair to a reviver function for possible transformation.
-
-                return typeof reviver === 'function' ?
-                    walk({'': j}, '') : j;
-            }
-
-// If the text is not JSON parseable, then a SyntaxError is thrown.
-
-            throw new SyntaxError('JSON.parse');
-        };
     }
 })();
+(function () {
+    var elm = document.createElement('div');
+    elm.appendChild(document.createComment(' '));
+
+    if (elm.textContent === undefined) {
+          Object.defineProperty(Element.prototype, 'textContent', {
+              get: function () {
+                  return this.innerText;
+              }
+          });
+    }
+
+    if (elm.children === undefined || elm.children.length !== 0) {
+        Object.defineProperty(Element.prototype, 'children', {
+            get: function () {
+                var children = [];
+                var child = this.firstChild;
+                while (child) {
+                    if (child.nodeType === 1) {
+                        children.push(child);
+                    }
+                    child = child.nextSibling;
+                }
+                return children;
+            }
+        });
+    }
+
+    if (elm.childElementCount === undefined) {
+        Object.defineProperty(Element.prototype, 'childElementCount', {
+            get: function() {
+                var count = 0;
+                var child = this.firstChild;
+                while (child) {
+                    if (child.nodeType === 1) {
+                        count++;
+                    }
+                    child = child.nextSibling;
+                }
+                return count;
+            }
+        });
+    }
+
+    if (elm.firstElementChild === undefined) {
+        Object.defineProperty(Element.prototype, 'firstElementChild', {
+            get: function() {
+                var child = this.firstChild;
+                while (child && child.nodeType !== 1) {
+                    child = child.nextSibling;
+                }
+                return (child && child.nodeType === 1) ? child : null;
+            }
+        });
+    }
+
+    if (elm.lastElementChild === undefined) {
+        Object.defineProperty(Element.prototype, 'lastElementChild', {
+            get: function() {
+                var child = this.lastChild;
+                while (child && child.nodeType !== 1) {
+                    child = child.previousSibling;
+                }
+                return (child && child.nodeType === 1) ? child : null;
+            }
+        });
+    }
+
+    if (elm.nextElementSibling === undefined) {
+        Object.defineProperty(Element.prototype, 'nextElementSibling', {
+            get: function () {
+                var sibling = this.nextSibling;
+                while (sibling && sibling.nodeType !== 1) {
+                    sibling = sibling.nextSibling;
+                }
+                return (sibling && sibling.nodeType === 1) ? sibling : null;
+            }
+        });
+    }
+
+    if (elm.previousElementSibling === undefined) {
+        Object.defineProperty(Element.prototype, 'previousElementSibling', {
+            get: function () {
+                var sibling = this.previousSibling;
+                while (sibling && sibling.nodeType !== 1) {
+                    sibling = sibling.previousSibling;
+                }
+                return (sibling && sibling.nodeType === 1) ? sibling : null;
+            }
+        });
+    }
+
+    if (elm.append === undefined) {
+        var macro = function (nodes) {
+            if (nodes.length === 1) {
+                return (typeof nodes[0] === 'string') ?
+                    document.createTextNode(nodes[0]) : nodes[0];
+            }
+            var fragment = document.createDocumentFragment();
+            for (var i = 0, l = nodes.length; i < l; i++) {
+                fragment.appendChild((typeof nodes[i] === 'string') ?
+                    document.createTextNode(nodes[i]) : nodes[i]);
+            }
+            return fragment;
+        };
+
+        var prepend = function () {
+            this.insertBefore(macro(arguments), this.firstChild);
+        };
+
+        var append = function () {
+            this.appendChild(macro(arguments));
+        };
+
+        var before = function () {
+            if (this.parentNode) {
+                this.parentNode.insertBefore(macro(arguments), this);
+            }
+        };
+
+        var after = function () {
+            if (this.parentNode) {
+                this.parentNode.insertBefore(macro(arguments), this.nextSibling);
+            }
+        };
+
+        var replace = function () {
+            if (this.parentNode) {
+                this.parentNode.replaceChild(macro(arguments), this);
+            }
+        };
+
+        var remove = function () {
+            if (this.parentNode) {
+                this.parentNode.removeChild(this);
+            }
+        };
+
+        (Document || HTMLDocument).prototype.prepend = prepend;
+        (Document || HTMLDocument).prototype.append  = append;
+
+        Element.prototype.prepend = prepend;
+        Element.prototype.append  = append;
+        Element.prototype.before  = before;
+        Element.prototype.after   = after;
+        Element.prototype.replace = replace;
+        Element.prototype.remove  = remove;
+
+        if (typeof CharacterData !== 'undefined') {
+            // applies to Text, Comment and ProcessingInstruction
+            CharacterData.prototype.before  = before;
+            CharacterData.prototype.after   = after;
+            CharacterData.prototype.replace = replace;
+            CharacterData.prototype.remove  = remove;
+        } else if (Text) {
+            // IE8 has a constructor for Text, but none for Comment
+            Text.prototype.before  = before;
+            Text.prototype.after   = after;
+            Text.prototype.replace = replace;
+            Text.prototype.remove  = remove;
+        }
+    }
+}());
+if (window.innerWidth === undefined) {
+    Object.defineProperty(window, 'innerWidth', {
+        get: function () {
+            return document.documentElement.clientWidth;
+        }
+    });
+
+    Object.defineProperty(window, 'innerHeight', {
+        get: function () {
+            return document.documentElement.clientHeight;
+        }
+    });
+}
+
+if (window.pageXOffset === undefined) {
+    Object.defineProperty(window, 'pageXOffset', {
+        get: function () {
+            return document.documentElement.scrollLeft;
+        }
+    });
+
+    Object.defineProperty(window, 'pageYOffset', {
+        get: function () {
+            return document.documentElement.scrollTop;
+        }
+    });
+}

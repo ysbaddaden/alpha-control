@@ -1,27 +1,33 @@
 var Optionable = function (klass) {
-  // Inits options as empty hash unless it was already defined.
-  klass.prototype.initOptions = function () {
-    if (typeof this.options === 'undefined') {
-      this.options = {};
-    }
-  };
-  
-  // Sets options, overwriting those already in place.
-  klass.prototype.setOptions = function (options) {
-    this.initOptions();
-    for (var i in (options || {})) {
-      this.options[i] = options[i];
-    }
-  };
-  
-  // Sets options unless they're already defined.
-  klass.prototype.setDefaultOptions = function (options) {
-    this.initOptions();
-    for (var i in (options || {})) {
-      if (typeof this.options[i] === 'undefined') {
-        this.options[i] = options[i];
-      }
-    }
-  };
+    klass.prototype.initOptions = function () {
+        if (!this.options) {
+            this.options = {};
+        }
+    };
+
+    klass.prototype.setOptions = function (options) {
+        this.initOptions();
+        if (!options) {
+            return;
+        }
+        for (var k in options) {
+            if (options.hasOwnProperty(k)) {
+                this.options[k] = options[k];
+            }
+        }
+    };
+
+    klass.prototype.setDefaultOptions = function (options) {
+        this.initOptions();
+        if (!options) {
+            return;
+        }
+        for (var k in options) {
+            // only define if null or undefined
+            if (options.hasOwnProperty(k) && this.options[k] == null) {
+                this.options[k] = options[k];
+            }
+        }
+    };
 };
 

@@ -1,3 +1,3 @@
 RegExp.escape = function(str) {
-  return str.replace(/[.*+?|()\[\]{}\\]/g, '\\$&');
+    return str.replace(/[.*+?|()\[\]{}\\]/g, '\\$&');
 };
