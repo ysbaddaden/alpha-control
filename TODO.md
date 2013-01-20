@@ -1,16 +1,19 @@
 # TODO
 
-  * check and update documentation.
-  * generate HTML documentation from asciidoc txt files.
+  * UI.Autocompleter should dispatch events
+  * UI.Autocompleter remote calls should be optionnal (using a fixed list, or
+    by calling a method)
 
-  * add POST requests to `JSONP.Request`.
-  * add PUT and DELETE requests to `JSONP.Request` (emulated with an _method param).
+  * implement UI.DatePicker
+  * implement UI.ColorPicker
 
-  * refactor Alpha.Serializer to extend `FormElement`'s or even `Element`'s
-    prototype with a `serialize` method, or even better a `send` method.
+  * I18n.localize method
 
-  * `I18n.localize` method.
+  * add support for POST requests to JSONP.Request
+  * add support for PUT and DELETE requests to JSONP.Request (emulated with
+    a `_method` param)
 
-  * check if Sugar.js wouldn't be a best solution instead of `Array`, `Inflector`,
-    etc. AlphaControl would then concentrate on the DOM instead of JavaScript.
+  * check and update documentation
+  * generate HTML documentation from asciidoc txt files
+
 
