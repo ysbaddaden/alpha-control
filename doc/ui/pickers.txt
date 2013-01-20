@@ -2,9 +2,10 @@
 
 Pickers are widgets that are relative to another Element.
 
+
 ==== UI.Picker < UI.Widget
 
-Base picker object.
+Base picker object. Should be considered abstract.
 
 .Methods
 
@@ -61,10 +62,11 @@ Base picker object.
   deactivate::
     Dispatched when the widget is deactivated. Default behavior may be cancelled.
 
+
 // === UI.ColorPicker < UI.Picker
-// 
+//
 // .Methods
-// 
+//
 //   - initColorPicker()
 //   - setColor()
 //   - setBaseColor()
@@ -72,32 +74,118 @@ Base picker object.
 //   - getGradientColor()
 //   - getHueColor()
 
+
 // === UI.DatePicker < UI.Picker
-// 
+//
 // .Methods
-// 
+//
 //   - initDatePicker()
+
 
 ==== UI.ListPicker < UI.Picker
 
+Displays a list of possible choices for an input.
+
 .Methods
 
-  - initListPicker()
-  - cancel()
-  - displayOrHide()
-  - setItems()
-  - getItems()
-  - getItem(index)
-  - hasItems()
-  - clearItems()
-  - markSelection()
-  - unmarkSelection()
-  - moveSelectionUp()
-  - moveSelectionDown()
-  - selectSelection()
+  initListPicker(relativeElement, options = {})::
+    Initializes the picker. Possible options are
+
+  cancel()::
+
+  displayOrHide()::
+
+  setItems(items)::
+    Sets the list items. May be a HTML string, a DocumentFragment or a mixed
+    Array of HTML strings, Elements and DocumentFragments.
+
+  getItems()::
+    Returns the list items as DOM Elements.
+
+  getItem(index)::
+    Returns the item of index as a DOM Element.
+
+  hasItems()::
+    Returns true unless the list items if empty.
+
+  clearItems()::
+    Removes all items from the list.
+
+  markSelection(item)::
+    Marks an item for selection.
+
+  unmarkSelection()::
+    Unmarks any item marked for selection.
+
+  moveSelectionUp()::
+    Marks the item before the currently marked item, thus unmarking the current
+    item.
+
+  moveSelectionDown()::
+    Marks the item after the currently marked item, thus unmarking the current
+    item.
+
+  selectSelection()::
+    Fires the `select` event with event.targetElement set to the currently
+    marked item. Eventually hides the list picker.
+
+.Options
+
+  activate::
+    An array of DOM event types on the relativeElement that may activate the
+    picker. Defaults to `[ 'focus', 'click' ]`.
+
+  autoMarkFirst::
+    Automatically marks the first proposed item in the list for selection.
+    Defaults to false.
+
+.Events
+
+    select::
+        Dispatched when an item is selected. You may access the selected item,
+        as a DOM Element, through the `targetElement` property of the event.
 
 ==== UI.Autocompleter < UI.ListPicker
 
-.TODO
-Write documentation for UI.Autocompleter
+Autocompletes text entered in a text field input.
+
+.Methods
+
+  autocomplete(e)::
+    Called whenever an item is selected. Tries to read a `data-value` attribute
+    and falls back to the item's text content.
+
+  search()::
+    Called whenever a key is typed. Takes care to query the remote URL, to
+    update the contents, etc.
+
+  setValue(value)::
+    Replaces the text field's value. Eventually clears the list.
+
+  xhrRequest()::
+    The actual XMLHTTPRequest. Override if you need custom calls.
+
+  jsonpRequest()::
+    The actual JSONP request. Override if you need custom calls.
+
+  url()::
+    Correctly formats the URL with the query parameter and value.
+
+.Options
+
+  delay::
+    Delay calls by some milliseconds in order to limit remote calls. Defaults
+    to 200 (ms).
+  param::
+    The parameter name to use for the XMLHTTPRequest calls. Defaults to `param`.
+
+  url::
+    The URL to use for the XMLHTTPRequest or JSONP calls.
+
+  jsonp::
+    Set to true to use JSONP instead of XMLHTTPRequest for remote calls.
+
+  callback::
+    The name of the callback parameter for JSONP requests. Defaults to
+    `callback`.
 

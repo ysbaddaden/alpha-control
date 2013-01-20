@@ -2,36 +2,46 @@
 
 User Interface Widgets.
 
+All UI objects have a create method in the UI object. They are a shortcut
+for newing and initing an object at once. For instance the two following
+calls are equivalent:
+
+    var dialog = UI.Dialog();
+    dialog.initDialog({ modal: true });
+
+    var dialog = UI.CreateDialog({ modal: true });
+
 .Object methods
 
   UI.createNotification(options = {})::
-    Creates and initializes a new UI.Notification() object.
+    Creates and initializes a UI.Notification object.
 
   UI.createOverlay(options = {})::
-    Creates and initializes a new UI.Notification() object.
+    Creates and initializes a UI.Overlay object.
 
   UI.createWindow(options = {})::
-    Creates and initializes a new UI.Window() object.
+    Creates and initializes a UI.Window object.
 
   UI.createDialog(options = {})::
-    Creates and initializes a new UI.Dialog() object.
+    Creates and initializes a UI.Dialog object.
 
   UI.createAlert(options = {})::
-    Creates and initializes a new UI.Alert() object.
-
-  UI.createWarningAlert(options = {})::
-    Creates and initializes a new UI.Alert() object with the `Warning` alert
-    style and cancel and OK buttons that call the cancel() or validate()
-    methods when clicked.
+    Creates and initializes a UI.Alert object.
 
   UI.createInformationalAlert(options = {})::
-    Creates and initializes a new UI.Alert() object with the `Informational`
-    alert style and an OK button that calls the validate() method when clicked.
+    Creates and initializes a new UI.Alert object with the `Informational`
+    alert style and an OK button that calls the `validate` method when clicked.
+
+  UI.createWarningAlert(options = {})::
+    Creates and initializes a UI.Alert object with the `Warning` alert
+    style and cancel and OK buttons that call the `cancel` and `validate`
+    methods when clicked.
 
   UI.createCriticalAlert(options = {})::
-    Creates and initializes a new UI.Alert() object with the `Critical` alert
-    style and cancel and OK buttons that call the cancel() or validate()
+    Creates and initializes a new UI.Alert object with the `Critical` alert
+    style and cancel and OK buttons that call the `cancel` or `validate`
     methods when clicked.
+
 
 === UI.Widget
 
@@ -128,22 +138,23 @@ like UI.Window and UI.Picker.
 .Events
 
   close::
-    Dispatched when closing the widget. Closing  may be cancelled.
+    Dispatched when closing the widget. May be cancelled.
 
   destroy::
-    Dispatched when destroying the widget. The default behavior may be cancelled.
+    Dispatched when destroying the widget. May be cancelled.
 
   display::
-    Dispatched when displaying the widget. The default behavior may be cancelled.
+    Dispatched when displaying the widget. May be cancelled.
 
   hide::
-    Dispatched when hiding the widget. The default behavior may be cancelled.
+    Dispatched when hiding the widget. May be cancelled.
 
   realize::
-    Dispatched when realizing the widget. The default behavior may not be cancelled.
+    Dispatched when realizing the widget. May not be cancelled.
 
   unrealize::
-    Dispatched when unrealizing the widget. The default behavior may not be cancelled.
+    Dispatched when unrealizing the widget. May not be cancelled.
+
 
 === UI.Notification < UI.Widget
 
@@ -173,14 +184,22 @@ Accepts any other option as accepted by UI.Widget.
   getMessage()::
     Returns the notification message as an HTML string.
 
+
 === UI.Overlay < UI.Widget
+
+Displays an overlay above the screen, taking over all the screen estate. It
+generally takes the form of a transparent black layer. It is used by modal
+dialogs for instance, to help the user to concentrate on the modal.
 
 .Methods
 
   initOverlay()::
     Creates the widget.
 
+
 === UI.Sortable
+
+Allows items in a list to be manually sorted through drag and drops.
 
 .Properties
 

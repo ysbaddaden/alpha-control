@@ -43,13 +43,13 @@ Rails.
 
   plural(regexp, replacement)::
     declares a singular -> plural rule.
-  
+
   singular(regexp, replacement)::
     declares a plural -> singular rule.
-  
+
   irregular(singular, plural)::
     declares an irregular word.
-  
+
   uncountable(words)::
     declares uncountable words -- takes an array of strings.
 
@@ -83,7 +83,7 @@ These methods follow the rules of the Ruby `String` and Ruby on Rails
 
 === Optionable
 
-Simplifies options handling to any object. Options are just `{key: value}` objects.
+Simplifies options handling to any object. Options are simple `{key: value}` objects.
 
 .Example:
 
