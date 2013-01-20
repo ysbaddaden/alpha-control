@@ -1,4 +1,5 @@
-// FIXME: find better method names than autocomplete & setValue.
+// TODO: dispatching events wouldn't hurt.
+// TODO: better method names for autocomplete & setValue.
 
 UI.Autocompleter = function () {};
 UI.Autocompleter.prototype = new UI.ListPicker();
@@ -32,9 +33,10 @@ UI.Autocompleter.prototype.setItems = function (items) {
 };
 
 // Called whenever a selection is selected. Tries to read a data-value
-// attribute and falls back to testContent.
+// attribute and falls back to textContent.
 UI.Autocompleter.prototype.autocomplete = function (event) {
-    var value = event.targetElement.getAttribute('data-value') || event.targetElement.testContent;
+    var value = event.targetElement.getAttribute('data-value') ||
+        event.targetElement.textContent;
     this.setValue(value);
 };
 

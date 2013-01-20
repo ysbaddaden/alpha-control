@@ -35,7 +35,7 @@ UI.Window.prototype.initWindow = function (options) {
 
 // Sets the window title as text.
 UI.Window.prototype.setTitle = function (title) {
-    this.title.testContent = title;
+    this.title.textContent = title;
 };
 
 // Positions the window. Automatically called on display.

@@ -32,7 +32,7 @@ UI.Dialog.prototype.initDialog = function (options) {
 // (most important) to the left (less important).
 UI.Dialog.prototype.addButton = function (label, callback) {
     var button = document.createElement('button');
-    button.testContent = label;
+    button.textContent = label;
     button.onclick = callback;
     this.buttons.before(button, this.buttons.firstChild);
     return button;
